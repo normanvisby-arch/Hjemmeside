@@ -1,7 +1,8 @@
 /* ============================================================
    HEDENSTED LÆGEHUS — 3D/WebGL hero
-   DNA-helix + partikelfelt renderet med Three.js (global THREE
-   fra js/vendor/three.min.js — virker også direkte fra disk).
+   Æskulapstav (slangen om staven) + partikelfelt renderet med
+   Three.js (global THREE fra js/vendor/three.min.js — virker
+   også direkte fra disk).
    Falder pænt tilbage til CSS-gradienten hvis WebGL mangler,
    og respekterer "prefers-reduced-motion".
    ============================================================ */
@@ -53,81 +54,93 @@ function init(canvas) {
   glow.position.set(2.5, 1, 2);
   scene.add(glow);
 
-  /* ---------- DNA-helix ---------- */
-  const dna = new THREE.Group();
-  scene.add(dna);
+  /* ---------- Æskulapstav ---------- */
+  const aesculap = new THREE.Group();
+  scene.add(aesculap);
 
-  const TURNS = 2.6;
-  const RUNGS = 34;
-  const HELIX_HEIGHT = 9.5;
-  const HELIX_RADIUS = 1.15;
-
-  const sphereGeo = new THREE.SphereGeometry(0.16, 24, 24);
-  const matA = new THREE.MeshStandardMaterial({
-    color: 0x35d0c5, roughness: 0.25, metalness: 0.35,
+  const staffMat = new THREE.MeshStandardMaterial({
+    color: 0xe8f6f1, roughness: 0.3, metalness: 0.55,
+    emissive: 0x1a6a70, emissiveIntensity: 0.25,
+  });
+  const snakeMat = new THREE.MeshStandardMaterial({
+    color: 0x35d0c5, roughness: 0.35, metalness: 0.3,
     emissive: 0x0b5f58, emissiveIntensity: 0.55,
   });
-  const matB = new THREE.MeshStandardMaterial({
-    color: 0xdff7f2, roughness: 0.3, metalness: 0.2,
-    emissive: 0x1a6a70, emissiveIntensity: 0.35,
-  });
-  const rungMat = new THREE.MeshStandardMaterial({
-    color: 0x0e7c86, roughness: 0.45, metalness: 0.3,
-    emissive: 0x0a4046, emissiveIntensity: 0.5,
-    transparent: true, opacity: 0.9,
-  });
 
-  const strandA = new THREE.InstancedMesh(sphereGeo, matA, RUNGS);
-  const strandB = new THREE.InstancedMesh(sphereGeo, matB, RUNGS);
-  const rungGeo = new THREE.CylinderGeometry(0.035, 0.035, 1, 10, 1, true);
-  const rungs = new THREE.InstancedMesh(rungGeo, rungMat, RUNGS);
-  dna.add(strandA, strandB, rungs);
+  // Staven — let konisk med knop i toppen
+  const STAFF_H = 8.2;
+  const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, STAFF_H, 24), staffMat);
+  aesculap.add(staff);
 
-  const dummy = new THREE.Object3D();
-  const up = new THREE.Vector3(0, 1, 0);
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 24), staffMat);
+  knob.position.y = STAFF_H / 2 + 0.18;
+  aesculap.add(knob);
 
-  function layoutHelix(phase) {
-    for (let i = 0; i < RUNGS; i++) {
-      const t = i / (RUNGS - 1);
-      const angle = t * Math.PI * 2 * TURNS + phase;
-      const y = (t - 0.5) * HELIX_HEIGHT;
-      // Let "åndedræt" i radius, så helixen føles levende
-      const r = HELIX_RADIUS * (1 + 0.05 * Math.sin(phase * 2 + t * 9));
+  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.19, 20, 20), staffMat);
+  foot.position.y = -STAFF_H / 2;
+  aesculap.add(foot);
 
-      const ax = Math.cos(angle) * r, az = Math.sin(angle) * r;
-      const bx = Math.cos(angle + Math.PI) * r, bz = Math.sin(angle + Math.PI) * r;
+  // Slangen — en jævn spiral omkring staven, tegnet som et rør
+  const TURNS = 4;
+  const SNAKE_TOP = 3.1;
+  const SNAKE_BOTTOM = -3.5;
+  const COIL_R = 0.46;
 
-      dummy.position.set(ax, y, az);
-      dummy.scale.setScalar(1 + 0.25 * Math.sin(phase * 3 + i));
-      dummy.rotation.set(0, 0, 0);
-      dummy.updateMatrix();
-      strandA.setMatrixAt(i, dummy.matrix);
-
-      dummy.position.set(bx, y, bz);
-      dummy.scale.setScalar(1 + 0.25 * Math.cos(phase * 3 + i));
-      dummy.updateMatrix();
-      strandB.setMatrixAt(i, dummy.matrix);
-
-      // Tværstang mellem de to strenge
-      const mid = new THREE.Vector3((ax + bx) / 2, y, (az + bz) / 2);
-      const dir = new THREE.Vector3(bx - ax, 0, bz - az);
-      const len = dir.length();
-      dummy.position.copy(mid);
-      dummy.quaternion.setFromUnitVectors(up, dir.normalize());
-      dummy.scale.set(1, len, 1);
-      dummy.updateMatrix();
-      rungs.setMatrixAt(i, dummy.matrix);
-      dummy.quaternion.identity();
-    }
-    strandA.instanceMatrix.needsUpdate = true;
-    strandB.instanceMatrix.needsUpdate = true;
-    rungs.instanceMatrix.needsUpdate = true;
+  const pts = [];
+  const N = 140;
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const angle = t * Math.PI * 2 * TURNS;
+    // Spiralen strammer let til opad — som på det klassiske symbol
+    const r = COIL_R * (1.06 - 0.18 * t);
+    pts.push(new THREE.Vector3(
+      Math.cos(angle) * r,
+      SNAKE_BOTTOM + (SNAKE_TOP - SNAKE_BOTTOM) * t,
+      Math.sin(angle) * r
+    ));
   }
+  // Halen svinger ud forneden, hovedet løfter sig fri af staven foroven
+  pts[0].multiplyScalar(1.9).setY(SNAKE_BOTTOM - 0.25);
+  const last = pts[N];
+  pts.push(new THREE.Vector3(last.x * 1.7, SNAKE_TOP + 0.45, last.z * 1.7));
 
-  dna.position.set(3.1, 0, 0);
-  dna.rotation.z = -0.18;
+  const snakeCurve = new THREE.CatmullRomCurve3(pts);
+  const snake = new THREE.Mesh(new THREE.TubeGeometry(snakeCurve, 320, 0.15, 14), snakeMat);
+  aesculap.add(snake);
 
-  /* ---------- Medicinsk kryds (omdrejningspunkt til venstre) ---------- */
+  // Hale-spids og hoved
+  const tailTip = new THREE.Mesh(new THREE.SphereGeometry(0.15, 14, 14), snakeMat);
+  tailTip.position.copy(snakeCurve.getPoint(0));
+  aesculap.add(tailTip);
+
+  const headPos = snakeCurve.getPoint(1);
+  const headTangent = snakeCurve.getTangent(1);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 20), snakeMat);
+  head.scale.set(1.55, 1.05, 1.15);
+  head.position.copy(headPos).addScaledVector(headTangent, 0.18);
+  head.lookAt(headPos.clone().addScaledVector(headTangent, 2));
+  aesculap.add(head);
+
+  const eyeMat = new THREE.MeshStandardMaterial({
+    color: 0x062028, roughness: 0.2, metalness: 0.1,
+    emissive: 0x9ff0e2, emissiveIntensity: 0.6,
+  });
+  [-1, 1].forEach((side) => {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 10), eyeMat);
+    eye.position.copy(head.position);
+    eye.position.y += 0.09;
+    // Placér øjnene på hver side af hovedet, vinkelret på kigge-retningen
+    const sideDir = new THREE.Vector3().crossVectors(headTangent, new THREE.Vector3(0, 1, 0)).normalize();
+    eye.position.addScaledVector(sideDir, side * 0.13);
+    eye.position.addScaledVector(headTangent, 0.16);
+    aesculap.add(eye);
+  });
+
+  aesculap.position.set(3.1, 0, 0);
+  aesculap.rotation.z = -0.1;
+  aesculap.scale.setScalar(0.82); // hele symbolet, inkl. knop og hoved, skal være i billedet
+
+  /* ---------- Medicinsk kryds (svæver til venstre) ---------- */
   const cross = new THREE.Group();
   const crossMat = new THREE.MeshStandardMaterial({
     color: 0x9ff0e2, roughness: 0.2, metalness: 0.5,
@@ -187,8 +200,8 @@ function init(canvas) {
     const w = hero.clientWidth, h = hero.clientHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // På smalle skærme rykkes helixen ind i midten bag teksten
-    dna.position.x = w < 760 ? 0.6 : 3.1;
+    // På smalle skærme rykkes staven ind i midten bag teksten
+    aesculap.position.x = w < 760 ? 0.6 : 3.1;
     cross.visible = w >= 760;
     camera.updateProjectionMatrix();
   }
@@ -202,8 +215,13 @@ function init(canvas) {
   function frame() {
     const t = clock.getElapsedTime();
 
-    layoutHelix(t * 0.35);
-    dna.rotation.y = t * 0.22;
+    // Staven drejer roligt om sin egen akse og "ånder" let op og ned
+    aesculap.rotation.y = t * 0.3;
+    aesculap.position.y = Math.sin(t * 0.6) * 0.18;
+    aesculap.rotation.z = -0.1 + Math.sin(t * 0.4) * 0.03;
+
+    // Slangen pulserer svagt — som et roligt åndedræt
+    snakeMat.emissiveIntensity = 0.55 + Math.sin(t * 1.6) * 0.15;
 
     cross.rotation.x = t * 0.5;
     cross.rotation.y = t * 0.35;
@@ -235,7 +253,6 @@ function init(canvas) {
 
   if (reducedMotion) {
     // Ét statisk, flot frame — ingen animation
-    layoutHelix(1.2);
     renderer.render(scene, camera);
     window.addEventListener("resize", () => { resize(); renderer.render(scene, camera); });
   } else {
