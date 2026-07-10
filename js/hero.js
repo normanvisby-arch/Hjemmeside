@@ -1,8 +1,9 @@
 /* ============================================================
-   HEDENSTED LÆGEHUS — 3D/WebGL hero
-   Animeret EKG-signal: en glødende 3D-kurve med realistiske
-   komplekser (P-tak, QRS, T-tak) der pulserer hen over skærmen
-   på klassisk millimeterpapir — i lyse, luftige farver.
+   HEDENSTED LÆGEHUS — 3D/WebGL hero til FORSIDEN
+   Stiliseret æskulapstav: gylden stav med en venlig, mintgrøn
+   slange — glatte, blanke former i lyse farver som en moderne
+   3D-illustration. Tydeligt slangehoved med store øjne og
+   spillende tunge.
    Renderet med Three.js (global THREE fra js/vendor/three.min.js).
    Falder pænt tilbage til CSS-gradienten hvis WebGL mangler,
    og respekterer "prefers-reduced-motion".
@@ -19,82 +20,41 @@ function webglAvailable() {
   }
 }
 
-if (canvas && typeof THREE !== "undefined" && webglAvailable()) {
-  init(canvas);
-}
+/* ---------- Rør-geometri med varierende radius (hale → krop → hals) ---------- */
+function taperedTube(curve, segments, radial, radiusAt) {
+  const frames = curve.computeFrenetFrames(segments, false);
+  const positions = [], normals = [], uvs = [], indices = [];
 
-/* ------------------------------------------------------------
-   EKG-kurven — én hjertecyklus, u ∈ [0;1).
-   Opbygget af gaussiske komponenter med realistisk morfologi
-   og timing (PR-interval ~0.16 s, QRS ~0.08 s, QT ~0.36 s ved
-   en cyklus på ~0.95 s):
-     P-tak   : lille, rund forkammer-depolarisering
-     Q-tak   : lille negativ udsving
-     R-tak   : høj, smal spids
-     S-tak   : negativt udsving efter R
-     T-tak   : bredere, asymmetrisk repolarisering
-   ------------------------------------------------------------ */
-function gauss(u, mu, sigma, amp) {
-  const d = u - mu;
-  return amp * Math.exp(-(d * d) / (2 * sigma * sigma));
-}
-
-function ecg(s) {
-  const u = s - Math.floor(s); // én cyklus
-  let y = 0;
-  y += gauss(u, 0.17, 0.022, 0.13);   // P
-  y += gauss(u, 0.235, 0.009, -0.10); // Q
-  y += gauss(u, 0.255, 0.011, 1.0);   // R
-  y += gauss(u, 0.278, 0.010, -0.24); // S
-  y += gauss(u, 0.30, 0.02, 0.02);    // let ST-løft op mod T
-  y += gauss(u, 0.44, 0.045, 0.30);   // T
-  y += gauss(u, 0.47, 0.025, 0.06);   // T'ens asymmetri (stejlere bagkant)
-  y += 0.012 * Math.sin(s * 2.1);     // diskret baseline-vandring
-  return y;
-}
-
-/* ---------- Millimeterpapir (klassisk lys rosa EKG-grid) ---------- */
-function makePaperTexture() {
-  const S = 200; // én stor rude = 5 små
-  const c = document.createElement("canvas");
-  c.width = S; c.height = S;
-  const g = c.getContext("2d");
-  g.clearRect(0, 0, S, S);
-  // små ruder
-  g.strokeStyle = "rgba(226, 150, 150, 0.35)";
-  g.lineWidth = 1;
-  for (let i = 0; i <= 5; i++) {
-    const p = (i * S) / 5 + 0.5;
-    g.beginPath(); g.moveTo(p, 0); g.lineTo(p, S); g.stroke();
-    g.beginPath(); g.moveTo(0, p); g.lineTo(S, p); g.stroke();
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const p = curve.getPointAt(t);
+    const N = frames.normals[i], B = frames.binormals[i];
+    const r = radiusAt(t);
+    for (let j = 0; j <= radial; j++) {
+      const ang = (j / radial) * Math.PI * 2;
+      const sin = Math.sin(ang), cos = Math.cos(ang);
+      const nx = cos * N.x + sin * B.x;
+      const ny = cos * N.y + sin * B.y;
+      const nz = cos * N.z + sin * B.z;
+      positions.push(p.x + r * nx, p.y + r * ny, p.z + r * nz);
+      normals.push(nx, ny, nz);
+      uvs.push(t, j / radial);
+    }
   }
-  // stor rude
-  g.strokeStyle = "rgba(219, 120, 120, 0.55)";
-  g.lineWidth = 1.6;
-  g.strokeRect(0.8, 0.8, S - 1.6, S - 1.6);
+  for (let i = 0; i < segments; i++) {
+    for (let j = 0; j < radial; j++) {
+      const a = i * (radial + 1) + j;
+      const b = a + radial + 1;
+      indices.push(a, a + 1, b, b, a + 1, b + 1);
+    }
+  }
 
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  return tex;
-}
-
-/* ---------- Blød glød-sprite til kurvens "hoved" ---------- */
-function makeGlowTexture() {
-  const S = 128;
-  const c = document.createElement("canvas");
-  c.width = S; c.height = S;
-  const g = c.getContext("2d");
-  const grad = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
-  grad.addColorStop(0, "rgba(53, 208, 197, 0.95)");
-  grad.addColorStop(0.35, "rgba(53, 208, 197, 0.45)");
-  grad.addColorStop(1, "rgba(53, 208, 197, 0)");
-  g.fillStyle = grad;
-  g.fillRect(0, 0, S, S);
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  geo.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+  geo.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  geo.setIndex(indices);
+  return geo;
 }
 
 function init(canvas) {
@@ -109,152 +69,183 @@ function init(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0xe9f5f0, 0.02);
+  scene.fog = new THREE.FogExp2(0xeaf5ef, 0.018);
 
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.set(0, 0.3, 11);
 
-  /* ---------- Gruppe med let 3D-tilt ---------- */
-  const ekg = new THREE.Group();
-  ekg.rotation.y = -0.14;
-  ekg.rotation.x = 0.05;
-  scene.add(ekg);
+  /* ---------- Lys — lyst og venligt, ingen tunge skygger ---------- */
+  scene.add(new THREE.HemisphereLight(0xfdfaf2, 0xd2ebdd, 1.5));
 
-  /* ---------- Papiret ---------- */
-  const paperTex = makePaperTexture();
-  const PAPER_W = 30, PAPER_H = 13;
-  const CELL = 1.25; // én stor rude i world-units
-  paperTex.repeat.set(PAPER_W / CELL, PAPER_H / CELL);
-  const paper = new THREE.Mesh(
-    new THREE.PlaneGeometry(PAPER_W, PAPER_H),
-    new THREE.MeshBasicMaterial({ map: paperTex, transparent: true, opacity: 0.5, depthWrite: false })
-  );
-  paper.position.set(0, -0.1, -0.9);
-  ekg.add(paper);
+  const keyLight = new THREE.DirectionalLight(0xfff1da, 1.9); // varm sol
+  keyLight.position.set(5, 7, 6);
+  scene.add(keyLight);
 
-  /* ---------- EKG-kurven som rør med aftagende hale ----------
-     Geometrien allokeres én gang; y-værdier, tykkelse og retning
-     opdateres på plads hver frame — ingen ny hukommelse pr. frame. */
-  const SAMPLES = 460;
-  const RADIAL = 8;
-  const X_MIN = -10.5, X_MAX = 6.1; // kurven ender i "skrivespidsen" i højre side
-  const DX = (X_MAX - X_MIN) / (SAMPLES - 1);
-  const AMP = 1.55;         // R-takkens højde i world-units
-  const BASE_Y = -0.15;     // kurvens baselinje
-  const BEATS_PER_UNIT = 1 / 3.3; // bølgelængde: én cyklus ≈ 3,3 world-units
-  const BPS = 1.05;         // ~63 slag/min
+  const fillLight = new THREE.DirectionalLight(0xbdeee2, 0.9); // frisk mint
+  fillLight.position.set(-6, -1, 4);
+  scene.add(fillLight);
 
-  const ringCos = [], ringSin = [];
-  for (let j = 0; j < RADIAL; j++) {
-    const a = (j / RADIAL) * Math.PI * 2;
-    ringCos.push(Math.cos(a));
-    ringSin.push(Math.sin(a));
+  /* ---------- Materialer — glatte og blanke, som poleret legetøj ---------- */
+  const goldMat = new THREE.MeshPhysicalMaterial({
+    color: 0xe8c27e, roughness: 0.28, metalness: 0.45,
+    clearcoat: 0.6, clearcoatRoughness: 0.25,
+  });
+  const snakeMat = new THREE.MeshPhysicalMaterial({
+    color: 0x2fc4ad, roughness: 0.3, metalness: 0.05,
+    clearcoat: 0.7, clearcoatRoughness: 0.2,
+    emissive: 0x0f6a5c, emissiveIntensity: 0.12,
+  });
+
+  /* ---------- Æskulapstaven ---------- */
+  const aesculap = new THREE.Group();
+  scene.add(aesculap);
+
+  const STAFF_H = 8.2;
+  const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.16, STAFF_H, 28), goldMat);
+  aesculap.add(staff);
+
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.32, 28, 28), goldMat);
+  knob.position.y = STAFF_H / 2 + 0.2;
+  aesculap.add(knob);
+
+  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.05, 12, 24), goldMat);
+  collar.rotation.x = Math.PI / 2;
+  collar.position.y = STAFF_H / 2 - 0.12;
+  aesculap.add(collar);
+
+  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.2, 22, 22), goldMat);
+  foot.position.y = -STAFF_H / 2;
+  aesculap.add(foot);
+
+  /* ---------- Slangen — blød spiral med fyldig krop ---------- */
+  const TURNS = 3.5;
+  const SNAKE_TOP = 2.9;
+  const SNAKE_BOTTOM = -3.4;
+  const COIL_R = 0.5;
+
+  const pts = [];
+  const N = 130;
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const angle = t * Math.PI * 2 * TURNS;
+    const r = COIL_R * (1.05 - 0.14 * t);
+    pts.push(new THREE.Vector3(
+      Math.cos(angle) * r,
+      SNAKE_BOTTOM + (SNAKE_TOP - SNAKE_BOTTOM) * t,
+      Math.sin(angle) * r
+    ));
   }
+  // Halen svinger blødt ud forneden, hovedet løfter sig frit foroven
+  pts[0].multiplyScalar(1.8).setY(SNAKE_BOTTOM - 0.3);
+  const last = pts[N];
+  pts.push(new THREE.Vector3(last.x * 1.8, SNAKE_TOP + 0.5, last.z * 1.8));
 
-  const vertCount = SAMPLES * RADIAL;
-  const positions = new Float32Array(vertCount * 3);
-  const colors = new Float32Array(vertCount * 3);
-  const indices = [];
-  for (let i = 0; i < SAMPLES - 1; i++) {
-    for (let j = 0; j < RADIAL; j++) {
-      const a = i * RADIAL + j;
-      const b = i * RADIAL + ((j + 1) % RADIAL);
-      const c2 = (i + 1) * RADIAL + j;
-      const d = (i + 1) * RADIAL + ((j + 1) % RADIAL);
-      indices.push(a, c2, b, b, c2, d);
-    }
-  }
+  const snakeCurve = new THREE.CatmullRomCurve3(pts);
 
-  // Farve: bleg mod halen (venstre), dyb teal mod hovedet (højre)
-  const tail = new THREE.Color(0xbfe3d9);
-  const headCol = new THREE.Color(0x0e7c86);
-  const tmpCol = new THREE.Color();
-  for (let i = 0; i < SAMPLES; i++) {
-    const f = Math.pow(i / (SAMPLES - 1), 1.6);
-    tmpCol.copy(tail).lerp(headCol, f);
-    for (let j = 0; j < RADIAL; j++) {
-      const o = (i * RADIAL + j) * 3;
-      colors[o] = tmpCol.r; colors[o + 1] = tmpCol.g; colors[o + 2] = tmpCol.b;
-    }
-  }
+  // Fyldig, "buttet" krop: spids hale → tyk midte → hals
+  const BODY_R = 0.21;
+  const radiusAt = (t) => {
+    const tail = Math.min(1, t / 0.25);
+    const ease = tail * tail * (3 - 2 * tail);
+    const r = 0.03 + (BODY_R - 0.03) * ease;
+    const neck = t > 0.86 ? (t - 0.86) / 0.14 : 0;
+    return r * (1 - 0.3 * neck * neck);
+  };
 
-  const traceGeo = new THREE.BufferGeometry();
-  traceGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  traceGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  traceGeo.setIndex(indices);
-  const traceMat = new THREE.MeshBasicMaterial({ vertexColors: true });
-  const trace = new THREE.Mesh(traceGeo, traceMat);
-  ekg.add(trace);
+  const snake = new THREE.Mesh(taperedTube(snakeCurve, 380, 20, radiusAt), snakeMat);
+  aesculap.add(snake);
 
-  // Radius: tynd hale → kraftigt hoved
-  function radiusAt(i) {
-    const f = i / (SAMPLES - 1);
-    return 0.014 + 0.05 * Math.pow(f, 1.5);
-  }
+  const tailTip = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 12), snakeMat);
+  tailTip.position.copy(snakeCurve.getPoint(0));
+  aesculap.add(tailTip);
 
-  const ys = new Float32Array(SAMPLES);
+  /* ---------- Hovedet — stort, venligt og tydeligt (bygget mod +Z) ---------- */
+  const headPivot = new THREE.Group();
+  const head = new THREE.Group();
+  headPivot.add(head);
 
-  function updateTrace(time) {
-    // 1) Beregn kurvens y-værdier (signalet ruller mod venstre)
-    for (let i = 0; i < SAMPLES; i++) {
-      const x = X_MIN + i * DX;
-      ys[i] = BASE_Y + AMP * ecg(x * BEATS_PER_UNIT + time * BPS);
-    }
-    // 2) Byg røret omkring kurven — retningen følger kurvens hældning,
-    //    så selv de stejle QRS-flanker får jævn tykkelse
-    for (let i = 0; i < SAMPLES; i++) {
-      const x = X_MIN + i * DX;
-      const yPrev = ys[Math.max(0, i - 1)];
-      const yNext = ys[Math.min(SAMPLES - 1, i + 1)];
-      let tx = 2 * DX, ty = yNext - yPrev;
-      const tl = Math.hypot(tx, ty);
-      tx /= tl; ty /= tl;
-      // normal i kurvens plan (peger "op" i forhold til retningen)
-      const nx = -ty, ny = tx;
-      const r = radiusAt(i);
-      for (let j = 0; j < RADIAL; j++) {
-        const o = (i * RADIAL + j) * 3;
-        positions[o] = x + r * ringCos[j] * nx;
-        positions[o + 1] = ys[i] + r * ringCos[j] * ny;
-        positions[o + 2] = r * ringSin[j]; // dybde giver rørets runding
-      }
-    }
-    traceGeo.attributes.position.needsUpdate = true;
-    traceGeo.computeBoundingSphere();
-  }
+  // Kranium: stor afrundet dråbeform
+  const skull = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 26), snakeMat);
+  skull.scale.set(1.0, 0.82, 1.35);
+  head.add(skull);
 
-  /* ---------- Glødende "hoved" + puls-lys ---------- */
-  const glowTex = makeGlowTexture();
-  const headGlow = new THREE.Sprite(new THREE.SpriteMaterial({
-    map: glowTex, transparent: true, depthWrite: false,
-    blending: THREE.AdditiveBlending, opacity: 0.9,
-  }));
-  headGlow.scale.setScalar(0.9);
-  ekg.add(headGlow);
+  // Snude: blødt afrundet, let opadvendt
+  const snout = new THREE.Mesh(new THREE.SphereGeometry(0.2, 26, 20), snakeMat);
+  snout.scale.set(0.78, 0.6, 1.1);
+  snout.position.set(0, -0.05, 0.33);
+  head.add(snout);
 
-  const headDot = new THREE.Mesh(
-    new THREE.SphereGeometry(0.075, 16, 16),
-    new THREE.MeshBasicMaterial({ color: 0x0e7c86 })
-  );
-  ekg.add(headDot);
+  // Store, venlige øjne: hvid sklera + mørk pupil + lysglimt
+  const scleraMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.25 });
+  const pupilMat = new THREE.MeshBasicMaterial({ color: 0x123033 });
+  const glintMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  [-1, 1].forEach((side) => {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.115, 22, 22), scleraMat);
+    eye.position.set(side * 0.19, 0.12, 0.22);
+    head.add(eye);
+    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.062, 16, 16), pupilMat);
+    pupil.position.set(side * 0.2, 0.12, 0.315);
+    head.add(pupil);
+    const glint = new THREE.Mesh(new THREE.SphereGeometry(0.022, 10, 10), glintMat);
+    glint.position.set(side * 0.175, 0.155, 0.36);
+    head.add(glint);
+    // blødt øjenbryn giver karakter
+    const brow = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 12), snakeMat);
+    brow.scale.set(1.1, 0.38, 0.9);
+    brow.position.set(side * 0.19, 0.235, 0.2);
+    head.add(brow);
+  });
 
-  const pulseLight = new THREE.PointLight(0x35d0c5, 4, 14, 2);
-  ekg.add(pulseLight);
+  // Næsebor
+  const nostrilMat = new THREE.MeshBasicMaterial({ color: 0x0d4b42 });
+  [-1, 1].forEach((side) => {
+    const nostril = new THREE.Mesh(new THREE.SphereGeometry(0.018, 8, 8), nostrilMat);
+    nostril.position.set(side * 0.07, -0.02, 0.51);
+    head.add(nostril);
+  });
+
+  // Kløftet koral-tunge, der spiller
+  const tongue = new THREE.Group();
+  const tongueMat = new THREE.MeshStandardMaterial({ color: 0xf2766b, roughness: 0.5 });
+  const tongueBase = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.26, 8), tongueMat);
+  tongueBase.rotation.x = Math.PI / 2;
+  tongueBase.position.z = 0.13;
+  tongue.add(tongueBase);
+  [-1, 1].forEach((side) => {
+    const fork = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.017, 0.14, 6), tongueMat);
+    fork.rotation.x = Math.PI / 2;
+    fork.rotation.z = side * 0.5;
+    fork.position.set(side * 0.033, 0, 0.3);
+    tongue.add(fork);
+  });
+  tongue.position.set(0, -0.1, 0.5);
+  tongue.scale.z = 0.001;
+  tongue.visible = false;
+  head.add(tongue);
+
+  // Placér og orientér hovedet for enden af kroppen
+  const headPos = snakeCurve.getPoint(1);
+  const headTangent = snakeCurve.getTangent(1);
+  headPivot.position.copy(headPos).addScaledVector(headTangent, 0.2);
+  headPivot.lookAt(headPivot.position.clone().addScaledVector(headTangent, 2));
+  aesculap.add(headPivot);
+
+  aesculap.position.set(3.1, 0, 0);
+  aesculap.rotation.z = -0.08;
+  aesculap.scale.setScalar(0.8); // hele symbolet, inkl. knop og hoved, i billedet
 
   /* ---------- Diskret støv i luften ---------- */
   const P_COUNT = 260;
   const pPositions = new Float32Array(P_COUNT * 3);
-  const pSeeds = new Float32Array(P_COUNT);
   for (let i = 0; i < P_COUNT; i++) {
     pPositions[i * 3] = (Math.random() - 0.5) * 26;
     pPositions[i * 3 + 1] = (Math.random() - 0.5) * 14;
     pPositions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 2;
-    pSeeds[i] = Math.random() * Math.PI * 2;
   }
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute("position", new THREE.BufferAttribute(pPositions, 3));
   const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
-    color: 0x2aa896, size: 0.04, transparent: true, opacity: 0.35,
+    color: 0x2aa896, size: 0.04, transparent: true, opacity: 0.32,
     sizeAttenuation: true, depthWrite: false,
   }));
   scene.add(particles);
@@ -271,12 +262,8 @@ function init(canvas) {
     const w = hero.clientWidth, h = hero.clientHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // På smalle skærme skaleres sceneriet ned og forskydes,
-    // så skrivespidsen forbliver synlig i højre side
-    const narrow = w < 760;
-    ekg.scale.setScalar(narrow ? 0.72 : 1);
-    ekg.position.y = narrow ? 0.6 : 0;
-    ekg.position.x = narrow ? -2.9 : 0;
+    // På smalle skærme rykkes staven ind i midten bag teksten
+    aesculap.position.x = w < 760 ? 0.6 : 3.1;
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
@@ -286,49 +273,39 @@ function init(canvas) {
   const clock = new THREE.Clock();
   let rafId = null;
 
-  // Skrivespidsen sidder for enden af kurven — signalet strømmer ud fra den
-  const HEAD_I = SAMPLES - 1;
-  const HEAD_X = X_MIN + HEAD_I * DX;
-
   function frame() {
     const t = clock.getElapsedTime();
 
-    updateTrace(t);
+    // Staven drejer roligt og "ånder" let
+    aesculap.rotation.y = t * 0.28;
+    aesculap.position.y = Math.sin(t * 0.55) * 0.16;
+    aesculap.rotation.z = -0.08 + Math.sin(t * 0.4) * 0.025;
 
-    // Hovedets position + puls ved hver R-tak
-    const headY = ys[HEAD_I];
-    headDot.position.set(HEAD_X, headY, 0.05);
-    headGlow.position.set(HEAD_X, headY, 0.1);
-    pulseLight.position.set(HEAD_X, headY, 1.2);
+    // Hovedet vejrer nysgerrigt
+    head.rotation.y = Math.sin(t * 0.6) * 0.16;
+    head.rotation.x = Math.sin(t * 0.45 + 1.2) * 0.08;
 
-    const u = HEAD_X * BEATS_PER_UNIT + t * BPS;
-    const phase = u - Math.floor(u);
-    const dR = phase - 0.255;
-    const pulse = Math.exp(-(dR * dR) / (2 * 0.03 * 0.03));
-    headGlow.scale.setScalar(0.7 + 1.4 * pulse);
-    headGlow.material.opacity = 0.55 + 0.45 * pulse;
-    pulseLight.intensity = 3 + 22 * pulse;
-
-    // Papiret ånder næsten umærkeligt i takt med pulsen
-    paper.material.opacity = 0.46 + 0.08 * pulse;
+    // Tungen spiller ud cirka hvert 4. sekund — to hurtige flik
+    const cycle = t % 4.2;
+    let ext = 0;
+    if (cycle < 0.55) ext = Math.abs(Math.sin((cycle / 0.55) * Math.PI * 2));
+    tongue.visible = ext > 0.03;
+    tongue.scale.z = Math.max(0.001, ext);
 
     particles.rotation.y = t * 0.012;
 
     // Blød mus-parallakse
     pointer.x += (pointer.tx - pointer.x) * 0.04;
     pointer.y += (pointer.ty - pointer.y) * 0.04;
-    camera.position.x = pointer.x * 0.6;
-    camera.position.y = 0.3 - pointer.y * 0.4;
-    camera.lookAt(0.4, 0, 0);
+    camera.position.x = pointer.x * 0.7;
+    camera.position.y = 0.3 - pointer.y * 0.45;
+    camera.lookAt(0.6, 0, 0);
 
     renderer.render(scene, camera);
   }
 
   if (reducedMotion) {
-    // Ét statisk, flot frame — kurven står stille med et pænt kompleks
-    updateTrace(0.35);
-    headDot.position.set(HEAD_X, ys[HEAD_I], 0.05);
-    headGlow.position.set(HEAD_X, ys[HEAD_I], 0.1);
+    // Ét statisk, flot frame — ingen animation
     renderer.render(scene, camera);
     window.addEventListener("resize", () => { resize(); renderer.render(scene, camera); });
   } else {
@@ -345,4 +322,8 @@ function init(canvas) {
     }, { threshold: 0.02 });
     io.observe(canvas.parentElement);
   }
+}
+
+if (canvas && typeof THREE !== "undefined" && webglAvailable()) {
+  init(canvas);
 }
