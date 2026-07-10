@@ -1,11 +1,10 @@
 /* ============================================================
    HEDENSTED LÆGEHUS — 3D/WebGL hero
-   DNA-helix + partikelfelt renderet med Three.js.
+   DNA-helix + partikelfelt renderet med Three.js (global THREE
+   fra js/vendor/three.min.js — virker også direkte fra disk).
    Falder pænt tilbage til CSS-gradienten hvis WebGL mangler,
    og respekterer "prefers-reduced-motion".
    ============================================================ */
-
-import * as THREE from "./vendor/three.module.min.js";
 
 const canvas = document.getElementById("hero-canvas");
 
@@ -18,7 +17,7 @@ function webglAvailable() {
   }
 }
 
-if (canvas && webglAvailable()) {
+if (canvas && typeof THREE !== "undefined" && webglAvailable()) {
   init(canvas);
 }
 
