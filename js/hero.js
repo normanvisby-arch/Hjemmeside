@@ -140,20 +140,6 @@ function init(canvas) {
   aesculap.rotation.z = -0.1;
   aesculap.scale.setScalar(0.82); // hele symbolet, inkl. knop og hoved, skal være i billedet
 
-  /* ---------- Medicinsk kryds (svæver til venstre) ---------- */
-  const cross = new THREE.Group();
-  const crossMat = new THREE.MeshStandardMaterial({
-    color: 0x9ff0e2, roughness: 0.2, metalness: 0.5,
-    emissive: 0x2ba89f, emissiveIntensity: 0.7,
-  });
-  const barGeo = new THREE.BoxGeometry(0.9, 0.3, 0.3);
-  const bar1 = new THREE.Mesh(barGeo, crossMat);
-  const bar2 = new THREE.Mesh(barGeo, crossMat);
-  bar2.rotation.z = Math.PI / 2;
-  cross.add(bar1, bar2);
-  cross.position.set(-4.6, 1.6, -2);
-  scene.add(cross);
-
   /* ---------- Partikelfelt ---------- */
   const P_COUNT = 700;
   const positions = new Float32Array(P_COUNT * 3);
@@ -202,7 +188,6 @@ function init(canvas) {
     camera.aspect = w / h;
     // På smalle skærme rykkes staven ind i midten bag teksten
     aesculap.position.x = w < 760 ? 0.6 : 3.1;
-    cross.visible = w >= 760;
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
@@ -222,10 +207,6 @@ function init(canvas) {
 
     // Slangen pulserer svagt — som et roligt åndedræt
     snakeMat.emissiveIntensity = 0.55 + Math.sin(t * 1.6) * 0.15;
-
-    cross.rotation.x = t * 0.5;
-    cross.rotation.y = t * 0.35;
-    cross.position.y = 1.6 + Math.sin(t * 0.8) * 0.3;
 
     particles.rotation.y = t * 0.02;
     const pos = pGeo.attributes.position;
