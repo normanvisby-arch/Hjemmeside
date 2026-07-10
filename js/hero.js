@@ -34,13 +34,13 @@ function init(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x062028, 0.03);
+  scene.fog = new THREE.FogExp2(0xe9f5f0, 0.03);
 
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.set(0, 0.3, 11);
 
   /* ---------- Lys — blødt og diffust, ingen hårde highlights ---------- */
-  scene.add(new THREE.AmbientLight(0x9fc9c4, 1.5));
+  scene.add(new THREE.AmbientLight(0xf2fbf7, 1.5));
 
   const keyLight = new THREE.DirectionalLight(0xfff4e8, 1.8); // varmt hovedlys
   keyLight.position.set(5, 7, 6);
@@ -54,14 +54,14 @@ function init(canvas) {
   rimLight.position.set(0, 3, -6);
   scene.add(rimLight);
 
-  const glow = new THREE.PointLight(0x35d0c5, 10, 24, 1.8);
+  const glow = new THREE.PointLight(0x35d0c5, 6, 24, 1.8);
   glow.position.set(2.5, 1, 2);
   scene.add(glow);
 
   /* ---------- Blob-fabrik ---------- */
   // Hver blob er en kugle, hvis punkter forskydes af et blødt bølgefelt,
   // så formen morfer organisk — som flydende glas.
-  function makeBlob({ color, emissive, radius, detail, opacity, seed, amp, speed, glowStrength = 0.35 }) {
+  function makeBlob({ color, emissive, radius, detail, opacity, seed, amp, speed, glowStrength = 0.15 }) {
     const geo = new THREE.SphereGeometry(radius, detail, Math.round(detail * 0.75));
     const posAttr = geo.getAttribute("position");
     // Gem de oprindelige retninger og radius pr. punkt
@@ -115,9 +115,9 @@ function init(canvas) {
     // Pudder-aqua — øverst til venstre, langt tilbage
     makeBlob({ color: 0x9fd8e8, emissive: 0x1f6a7e, radius: 1.5, detail: 56, opacity: 0.6, seed: 2.1, amp: 0.3, speed: 0.45 }),
     // Blød fersken — lille, varm kontrast nederst
-    makeBlob({ color: 0xf6dcc8, emissive: 0xc27a45, radius: 0.95, detail: 48, opacity: 0.72, seed: 4.4, amp: 0.34, speed: 0.7, glowStrength: 0.75 }),
+    makeBlob({ color: 0xf6dcc8, emissive: 0xc27a45, radius: 0.95, detail: 48, opacity: 0.72, seed: 4.4, amp: 0.34, speed: 0.7, glowStrength: 0.35 }),
     // Sart lavendel — lille, øverst til højre
-    makeBlob({ color: 0xd6c9f2, emissive: 0x7d63c9, radius: 0.8, detail: 48, opacity: 0.68, seed: 6.2, amp: 0.32, speed: 0.6, glowStrength: 0.65 }),
+    makeBlob({ color: 0xd6c9f2, emissive: 0x7d63c9, radius: 0.8, detail: 48, opacity: 0.68, seed: 6.2, amp: 0.32, speed: 0.6, glowStrength: 0.3 }),
     // Havskum — mellemstor, bagved teksten til venstre
     makeBlob({ color: 0x8fe3cf, emissive: 0x1e7a68, radius: 1.25, detail: 56, opacity: 0.5, seed: 8.7, amp: 0.28, speed: 0.5 }),
   ];
@@ -148,9 +148,8 @@ function init(canvas) {
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   const pMat = new THREE.PointsMaterial({
-    color: 0xbfeee2, size: 0.045, transparent: true, opacity: 0.5,
+    color: 0x2aa896, size: 0.045, transparent: true, opacity: 0.4,
     sizeAttenuation: true, depthWrite: false,
-    blending: THREE.AdditiveBlending,
   });
   const particles = new THREE.Points(pGeo, pMat);
   scene.add(particles);
