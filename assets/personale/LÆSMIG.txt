@@ -1,0 +1,24 @@
+PERSONALEFOTOS
+==============
+
+Læg portrætfotos i denne mappe, så vises de automatisk på personalesiden.
+Mangler et foto, vises personens initialer i stedet — intet går i stykker.
+
+Filnavne (skal ramme præcist, små bogstaver, .jpg):
+
+  Læger:
+    tine-friis-andersen.jpg
+    troels-arent-olesen.jpg
+    norman-visby.jpg
+    jette-mikkelsen.jpg
+    anne-silkjaer-moeller.jpg
+    alena-litskalava-jensen.jpg
+    maiken-moeller-aasted.jpg
+
+  Sygeplejersker:
+    dorte-ligaard.jpg
+    lone-rothausen.jpg
+    susanne-harrild-moeller.jpg
+
+Anbefaling: kvadratiske billeder, mindst 400 x 400 px. Billederne
+beskæres automatisk til en cirkel og skaleres, så alle størrelser virker.

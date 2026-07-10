@@ -42,9 +42,17 @@ Siden er 100 % statisk — der kræves ingen database, PHP eller build-trin:
   øverst i hver side — eller slet den helt.
 - **Farver:** justér CSS-variablerne øverst i `css/style.css`.
 
+## Personalefotos
+
+Personalesiden er forberedt til fotos: Læg portrætter i `assets/personale/`
+med de filnavne, der står i `assets/personale/LÆSMIG.txt` (fx
+`norman-visby.jpg`) — så vises de automatisk. Mangler et foto, vises
+personens initialer i stedet. Kvadratiske billeder på mindst 400 × 400 px
+anbefales; de beskæres automatisk til cirkler.
+
 ## Inden lancering — tjekliste
 
 - [ ] Verificér telefontider, åbningstider og personale­liste mod klinikkens aktuelle oplysninger.
-- [ ] Tilføj evt. rigtige personalefotos (erstat initial-avatarerne i `personale.html`).
+- [ ] Læg personalefotos i `assets/personale/` (se ovenfor).
 - [ ] Bekræft, at »lukket for tilgang af nye patienter« stadig er gældende.
 - [ ] Peg selvbetjeningsknappen på jeres foretrukne patientportal, hvis den er en anden end Min Læge (`minlaege.dk`).
