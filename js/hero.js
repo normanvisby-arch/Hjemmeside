@@ -87,13 +87,13 @@ function init(canvas) {
 
   /* ---------- Materialer — glatte og blanke, som poleret legetøj ---------- */
   const goldMat = new THREE.MeshPhysicalMaterial({
-    color: 0xe8c27e, roughness: 0.28, metalness: 0.45,
+    color: 0xf2d9a4, roughness: 0.3, metalness: 0.35, // lys champagne
     clearcoat: 0.6, clearcoatRoughness: 0.25,
   });
   const snakeMat = new THREE.MeshPhysicalMaterial({
-    color: 0x2fc4ad, roughness: 0.3, metalness: 0.05,
+    color: 0x66dfc9, roughness: 0.32, metalness: 0.02, // lys, frisk mint
     clearcoat: 0.7, clearcoatRoughness: 0.2,
-    emissive: 0x0f6a5c, emissiveIntensity: 0.12,
+    emissive: 0x2a8f7f, emissiveIntensity: 0.08,
   });
 
   /* ---------- Æskulapstaven ---------- */
@@ -125,9 +125,11 @@ function init(canvas) {
 
   const pts = [];
   const N = 130;
+  // Faseforskydning så spiralen ender fortil (mod kameraet)
+  const PHASE = Math.PI / 2 - Math.PI * 2 * TURNS;
   for (let i = 0; i <= N; i++) {
     const t = i / N;
-    const angle = t * Math.PI * 2 * TURNS;
+    const angle = t * Math.PI * 2 * TURNS + PHASE;
     const r = COIL_R * (1.05 - 0.14 * t);
     pts.push(new THREE.Vector3(
       Math.cos(angle) * r,
@@ -135,10 +137,11 @@ function init(canvas) {
       Math.sin(angle) * r
     ));
   }
-  // Halen svinger blødt ud forneden, hovedet løfter sig frit foroven
+  // Halen svinger blødt ud forneden; hovedet løfter sig frit foroven
+  // og læner sig frem mod beskueren
   pts[0].multiplyScalar(1.8).setY(SNAKE_BOTTOM - 0.3);
   const last = pts[N];
-  pts.push(new THREE.Vector3(last.x * 1.8, SNAKE_TOP + 0.5, last.z * 1.8));
+  pts.push(new THREE.Vector3(last.x * 1.5, SNAKE_TOP + 0.55, last.z * 1.5 + 0.55));
 
   const snakeCurve = new THREE.CatmullRomCurve3(pts);
 
@@ -168,6 +171,7 @@ function init(canvas) {
   const skull = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 26), snakeMat);
   skull.scale.set(1.0, 0.82, 1.35);
   head.add(skull);
+  head.scale.setScalar(1.35); // markant, tydeligt hoved
 
   // Snude: blødt afrundet, let opadvendt
   const snout = new THREE.Mesh(new THREE.SphereGeometry(0.2, 26, 20), snakeMat);
@@ -177,7 +181,7 @@ function init(canvas) {
 
   // Store, venlige øjne: hvid sklera + mørk pupil + lysglimt
   const scleraMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.25 });
-  const pupilMat = new THREE.MeshBasicMaterial({ color: 0x123033 });
+  const pupilMat = new THREE.MeshBasicMaterial({ color: 0x143a3d });
   const glintMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   [-1, 1].forEach((side) => {
     const eye = new THREE.Mesh(new THREE.SphereGeometry(0.115, 22, 22), scleraMat);
@@ -223,11 +227,16 @@ function init(canvas) {
   tongue.visible = false;
   head.add(tongue);
 
-  // Placér og orientér hovedet for enden af kroppen
+  // Placér hovedet for enden af kroppen og lad det kigge frem
+  // mod beskueren med et lille løft
   const headPos = snakeCurve.getPoint(1);
   const headTangent = snakeCurve.getTangent(1);
-  headPivot.position.copy(headPos).addScaledVector(headTangent, 0.2);
-  headPivot.lookAt(headPivot.position.clone().addScaledVector(headTangent, 2));
+  headPivot.position.copy(headPos).addScaledVector(headTangent, 0.22);
+  headPivot.lookAt(new THREE.Vector3(
+    headPivot.position.x * 1.4,
+    headPivot.position.y + 0.35,
+    headPivot.position.z + 6
+  ));
   aesculap.add(headPivot);
 
   aesculap.position.set(3.1, 0, 0);
@@ -276,8 +285,9 @@ function init(canvas) {
   function frame() {
     const t = clock.getElapsedTime();
 
-    // Staven drejer roligt og "ånder" let
-    aesculap.rotation.y = t * 0.28;
+    // Staven svajer blidt fra side til side — hovedet beholder
+    // øjenkontakten med beskueren
+    aesculap.rotation.y = Math.sin(t * 0.32) * 0.38;
     aesculap.position.y = Math.sin(t * 0.55) * 0.16;
     aesculap.rotation.z = -0.08 + Math.sin(t * 0.4) * 0.025;
 
