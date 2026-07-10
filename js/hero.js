@@ -1,8 +1,8 @@
 /* ============================================================
    HEDENSTED LÆGEHUS — 3D/WebGL hero
-   Æskulapstav (slangen om staven) + partikelfelt renderet med
-   Three.js (global THREE fra js/vendor/three.min.js — virker
-   også direkte fra disk).
+   "Ambient blobs": bløde, morfende, glasagtige organiske former
+   i pastel — et roligt, omsorgsfuldt udtryk.
+   Renderet med Three.js (global THREE fra js/vendor/three.min.js).
    Falder pænt tilbage til CSS-gradienten hvis WebGL mangler,
    og respekterer "prefers-reduced-motion".
    ============================================================ */
@@ -34,114 +34,109 @@ function init(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x062028, 0.055);
+  scene.fog = new THREE.FogExp2(0x062028, 0.03);
 
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-  camera.position.set(0, 0.4, 11);
+  camera.position.set(0, 0.3, 11);
 
-  /* ---------- Lys ---------- */
-  scene.add(new THREE.AmbientLight(0x2a6b70, 1.4));
+  /* ---------- Lys — blødt og diffust, ingen hårde highlights ---------- */
+  scene.add(new THREE.AmbientLight(0x9fc9c4, 1.5));
 
-  const keyLight = new THREE.DirectionalLight(0x9ff0e2, 2.2);
-  keyLight.position.set(4, 6, 6);
+  const keyLight = new THREE.DirectionalLight(0xfff4e8, 1.8); // varmt hovedlys
+  keyLight.position.set(5, 7, 6);
   scene.add(keyLight);
 
-  const rimLight = new THREE.DirectionalLight(0x0e7c86, 1.6);
-  rimLight.position.set(-6, -3, -4);
+  const fillLight = new THREE.DirectionalLight(0x8ceade, 1.1); // kølig mint fra venstre
+  fillLight.position.set(-6, -2, 4);
+  scene.add(fillLight);
+
+  const rimLight = new THREE.DirectionalLight(0x35d0c5, 1.2); // kant-lys bagfra
+  rimLight.position.set(0, 3, -6);
   scene.add(rimLight);
 
-  const glow = new THREE.PointLight(0x35d0c5, 14, 22, 1.8);
+  const glow = new THREE.PointLight(0x35d0c5, 10, 24, 1.8);
   glow.position.set(2.5, 1, 2);
   scene.add(glow);
 
-  /* ---------- Æskulapstav ---------- */
-  const aesculap = new THREE.Group();
-  scene.add(aesculap);
+  /* ---------- Blob-fabrik ---------- */
+  // Hver blob er en kugle, hvis punkter forskydes af et blødt bølgefelt,
+  // så formen morfer organisk — som flydende glas.
+  function makeBlob({ color, emissive, radius, detail, opacity, seed, amp, speed, glowStrength = 0.35 }) {
+    const geo = new THREE.SphereGeometry(radius, detail, Math.round(detail * 0.75));
+    const posAttr = geo.getAttribute("position");
+    // Gem de oprindelige retninger og radius pr. punkt
+    const base = new Float32Array(posAttr.array);
 
-  const staffMat = new THREE.MeshStandardMaterial({
-    color: 0xe8f6f1, roughness: 0.3, metalness: 0.55,
-    emissive: 0x1a6a70, emissiveIntensity: 0.25,
-  });
-  const snakeMat = new THREE.MeshStandardMaterial({
-    color: 0x35d0c5, roughness: 0.35, metalness: 0.3,
-    emissive: 0x0b5f58, emissiveIntensity: 0.55,
-  });
+    const mat = new THREE.MeshPhysicalMaterial({
+      color,
+      emissive,
+      emissiveIntensity: glowStrength,
+      roughness: 0.16,
+      metalness: 0,
+      clearcoat: 1,
+      clearcoatRoughness: 0.12,
+      transparent: true,
+      opacity,
+      side: THREE.FrontSide,
+      depthWrite: false, // pænere overlap mellem gennemsigtige former
+    });
 
-  // Staven — let konisk med knop i toppen
-  const STAFF_H = 8.2;
-  const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, STAFF_H, 24), staffMat);
-  aesculap.add(staff);
-
-  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 24), staffMat);
-  knob.position.y = STAFF_H / 2 + 0.18;
-  aesculap.add(knob);
-
-  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.19, 20, 20), staffMat);
-  foot.position.y = -STAFF_H / 2;
-  aesculap.add(foot);
-
-  // Slangen — en jævn spiral omkring staven, tegnet som et rør
-  const TURNS = 4;
-  const SNAKE_TOP = 3.1;
-  const SNAKE_BOTTOM = -3.5;
-  const COIL_R = 0.46;
-
-  const pts = [];
-  const N = 140;
-  for (let i = 0; i <= N; i++) {
-    const t = i / N;
-    const angle = t * Math.PI * 2 * TURNS;
-    // Spiralen strammer let til opad — som på det klassiske symbol
-    const r = COIL_R * (1.06 - 0.18 * t);
-    pts.push(new THREE.Vector3(
-      Math.cos(angle) * r,
-      SNAKE_BOTTOM + (SNAKE_TOP - SNAKE_BOTTOM) * t,
-      Math.sin(angle) * r
-    ));
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.userData = { base, seed, amp, speed, radius };
+    return mesh;
   }
-  // Halen svinger ud forneden, hovedet løfter sig fri af staven foroven
-  pts[0].multiplyScalar(1.9).setY(SNAKE_BOTTOM - 0.25);
-  const last = pts[N];
-  pts.push(new THREE.Vector3(last.x * 1.7, SNAKE_TOP + 0.45, last.z * 1.7));
 
-  const snakeCurve = new THREE.CatmullRomCurve3(pts);
-  const snake = new THREE.Mesh(new THREE.TubeGeometry(snakeCurve, 320, 0.15, 14), snakeMat);
-  aesculap.add(snake);
+  // Det bløde bølgefelt, der former blobberne
+  function morph(mesh, t) {
+    const { base, seed, amp, speed } = mesh.userData;
+    const posAttr = mesh.geometry.getAttribute("position");
+    const arr = posAttr.array;
+    const tt = t * speed + seed;
+    for (let i = 0; i < arr.length; i += 3) {
+      const x = base[i], y = base[i + 1], z = base[i + 2];
+      const n =
+        Math.sin(x * 1.6 + tt * 0.9) +
+        Math.sin(y * 2.1 - tt * 0.7 + seed) +
+        Math.sin(z * 1.8 + tt * 0.8) +
+        Math.sin((x + y + z) * 1.2 - tt * 0.5);
+      const f = 1 + amp * (n / 4);
+      arr[i] = x * f;
+      arr[i + 1] = y * f;
+      arr[i + 2] = z * f;
+    }
+    posAttr.needsUpdate = true;
+    mesh.geometry.computeVertexNormals();
+  }
 
-  // Hale-spids og hoved
-  const tailTip = new THREE.Mesh(new THREE.SphereGeometry(0.15, 14, 14), snakeMat);
-  tailTip.position.copy(snakeCurve.getPoint(0));
-  aesculap.add(tailTip);
+  /* ---------- Blobberne — pastel, spredt over scenen ---------- */
+  const blobs = [
+    // Hovedblob — stor, mint, til højre for teksten
+    makeBlob({ color: 0xaee9d8, emissive: 0x2e8a7a, radius: 2.1, detail: 72, opacity: 0.75, seed: 0.0, amp: 0.24, speed: 0.55 }),
+    // Pudder-aqua — øverst til venstre, langt tilbage
+    makeBlob({ color: 0x9fd8e8, emissive: 0x1f6a7e, radius: 1.5, detail: 56, opacity: 0.6, seed: 2.1, amp: 0.3, speed: 0.45 }),
+    // Blød fersken — lille, varm kontrast nederst
+    makeBlob({ color: 0xf6dcc8, emissive: 0xc27a45, radius: 0.95, detail: 48, opacity: 0.72, seed: 4.4, amp: 0.34, speed: 0.7, glowStrength: 0.75 }),
+    // Sart lavendel — lille, øverst til højre
+    makeBlob({ color: 0xd6c9f2, emissive: 0x7d63c9, radius: 0.8, detail: 48, opacity: 0.68, seed: 6.2, amp: 0.32, speed: 0.6, glowStrength: 0.65 }),
+    // Havskum — mellemstor, bagved teksten til venstre
+    makeBlob({ color: 0x8fe3cf, emissive: 0x1e7a68, radius: 1.25, detail: 56, opacity: 0.5, seed: 8.7, amp: 0.28, speed: 0.5 }),
+  ];
 
-  const headPos = snakeCurve.getPoint(1);
-  const headTangent = snakeCurve.getTangent(1);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 20), snakeMat);
-  head.scale.set(1.55, 1.05, 1.15);
-  head.position.copy(headPos).addScaledVector(headTangent, 0.18);
-  head.lookAt(headPos.clone().addScaledVector(headTangent, 2));
-  aesculap.add(head);
-
-  const eyeMat = new THREE.MeshStandardMaterial({
-    color: 0x062028, roughness: 0.2, metalness: 0.1,
-    emissive: 0x9ff0e2, emissiveIntensity: 0.6,
+  // Ankerpositioner (drift sker omkring dem)
+  const anchors = [
+    new THREE.Vector3(3.4, 0.2, -0.5),
+    new THREE.Vector3(-4.4, 2.2, -3.5),
+    new THREE.Vector3(1.1, -2.6, -1.5),
+    new THREE.Vector3(5.6, 2.8, -2.5),
+    new THREE.Vector3(-2.6, -0.8, -4.5),
+  ];
+  blobs.forEach((b, i) => {
+    b.position.copy(anchors[i]);
+    scene.add(b);
   });
-  [-1, 1].forEach((side) => {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 10), eyeMat);
-    eye.position.copy(head.position);
-    eye.position.y += 0.09;
-    // Placér øjnene på hver side af hovedet, vinkelret på kigge-retningen
-    const sideDir = new THREE.Vector3().crossVectors(headTangent, new THREE.Vector3(0, 1, 0)).normalize();
-    eye.position.addScaledVector(sideDir, side * 0.13);
-    eye.position.addScaledVector(headTangent, 0.16);
-    aesculap.add(eye);
-  });
 
-  aesculap.position.set(3.1, 0, 0);
-  aesculap.rotation.z = -0.1;
-  aesculap.scale.setScalar(0.82); // hele symbolet, inkl. knop og hoved, skal være i billedet
-
-  /* ---------- Partikelfelt ---------- */
-  const P_COUNT = 700;
+  /* ---------- Partikelfelt — stille "støv" ---------- */
+  const P_COUNT = 450;
   const positions = new Float32Array(P_COUNT * 3);
   const seeds = new Float32Array(P_COUNT);
   for (let i = 0; i < P_COUNT; i++) {
@@ -153,26 +148,12 @@ function init(canvas) {
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   const pMat = new THREE.PointsMaterial({
-    color: 0x8ceade, size: 0.05, transparent: true, opacity: 0.65,
+    color: 0xbfeee2, size: 0.045, transparent: true, opacity: 0.5,
     sizeAttenuation: true, depthWrite: false,
     blending: THREE.AdditiveBlending,
   });
   const particles = new THREE.Points(pGeo, pMat);
   scene.add(particles);
-
-  /* ---------- Store bløde "celler" i baggrunden ---------- */
-  const cellMat = new THREE.MeshStandardMaterial({
-    color: 0x0e7c86, roughness: 0.9, metalness: 0,
-    transparent: true, opacity: 0.16,
-  });
-  const cells = [];
-  for (let i = 0; i < 5; i++) {
-    const cell = new THREE.Mesh(new THREE.SphereGeometry(0.7 + Math.random() * 0.9, 24, 24), cellMat);
-    cell.position.set((Math.random() - 0.5) * 18, (Math.random() - 0.5) * 9, -5 - Math.random() * 5);
-    cell.userData.seed = Math.random() * Math.PI * 2;
-    cells.push(cell);
-    scene.add(cell);
-  }
 
   /* ---------- Interaktion ---------- */
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -186,8 +167,11 @@ function init(canvas) {
     const w = hero.clientWidth, h = hero.clientHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // På smalle skærme rykkes staven ind i midten bag teksten
-    aesculap.position.x = w < 760 ? 0.6 : 3.1;
+    // På smalle skærme samles blobberne mere omkring midten, bag teksten
+    const narrow = w < 760;
+    blobs.forEach((b, i) => {
+      b.position.x = narrow ? anchors[i].x * 0.45 : anchors[i].x;
+    });
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
@@ -200,33 +184,31 @@ function init(canvas) {
   function frame() {
     const t = clock.getElapsedTime();
 
-    // Staven drejer roligt om sin egen akse og "ånder" let op og ned
-    aesculap.rotation.y = t * 0.3;
-    aesculap.position.y = Math.sin(t * 0.6) * 0.18;
-    aesculap.rotation.z = -0.1 + Math.sin(t * 0.4) * 0.03;
+    // Morf og lad blobberne drive roligt omkring deres anker
+    blobs.forEach((b, i) => {
+      morph(b, t);
+      const s = b.userData.seed;
+      b.position.y = anchors[i].y + Math.sin(t * 0.25 + s) * 0.45;
+      const narrowX = b.position.x; // x styres af resize — driften lægges oveni via rotation
+      b.rotation.y = t * 0.06 * (i % 2 ? 1 : -1) + s;
+      b.rotation.z = Math.sin(t * 0.15 + s) * 0.15;
+      void narrowX;
+    });
 
-    // Slangen pulserer svagt — som et roligt åndedræt
-    snakeMat.emissiveIntensity = 0.55 + Math.sin(t * 1.6) * 0.15;
-
-    particles.rotation.y = t * 0.02;
+    particles.rotation.y = t * 0.015;
     const pos = pGeo.attributes.position;
     for (let i = 0; i < P_COUNT; i += 3) { // opdater en tredjedel pr. frame — billigt og organisk
-      pos.array[i * 3 + 1] += Math.sin(t * 0.6 + seeds[i]) * 0.0025;
+      pos.array[i * 3 + 1] += Math.sin(t * 0.5 + seeds[i]) * 0.002;
     }
     pos.needsUpdate = true;
 
-    cells.forEach((c, i) => {
-      c.position.y += Math.sin(t * 0.3 + c.userData.seed) * 0.003;
-      c.rotation.y = t * 0.05 * (i % 2 ? 1 : -1);
-    });
-
-    glow.intensity = 12 + Math.sin(t * 1.4) * 3;
+    glow.intensity = 9 + Math.sin(t * 0.9) * 2.5;
 
     // Blød mus-parallakse
     pointer.x += (pointer.tx - pointer.x) * 0.04;
     pointer.y += (pointer.ty - pointer.y) * 0.04;
     camera.position.x = pointer.x * 0.7;
-    camera.position.y = 0.4 - pointer.y * 0.45;
+    camera.position.y = 0.3 - pointer.y * 0.45;
     camera.lookAt(0.6, 0, 0);
 
     renderer.render(scene, camera);
@@ -234,6 +216,7 @@ function init(canvas) {
 
   if (reducedMotion) {
     // Ét statisk, flot frame — ingen animation
+    blobs.forEach((b) => morph(b, 1.7));
     renderer.render(scene, camera);
     window.addEventListener("resize", () => { resize(); renderer.render(scene, camera); });
   } else {
