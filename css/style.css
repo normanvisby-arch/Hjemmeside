@@ -168,6 +168,34 @@ h1, h2, h3, h4 {
     linear-gradient(168deg, #fbfdfd 0%, #eef8f4 46%, #e4f3ed 100%);
 }
 .hero.hero-sub { min-height: 44vh; align-items: flex-end; padding-bottom: 56px; }
+
+/* Mørk, cinematisk hero-variant — resten af siden forbliver lys */
+.hero.hero-deep {
+  color: #fff;
+  background:
+    radial-gradient(1100px 600px at 78% 18%, rgba(210, 60, 50, 0.18), transparent 60%),
+    radial-gradient(900px 700px at 12% 85%, rgba(53, 208, 197, 0.14), transparent 55%),
+    linear-gradient(168deg, #051d24 0%, #072a33 46%, #0a323b 100%);
+}
+.hero.hero-deep::after {
+  background: linear-gradient(180deg, rgba(4,26,33,0.3) 0%, transparent 28%, transparent 58%, rgba(244,250,249,1) 100%);
+}
+.hero.hero-deep h1 { color: #fff; }
+.hero.hero-deep h1 .accent {
+  background: linear-gradient(92deg, var(--mint), #9ff0e2);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero.hero-deep p.lede { color: #c6dedd; }
+.hero.hero-deep .eyebrow { color: var(--mint-soft); }
+.hero.hero-deep .eyebrow::before { background: var(--mint); }
+.hero.hero-deep .btn-ghost {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-color: rgba(255,255,255,0.28);
+}
+.hero.hero-deep .btn-ghost:hover { background: rgba(255,255,255,0.16); }
+.hero.hero-deep .scroll-hint { color: rgba(255,255,255,0.55); }
+.hero.hero-deep .scroll-hint::after { background: linear-gradient(180deg, var(--mint), transparent); }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
 
 #hero-canvas {

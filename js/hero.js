@@ -1,9 +1,10 @@
 /* ============================================================
    HEDENSTED LÆGEHUS — 3D/WebGL hero til FORSIDEN
-   Stiliseret stetoskop: to buede metal-ørebøjler samles i en
-   blød, mintgrøn slange, der løber i et elegant S ned til
-   bryststykket, hvis membran "banker" roligt som et hjerteslag.
-   Lyse, venlige farver — champagne-metal og frisk mint.
+   En stor, halvgennemsigtig arterie løber hen over skærmen, og
+   indeni strømmer røde blodlegemer (bikonkave skiver), enkelte
+   hvide blodlegemer og små blodplader fra venstre mod højre.
+   Flowet er pulserende i hvilepuls-takt — som rigtigt arterielt
+   blod. Lyse, venlige farver.
    Renderet med Three.js (global THREE fra js/vendor/three.min.js).
    Falder pænt tilbage til CSS-gradienten hvis WebGL mangler,
    og respekterer "prefers-reduced-motion".
@@ -22,6 +23,8 @@ function webglAvailable() {
 
 function init(canvas) {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Mørk, cinematisk variant når hero-sektionen har klassen "hero-deep"
+  const DARK = canvas.parentElement.classList.contains("hero-deep");
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -32,141 +35,162 @@ function init(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0xeaf5ef, 0.018);
+  scene.fog = new THREE.FogExp2(DARK ? 0x072a33 : 0xeaf5ef, DARK ? 0.028 : 0.016);
 
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.set(0, 0.3, 11);
 
-  /* ---------- Lys — lyst og venligt ---------- */
-  scene.add(new THREE.HemisphereLight(0xfdfaf2, 0xd2ebdd, 1.5));
-
-  const keyLight = new THREE.DirectionalLight(0xfff1da, 1.9);
-  keyLight.position.set(5, 7, 6);
-  scene.add(keyLight);
-
-  const fillLight = new THREE.DirectionalLight(0xbdeee2, 0.9);
-  fillLight.position.set(-6, -1, 4);
-  scene.add(fillLight);
-
-  /* ---------- Materialer ---------- */
-  const metalMat = new THREE.MeshPhysicalMaterial({
-    color: 0xdde3e6, roughness: 0.22, metalness: 0.7, // børstet sølv
-    clearcoat: 0.7, clearcoatRoughness: 0.2,
-  });
-  const tubeMat = new THREE.MeshPhysicalMaterial({
-    color: 0x66dfc9, roughness: 0.35, metalness: 0.02, // lys, frisk mint
-    clearcoat: 0.65, clearcoatRoughness: 0.25,
-    emissive: 0x2a8f7f, emissiveIntensity: 0.07,
-  });
-  const oliveMat = new THREE.MeshPhysicalMaterial({
-    color: 0x35b3a0, roughness: 0.45, metalness: 0, // dybere mint til øreoliven
-    clearcoat: 0.4, clearcoatRoughness: 0.35,
-  });
-  const membraneMat = new THREE.MeshPhysicalMaterial({
-    color: 0xfbfaf5, roughness: 0.35, metalness: 0.05,
-    emissive: 0x35d0c5, emissiveIntensity: 0.0, // pulserer i render-løkken
-  });
-
-  /* ---------- Stetoskopet ---------- */
-  const steto = new THREE.Group();
-  scene.add(steto);
-
-  // -- Ørebøjler i metal: klassisk lyre-form, samles i Y'et --
-  const Y_POINT = new THREE.Vector3(0, 1.3, 0.05);
-
-  function earTube(side) {
-    const pts = [
-      new THREE.Vector3(side * 0.72, 3.25, 0),
-      new THREE.Vector3(side * 0.84, 2.8, 0.06),
-      new THREE.Vector3(side * 0.62, 2.1, 0.1),
-      new THREE.Vector3(side * 0.22, 1.55, 0.08),
-      Y_POINT.clone(),
-    ];
-    const curve = new THREE.CatmullRomCurve3(pts);
-    curve.curveType = "centripetal";
-    return curve;
+  /* ---------- Lys ---------- */
+  if (DARK) {
+    // Dybt, indre "kropslys": dæmpet ambient, varmt bagfra-skær og køligt kant-lys
+    scene.add(new THREE.HemisphereLight(0x6a8d90, 0x24151a, 1.0));
+    const keyLight = new THREE.DirectionalLight(0xffd9c2, 2.4);
+    keyLight.position.set(5, 6, 5);
+    scene.add(keyLight);
+    const rimLight = new THREE.DirectionalLight(0x35d0c5, 1.1);
+    rimLight.position.set(-6, -2, -4);
+    scene.add(rimLight);
+    const bloodGlow = new THREE.PointLight(0xff6a55, 9, 20, 1.9);
+    bloodGlow.position.set(1.5, 0.6, 1.5);
+    scene.add(bloodGlow);
+  } else {
+    scene.add(new THREE.HemisphereLight(0xfdfaf2, 0xd2ebdd, 1.5));
+    const keyLight = new THREE.DirectionalLight(0xfff1da, 1.9);
+    keyLight.position.set(5, 7, 6);
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0xbdeee2, 0.9);
+    fillLight.position.set(-6, -1, 4);
+    scene.add(fillLight);
   }
 
-  [-1, 1].forEach((side) => {
-    const curve = earTube(side);
-    const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.055, 14), metalMat);
-    steto.add(tube);
+  /* ---------- Arteriens forløb — blød S-kurve fra venstre mod højre ---------- */
+  const arteryCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-17, -0.4, -2.6),
+    new THREE.Vector3(-10, 0.5, -2.0),
+    new THREE.Vector3(-3.5, -0.3, -1.4),
+    new THREE.Vector3(2.5, 0.7, -0.9),
+    new THREE.Vector3(9.5, 0.1, -0.4),
+    new THREE.Vector3(16, 0.8, 0),
+  ]);
+  arteryCurve.curveType = "centripetal";
 
-    // Øreoliven: blød, afrundet dråbe, vinklet ind mod øret
-    const olive = new THREE.Mesh(new THREE.SphereGeometry(0.13, 18, 16), oliveMat);
-    olive.scale.set(1, 1.25, 1);
-    olive.position.set(side * 0.7, 3.38, 0);
-    olive.rotation.z = -side * 0.35;
-    steto.add(olive);
+  const ARTERY_R = 1.5;
+
+  /* ---------- Karvæggen — halvgennemsigtig, varm rosa ---------- */
+  const wallMat = new THREE.MeshPhysicalMaterial({
+    color: DARK ? 0xb45a52 : 0xf2ac9f, roughness: 0.4, metalness: 0,
+    transparent: true, opacity: DARK ? 0.24 : 0.3,
+    clearcoat: 0.6, clearcoatRoughness: 0.35,
+    side: THREE.DoubleSide, depthWrite: false,
+    emissive: DARK ? 0x5c1f1a : 0x000000,
+    emissiveIntensity: DARK ? 0.35 : 0,
+  });
+  const wall = new THREE.Mesh(new THREE.TubeGeometry(arteryCurve, 160, ARTERY_R, 28), wallMat);
+  wall.renderOrder = 2; // tegnes efter cellerne, så de ses gennem væggen
+  scene.add(wall);
+
+  // Diskret indervæg giver karret dybde
+  const innerMat = new THREE.MeshBasicMaterial({
+    color: DARK ? 0x8e3a32 : 0xe89a8e, transparent: true, opacity: 0.12,
+    side: THREE.BackSide, depthWrite: false,
+  });
+  const inner = new THREE.Mesh(new THREE.TubeGeometry(arteryCurve, 160, ARTERY_R * 0.97, 28), innerMat);
+  inner.renderOrder = 2;
+  scene.add(inner);
+
+  /* ---------- Rødt blodlegeme: bikonkav skive (lathe-profil) ---------- */
+  const rbcProfile = [
+    [0.03, 0.05], [0.14, 0.06], [0.27, 0.1], [0.40, 0.13],
+    [0.49, 0.1], [0.52, 0.0], [0.49, -0.1], [0.40, -0.13],
+    [0.27, -0.1], [0.14, -0.06], [0.03, -0.05],
+  ].map(([x, y]) => new THREE.Vector2(x, y));
+  const rbcGeo = new THREE.LatheGeometry(rbcProfile, 26);
+  rbcGeo.computeVertexNormals();
+
+  const rbcMat = new THREE.MeshPhysicalMaterial({
+    color: DARK ? 0xe0524a : 0xd6453d, roughness: 0.42, metalness: 0,
+    clearcoat: 0.5, clearcoatRoughness: 0.4,
+    // I mørket gløder cellerne indefra
+    emissive: DARK ? 0x9c221c : 0x7a1613, emissiveIntensity: DARK ? 0.55 : 0.18,
   });
 
-  // Lille fjederbøjle mellem de to metalrør
-  const springCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-0.52, 2.25, 0.12),
-    new THREE.Vector3(0, 2.05, 0.16),
-    new THREE.Vector3(0.52, 2.25, 0.12),
-  ]);
-  const spring = new THREE.Mesh(new THREE.TubeGeometry(springCurve, 32, 0.028, 10), metalMat);
-  steto.add(spring);
+  /* ---------- Cellerne — instanser med individuel bane ---------- */
+  const up = new THREE.Vector3(0, 1, 0);
+  const dummy = new THREE.Object3D();
+  const tmpN = new THREE.Vector3(), tmpB = new THREE.Vector3();
 
-  // -- Y-muffe hvor metal møder gummislangen --
-  const yoke = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.34, 16), metalMat);
-  yoke.position.copy(Y_POINT);
-  steto.add(yoke);
+  function makeFlock(count, radMax, speedLo, speedHi, scaleLo, scaleHi) {
+    const items = [];
+    for (let i = 0; i < count; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      items.push({
+        s: Math.random(),
+        ang,
+        rad: Math.sqrt(Math.random()) * radMax, // jævn fordeling i tværsnittet
+        speed: speedLo + Math.random() * (speedHi - speedLo),
+        scale: scaleLo + Math.random() * (scaleHi - scaleLo),
+        rx: Math.random() * Math.PI * 2,
+        rz: Math.random() * Math.PI * 2,
+        spin: 0.4 + Math.random() * 1.2,
+      });
+    }
+    return items;
+  }
 
-  // -- Gummislangen: elegant S-forløb ned til bryststykket --
-  const CHEST = new THREE.Vector3(-0.55, -2.85, 0.2); // hvor slangen ender
-  const tubePts = [
-    Y_POINT.clone(),
-    new THREE.Vector3(0.28, 0.55, 0.22),
-    new THREE.Vector3(0.62, -0.5, 0.12),
-    new THREE.Vector3(0.35, -1.6, -0.05),
-    new THREE.Vector3(-0.25, -2.35, 0.1),
-    CHEST.clone(),
-  ];
-  const tubeCurve = new THREE.CatmullRomCurve3(tubePts);
-  tubeCurve.curveType = "centripetal";
-  const rubber = new THREE.Mesh(new THREE.TubeGeometry(tubeCurve, 140, 0.085, 16), tubeMat);
-  steto.add(rubber);
+  function placeFlock(mesh, items, t, flow) {
+    items.forEach((c, i) => {
+      // Celler i midten af karret flyder hurtigst — som rigtig laminar strømning
+      const profile = 1.25 - 0.6 * (c.rad / ARTERY_R);
+      c.s = (c.s + c.speed * profile * flow) % 1;
 
-  // -- Bryststykket: stilk, klokke og lys membran --
-  const chest = new THREE.Group();
+      const p = arteryCurve.getPointAt(c.s);
+      const tan = arteryCurve.getTangentAt(c.s);
+      tmpN.crossVectors(tan, up).normalize();
+      tmpB.crossVectors(tan, tmpN).normalize();
 
-  const stemDir = tubeCurve.getTangent(1).normalize();
-  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.095, 0.5, 16), metalMat);
-  stem.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), stemDir.clone().negate());
-  stem.position.copy(stemDir.clone().multiplyScalar(0.22));
-  chest.add(stem);
+      dummy.position.copy(p)
+        .addScaledVector(tmpN, Math.cos(c.ang) * c.rad)
+        .addScaledVector(tmpB, Math.sin(c.ang) * c.rad);
+      dummy.rotation.set(c.rx + t * c.spin, t * c.spin * 0.7, c.rz + t * c.spin * 0.5);
+      dummy.scale.setScalar(c.scale);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+  }
 
-  // Klokken: affaset dobbelt-cylinder — membranen vender mod beskueren
-  const drum = new THREE.Group();
-  const bellBack = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.5, 0.16, 36), metalMat);
-  bellBack.position.z = -0.08;
-  bellBack.rotation.x = Math.PI / 2;
-  drum.add(bellBack);
-  const bellFront = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.52, 0.12, 36), metalMat);
-  bellFront.position.z = 0.06;
-  bellFront.rotation.x = Math.PI / 2;
-  drum.add(bellFront);
-  const membrane = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.44, 0.025, 36), membraneMat);
-  membrane.position.z = 0.135;
-  membrane.rotation.x = Math.PI / 2;
-  drum.add(membrane);
+  // Røde blodlegemer
+  const RBC_COUNT = 110;
+  const rbcs = makeFlock(RBC_COUNT, ARTERY_R * 0.78, 0.00055, 0.0011, 0.75, 1.05);
+  const rbcMesh = new THREE.InstancedMesh(rbcGeo, rbcMat, RBC_COUNT);
+  rbcMesh.renderOrder = 1;
+  scene.add(rbcMesh);
 
-  drum.position.copy(stemDir.clone().multiplyScalar(0.55));
-  drum.rotation.x = 0.35; // membranen vipper op mod beskueren
-  drum.rotation.y = -0.25;
-  chest.add(drum);
+  // Hvide blodlegemer: få, store, langsomme
+  const wbcMat = new THREE.MeshPhysicalMaterial({
+    color: 0xf8f4ec, roughness: 0.75, metalness: 0,
+    clearcoat: 0.2, clearcoatRoughness: 0.6,
+  });
+  const WBC_COUNT = 3;
+  const wbcs = makeFlock(WBC_COUNT, ARTERY_R * 0.5, 0.00035, 0.0005, 0.9, 1.1);
+  const wbcMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 22, 18), wbcMat, WBC_COUNT);
+  wbcMesh.renderOrder = 1;
+  scene.add(wbcMesh);
 
-  chest.position.copy(CHEST);
-  steto.add(chest);
+  // Blodplader: små, lyse linser
+  const pltMat = new THREE.MeshPhysicalMaterial({
+    color: 0xf0d7a8, roughness: 0.55, metalness: 0,
+  });
+  const pltGeo = new THREE.SphereGeometry(0.16, 14, 10);
+  pltGeo.scale(1, 0.35, 1);
+  const PLT_COUNT = 16;
+  const plts = makeFlock(PLT_COUNT, ARTERY_R * 0.8, 0.0006, 0.0012, 0.8, 1.2);
+  const pltMesh = new THREE.InstancedMesh(pltGeo, pltMat, PLT_COUNT);
+  pltMesh.renderOrder = 1;
+  scene.add(pltMesh);
 
-  steto.position.set(4.2, 0.4, 0);
-  steto.rotation.z = -0.05;
-  steto.scale.setScalar(0.95); // hele stetoskopet, inkl. bryststykke, i billedet
-
-  /* ---------- Diskret støv i luften ---------- */
-  const P_COUNT = 260;
+  /* ---------- Diskret støv udenfor karret ---------- */
+  const P_COUNT = 200;
   const pPositions = new Float32Array(P_COUNT * 3);
   for (let i = 0; i < P_COUNT; i++) {
     pPositions[i * 3] = (Math.random() - 0.5) * 26;
@@ -176,8 +200,10 @@ function init(canvas) {
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute("position", new THREE.BufferAttribute(pPositions, 3));
   const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
-    color: 0x2aa896, size: 0.04, transparent: true, opacity: 0.32,
+    color: DARK ? 0x8ceade : 0x2aa896, size: DARK ? 0.05 : 0.04,
+    transparent: true, opacity: DARK ? 0.5 : 0.28,
     sizeAttenuation: true, depthWrite: false,
+    blending: DARK ? THREE.AdditiveBlending : THREE.NormalBlending,
   }));
   scene.add(particles);
 
@@ -193,8 +219,6 @@ function init(canvas) {
     const w = hero.clientWidth, h = hero.clientHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // På smalle skærme rykkes stetoskopet ind i midten bag teksten
-    steto.position.x = w < 760 ? 0.7 : 4.2;
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
@@ -207,38 +231,40 @@ function init(canvas) {
 
   function frame() {
     const t = clock.getElapsedTime();
+    const dt = Math.min(clock.getDelta ? 0.016 : 0.016, 0.05);
 
-    // Blid svajen og løft — som om stetoskopet hænger og dingler let
-    steto.rotation.y = Math.sin(t * 0.3) * 0.3;
-    steto.rotation.z = -0.05 + Math.sin(t * 0.42) * 0.03;
-    steto.position.y = 0.4 + Math.sin(t * 0.55) * 0.14;
-
-    // Bryststykket svinger ganske let som et pendul
-    chest.rotation.z = Math.sin(t * 0.8) * 0.06;
-    chest.rotation.x = Math.sin(t * 0.65 + 0.8) * 0.05;
-
-    // Membranen "banker" roligt — dobbeltslag som et hjerte (lub-dub)
+    // Pulserende flow: hastigheden stiger ved hvert hjerteslag (lub-dub)
     const phase = (t * BPS) % 1;
     const beat =
-      Math.exp(-Math.pow((phase - 0.12) / 0.045, 2)) +
-      0.55 * Math.exp(-Math.pow((phase - 0.32) / 0.05, 2));
-    membrane.material.emissiveIntensity = beat * 0.45;
-    const s = 1 + beat * 0.035;
-    membrane.scale.set(s, 1, s);
+      Math.exp(-Math.pow((phase - 0.12) / 0.06, 2)) +
+      0.45 * Math.exp(-Math.pow((phase - 0.34) / 0.06, 2));
+    const flow = 1 + beat * 1.6;
 
-    particles.rotation.y = t * 0.012;
+    placeFlock(rbcMesh, rbcs, t, flow);
+    placeFlock(wbcMesh, wbcs, t, flow);
+    placeFlock(pltMesh, plts, t, flow);
+
+    // Karvæggen udvider sig umærkeligt ved pulsslaget
+    const ws = 1 + beat * 0.018;
+    wall.scale.set(1, ws, ws);
+    inner.scale.set(1, ws, ws);
+
+    particles.rotation.y = t * 0.01;
 
     // Blød mus-parallakse
     pointer.x += (pointer.tx - pointer.x) * 0.04;
     pointer.y += (pointer.ty - pointer.y) * 0.04;
-    camera.position.x = pointer.x * 0.7;
-    camera.position.y = 0.3 - pointer.y * 0.45;
-    camera.lookAt(0.6, 0, 0);
+    camera.position.x = pointer.x * 0.6;
+    camera.position.y = 0.3 - pointer.y * 0.4;
+    camera.lookAt(0.4, 0.2, 0);
 
     renderer.render(scene, camera);
   }
 
   if (reducedMotion) {
+    placeFlock(rbcMesh, rbcs, 1.5, 0);
+    placeFlock(wbcMesh, wbcs, 1.5, 0);
+    placeFlock(pltMesh, plts, 1.5, 0);
     renderer.render(scene, camera);
     window.addEventListener("resize", () => { resize(); renderer.render(scene, camera); });
   } else {
