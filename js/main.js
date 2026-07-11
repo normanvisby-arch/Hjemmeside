@@ -70,8 +70,10 @@ if (heroH1 && !prefersReduced) {
         }
       });
       heroH1.replaceChild(frag, child);
-    } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== "BR") {
+    } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== "BR" &&
+               !child.classList.contains("ekg-word")) {
       child.classList.add("w"); // fx accent-ordet som én enhed
+      // .ekg-word springes over — det animeres ind af sit eget EKG-kompleks
     }
   });
   heroH1.querySelectorAll(".w").forEach((w, i) => {
