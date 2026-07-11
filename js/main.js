@@ -1,4 +1,8 @@
-/* Fælles adfærd: mobilmenu, aktiv navigation og scroll-reveal */
+/* Fælles adfærd: mobilmenu, aktiv navigation, scroll-reveal,
+   header-morf, tekst-reveal, tal-optælling og kort-tilt */
+
+document.documentElement.classList.add("js");
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Mobilmenu
 const toggle = document.querySelector(".nav-toggle");
@@ -20,8 +24,8 @@ document.querySelectorAll(".main-nav a[href]").forEach((a) => {
   if (target === here) a.setAttribute("aria-current", "page");
 });
 
-// Scroll-reveal
-const revealables = document.querySelectorAll(".reveal");
+// Scroll-reveal (inkl. EKG-skillelinjer, der tegner sig selv)
+const revealables = document.querySelectorAll(".reveal, .ekg-divider");
 if ("IntersectionObserver" in window && revealables.length) {
   const io = new IntersectionObserver(
     (entries) => {
@@ -37,4 +41,85 @@ if ("IntersectionObserver" in window && revealables.length) {
   revealables.forEach((el) => io.observe(el));
 } else {
   revealables.forEach((el) => el.classList.add("in"));
+}
+
+// Header-morf: krymper og får skygge, når der scrolles
+const header = document.querySelector(".site-header");
+if (header) {
+  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 14);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+}
+
+// Ord-for-ord reveal i hero-overskriften
+const heroSection = document.querySelector(".hero");
+const heroH1 = document.querySelector(".hero h1");
+if (heroH1 && !prefersReduced) {
+  [...heroH1.childNodes].forEach((child) => {
+    if (child.nodeType === Node.TEXT_NODE) {
+      const frag = document.createDocumentFragment();
+      child.textContent.split(/(\s+)/).forEach((part) => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) {
+          frag.appendChild(document.createTextNode(part));
+        } else {
+          const span = document.createElement("span");
+          span.className = "w";
+          span.textContent = part;
+          frag.appendChild(span);
+        }
+      });
+      heroH1.replaceChild(frag, child);
+    } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== "BR") {
+      child.classList.add("w"); // fx accent-ordet som én enhed
+    }
+  });
+  heroH1.querySelectorAll(".w").forEach((w, i) => {
+    w.style.transitionDelay = `${0.1 + i * 0.07}s`;
+  });
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      heroH1.classList.add("in-words");
+      if (heroSection) heroSection.classList.add("h-in");
+    })
+  );
+} else if (heroSection) {
+  heroSection.classList.add("h-in");
+}
+
+// Tal, der tæller op, når de ruller ind i billedet
+document.querySelectorAll("[data-count]").forEach((el) => {
+  const target = parseInt(el.dataset.count, 10);
+  if (isNaN(target)) return;
+  const show = () => { el.textContent = target; };
+  if (prefersReduced || !("IntersectionObserver" in window)) { show(); return; }
+  const io = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    io.disconnect();
+    const start = performance.now();
+    const dur = 1400;
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / dur);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * ease);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, { threshold: 0.6 });
+  io.observe(el);
+});
+
+// 3D-tilt på kort — kun med mus, aldrig på touch
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !prefersReduced) {
+  document.querySelectorAll(".card").forEach((card) => {
+    card.addEventListener("pointermove", (e) => {
+      const r = card.getBoundingClientRect();
+      const rx = ((e.clientY - r.top) / r.height - 0.5) * -7;
+      const ry = ((e.clientX - r.left) / r.width - 0.5) * 7;
+      card.style.transform = `perspective(700px) translateY(-5px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+    });
+    card.addEventListener("pointerleave", () => {
+      card.style.transform = "";
+    });
+  });
 }

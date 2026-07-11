@@ -512,6 +512,57 @@ h1, h2, h3, h4 {
   font-size: 13px; color: #7fa39e;
 }
 
+/* ---------- EKG-skillelinje: tegner sig selv ved scroll ---------- */
+.ekg-divider {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+}
+.ekg-divider svg { width: 100%; height: 100%; display: block; }
+.ekg-divider path {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2.4s cubic-bezier(0.4, 0, 0.3, 1) 0.15s;
+}
+.ekg-divider.in path { stroke-dashoffset: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .ekg-divider path { stroke-dashoffset: 0; transition: none; }
+}
+
+/* ---------- Header-morf ved scroll ---------- */
+.header-inner { transition: min-height 0.25s ease; }
+.site-header.scrolled {
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow: 0 8px 28px -14px rgba(6, 45, 55, 0.22);
+}
+.site-header.scrolled .header-inner { min-height: 60px; }
+
+/* ---------- Ord-for-ord reveal i hero-overskriften ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 .w {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.5em);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .hero h1.in-words .w { opacity: 1; transform: none; }
+  html.js .hero p.lede,
+  html.js .hero .hero-actions {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease 0.6s, transform 0.7s ease 0.6s;
+  }
+  html.js .hero.h-in p.lede,
+  html.js .hero.h-in .hero-actions { opacity: 1; transform: none; }
+}
+
 /* ---------- Reveal-animationer ---------- */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.in { opacity: 1; transform: none; }
