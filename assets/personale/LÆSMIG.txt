@@ -14,6 +14,7 @@ Filnavne (skal ramme præcist, små bogstaver, .jpg):
     anne-silkjaer-moeller.jpg
     alena-litskalava-jensen.jpg
     maiken-moeller-aasted.jpg
+    charlotte-paaskesen.jpg
 
   Sygeplejersker:
     dorte-ligaard.jpg
