@@ -205,8 +205,13 @@ h1, h2, h3, h4 {
     url("../assets/hero-stetoskop.jpg") 72% center / cover no-repeat,
     linear-gradient(168deg, #051d24 0%, #072a33 100%);
 }
+/* Løft teksten og hold manchetten smallere, så den ikke rammer
+   den lyse stålklokke nederst til højre */
+.hero.hero-photo .hero-content { padding: 60px 0 220px; }
+.hero.hero-photo p.lede { max-width: 46ch; }
 @media (max-width: 760px) {
   .hero.hero-photo { background-position: 0 0, 76% center, 0 0; }
+  .hero.hero-photo .hero-content { padding: 90px 0 170px; }
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
 
