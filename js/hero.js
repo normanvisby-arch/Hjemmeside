@@ -117,17 +117,6 @@ function init(canvas) {
     emissive: DARK ? 0x9c221c : 0x7a1613, emissiveIntensity: DARK ? 0.55 : 0.18,
   });
 
-  const wbcMat = new THREE.MeshPhysicalMaterial({
-    color: 0xf8f4ec, roughness: 0.75, metalness: 0,
-    clearcoat: 0.2, clearcoatRoughness: 0.6,
-  });
-
-  const pltMat = new THREE.MeshPhysicalMaterial({
-    color: 0xf0d7a8, roughness: 0.55, metalness: 0,
-  });
-  const pltGeo = new THREE.SphereGeometry(0.16, 14, 10);
-  pltGeo.scale(1, 0.35, 1);
-
   /* ---------- Cellefysik ----------
      Cellerne simuleres i "rør-koordinater": a = position langs karret
      (buelængde), (x, y) = tværsnits-forskydning. Det gør kollisioner
@@ -164,16 +153,13 @@ function init(canvas) {
     }
   }
 
-  // type 0: røde blodlegemer · type 1: hvide · type 2: blodplader
-  spawn(105, 0, ARTERY_R * 0.95, 1.1, 2.1, 0.75, 1.05, 0.44);
-  spawn(3, 1, ARTERY_R * 0.6, 0.7, 1.0, 0.9, 1.1, 0.42);
-  spawn(16, 2, ARTERY_R * 0.95, 1.2, 2.3, 0.8, 1.2, 0.15);
+  // Kun røde blodlegemer i strømmen
+  spawn(52, 0, ARTERY_R * 0.95, 1.1, 2.1, 0.75, 1.05, 0.44);
 
-  const rbcMesh = new THREE.InstancedMesh(rbcGeo, rbcMat, cells.filter(c => c.type === 0).length);
-  const wbcMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 22, 18), wbcMat, cells.filter(c => c.type === 1).length);
-  const pltMesh = new THREE.InstancedMesh(pltGeo, pltMat, cells.filter(c => c.type === 2).length);
-  [rbcMesh, wbcMesh, pltMesh].forEach((m) => { m.renderOrder = 1; scene.add(m); });
-  const meshes = [rbcMesh, wbcMesh, pltMesh];
+  const rbcMesh = new THREE.InstancedMesh(rbcGeo, rbcMat, cells.length);
+  rbcMesh.renderOrder = 1;
+  scene.add(rbcMesh);
+  const meshes = [rbcMesh];
 
   const up = new THREE.Vector3(0, 1, 0);
   const dummy = new THREE.Object3D();
