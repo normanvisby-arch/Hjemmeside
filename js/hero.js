@@ -247,6 +247,9 @@ function init(canvas) {
   function writeMatrices(t) {
     const counters = [0, 0, 0];
     for (const c of cells) {
+      // Kollisioner kan skubbe a udenfor [0; CURVE_LEN) — normalisér,
+      // så kurveopslaget aldrig får en position udenfor kurven
+      c.a = ((c.a % CURVE_LEN) + CURVE_LEN) % CURVE_LEN;
       const u = c.a / CURVE_LEN;
       const p = arteryCurve.getPointAt(u);
       const tan = arteryCurve.getTangentAt(u);
