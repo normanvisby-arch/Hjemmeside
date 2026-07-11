@@ -301,26 +301,14 @@ function init(canvas) {
   /* ---------- Render-løkke ---------- */
   const clock = new THREE.Clock();
   let rafId = null;
-  const BPS = 63 / 60; // roligt hvilepuls-tempo
 
   function frame() {
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
 
-    // Pulserende flow: hastigheden stiger ved hvert hjerteslag (lub-dub)
-    const phase = (t * BPS) % 1;
-    const beat =
-      Math.exp(-Math.pow((phase - 0.12) / 0.06, 2)) +
-      0.45 * Math.exp(-Math.pow((phase - 0.34) / 0.06, 2));
-    const flow = 1 + beat * 1.6;
-
-    physicsStep(dt, flow);
+    // Roligt, jævnt flow uden pulsation
+    physicsStep(dt, 1);
     writeMatrices(t);
-
-    // Karvæggen udvider sig umærkeligt ved pulsslaget
-    const ws = 1 + beat * 0.018;
-    wall.scale.set(1, ws, ws);
-    inner.scale.set(1, ws, ws);
 
     particles.rotation.y = t * 0.01;
 
