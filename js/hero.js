@@ -50,7 +50,7 @@ function init(canvas) {
 
   /* ---------- Materialer ---------- */
   const metalMat = new THREE.MeshPhysicalMaterial({
-    color: 0xf0d8a6, roughness: 0.25, metalness: 0.55, // lys champagne
+    color: 0xdde3e6, roughness: 0.22, metalness: 0.7, // børstet sølv
     clearcoat: 0.7, clearcoatRoughness: 0.2,
   });
   const tubeMat = new THREE.MeshPhysicalMaterial({
@@ -161,7 +161,7 @@ function init(canvas) {
   chest.position.copy(CHEST);
   steto.add(chest);
 
-  steto.position.set(3.2, 0.4, 0);
+  steto.position.set(4.2, 0.4, 0);
   steto.rotation.z = -0.05;
   steto.scale.setScalar(0.95); // hele stetoskopet, inkl. bryststykke, i billedet
 
@@ -194,7 +194,7 @@ function init(canvas) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     // På smalle skærme rykkes stetoskopet ind i midten bag teksten
-    steto.position.x = w < 760 ? 0.7 : 3.2;
+    steto.position.x = w < 760 ? 0.7 : 4.2;
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
