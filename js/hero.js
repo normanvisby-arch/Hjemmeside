@@ -3,8 +3,8 @@
    En stor, halvgennemsigtig arterie løber hen over skærmen, og
    indeni strømmer røde blodlegemer (bikonkave skiver), enkelte
    hvide blodlegemer og små blodplader fra venstre mod højre.
-   Flowet er pulserende i hvilepuls-takt — som rigtigt arterielt
-   blod. Lyse, venlige farver.
+   Cellerne har fast fysik: de kolliderer og bouncer blødt mod
+   hinanden og mod karvæggen, og flowet pulserer i hvilepuls-takt.
    Renderet med Three.js (global THREE fra js/vendor/three.min.js).
    Falder pænt tilbage til CSS-gradienten hvis WebGL mangler,
    og respekterer "prefers-reduced-motion".
@@ -75,8 +75,9 @@ function init(canvas) {
   arteryCurve.curveType = "centripetal";
 
   const ARTERY_R = 1.5;
+  const CURVE_LEN = arteryCurve.getLength();
 
-  /* ---------- Karvæggen — halvgennemsigtig, varm rosa ---------- */
+  /* ---------- Karvæggen — halvgennemsigtig ---------- */
   const wallMat = new THREE.MeshPhysicalMaterial({
     color: DARK ? 0xb45a52 : 0xf2ac9f, roughness: 0.4, metalness: 0,
     transparent: true, opacity: DARK ? 0.24 : 0.3,
@@ -116,162 +117,150 @@ function init(canvas) {
     emissive: DARK ? 0x9c221c : 0x7a1613, emissiveIntensity: DARK ? 0.55 : 0.18,
   });
 
-  /* ---------- Cellerne — instanser med individuel bane ---------- */
-  const up = new THREE.Vector3(0, 1, 0);
-  const dummy = new THREE.Object3D();
-  const tmpN = new THREE.Vector3(), tmpB = new THREE.Vector3();
-
-  function makeFlock(count, radMax, speedLo, speedHi, scaleLo, scaleHi) {
-    const items = [];
-    for (let i = 0; i < count; i++) {
-      const ang = Math.random() * Math.PI * 2;
-      items.push({
-        s: Math.random(),
-        ang,
-        rad: Math.sqrt(Math.random()) * radMax, // jævn fordeling i tværsnittet
-        speed: speedLo + Math.random() * (speedHi - speedLo),
-        scale: scaleLo + Math.random() * (scaleHi - scaleLo),
-        rx: Math.random() * Math.PI * 2,
-        rz: Math.random() * Math.PI * 2,
-        spin: 0.4 + Math.random() * 1.2,
-      });
-    }
-    return items;
-  }
-
-  function placeFlock(mesh, items, t, flow) {
-    items.forEach((c, i) => {
-      // Celler i midten af karret flyder hurtigst — som rigtig laminar strømning
-      const profile = 1.25 - 0.6 * (c.rad / ARTERY_R);
-      c.s = (c.s + c.speed * profile * flow) % 1;
-
-      const p = arteryCurve.getPointAt(c.s);
-      const tan = arteryCurve.getTangentAt(c.s);
-      tmpN.crossVectors(tan, up).normalize();
-      tmpB.crossVectors(tan, tmpN).normalize();
-
-      dummy.position.copy(p)
-        .addScaledVector(tmpN, Math.cos(c.ang) * c.rad)
-        .addScaledVector(tmpB, Math.sin(c.ang) * c.rad);
-      dummy.rotation.set(c.rx + t * c.spin, t * c.spin * 0.7, c.rz + t * c.spin * 0.5);
-      dummy.scale.setScalar(c.scale);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
-    });
-    mesh.instanceMatrix.needsUpdate = true;
-  }
-
-  // Røde blodlegemer
-  const RBC_COUNT = 110;
-  const rbcs = makeFlock(RBC_COUNT, ARTERY_R * 0.78, 0.00055, 0.0011, 0.75, 1.05);
-  const rbcMesh = new THREE.InstancedMesh(rbcGeo, rbcMat, RBC_COUNT);
-  rbcMesh.renderOrder = 1;
-  scene.add(rbcMesh);
-
-  // Hvide blodlegemer: få, store, langsomme
   const wbcMat = new THREE.MeshPhysicalMaterial({
     color: 0xf8f4ec, roughness: 0.75, metalness: 0,
     clearcoat: 0.2, clearcoatRoughness: 0.6,
   });
-  const WBC_COUNT = 3;
-  const wbcs = makeFlock(WBC_COUNT, ARTERY_R * 0.5, 0.00035, 0.0005, 0.9, 1.1);
-  const wbcMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 22, 18), wbcMat, WBC_COUNT);
-  wbcMesh.renderOrder = 1;
-  scene.add(wbcMesh);
 
-  // Blodplader: små, lyse linser
   const pltMat = new THREE.MeshPhysicalMaterial({
     color: 0xf0d7a8, roughness: 0.55, metalness: 0,
   });
   const pltGeo = new THREE.SphereGeometry(0.16, 14, 10);
   pltGeo.scale(1, 0.35, 1);
-  const PLT_COUNT = 16;
-  const plts = makeFlock(PLT_COUNT, ARTERY_R * 0.8, 0.0006, 0.0012, 0.8, 1.2);
-  const pltMesh = new THREE.InstancedMesh(pltGeo, pltMat, PLT_COUNT);
-  pltMesh.renderOrder = 1;
-  scene.add(pltMesh);
 
-  /* ---------- Gimmick: syv blodlegemer bærer lægernes avatarer ----------
-     Initial-avatarer som på personalesiden — skiftes til rigtige
-     fotos, når de er klar. En lille easter egg i blodstrømmen. */
-  function makeAvatarTexture(initials, gradIdx) {
-    const S = 256;
-    const c = document.createElement("canvas");
-    c.width = c.height = S;
-    const g = c.getContext("2d");
-    const grads = [
-      ["#0d3b47", "#0e7c86"],
-      ["#0e7c86", "#35d0c5"],
-      ["#0a4b52", "#128c96"],
-    ];
-    const [c1, c2] = grads[gradIdx % grads.length];
-    const grad = g.createLinearGradient(0, 0, S, S);
-    grad.addColorStop(0, c1);
-    grad.addColorStop(1, c2);
-    // Cirkulær avatar med hvid kant
-    g.beginPath();
-    g.arc(S / 2, S / 2, S / 2 - 4, 0, Math.PI * 2);
-    g.fillStyle = grad;
-    g.fill();
-    g.lineWidth = 10;
-    g.strokeStyle = "rgba(255,255,255,0.92)";
-    g.stroke();
-    g.fillStyle = "#ffffff";
-    g.font = "700 96px Sora, Inter, system-ui, sans-serif";
-    g.textAlign = "center";
-    g.textBaseline = "middle";
-    g.fillText(initials, S / 2, S / 2 + 6);
-    const tex = new THREE.CanvasTexture(c);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    return tex;
+  /* ---------- Cellefysik ----------
+     Cellerne simuleres i "rør-koordinater": a = position langs karret
+     (buelængde), (x, y) = tværsnits-forskydning. Det gør kollisioner
+     og vægafvisning enkle, selvom karret snor sig. */
+  const cells = [];
+
+  function spawn(count, type, radMax, speedLo, speedHi, scaleLo, scaleHi, collR) {
+    for (let i = 0; i < count; i++) {
+      const scale = scaleLo + Math.random() * (scaleHi - scaleLo);
+      const r = collR * scale;
+      // Placér uden overlap (op til 60 forsøg pr. celle)
+      let a = 0, x = 0, y = 0, ok = false;
+      for (let tries = 0; tries < 60 && !ok; tries++) {
+        a = Math.random() * CURVE_LEN;
+        const ang = Math.random() * Math.PI * 2;
+        const rad = Math.sqrt(Math.random()) * Math.min(radMax, ARTERY_R - r - 0.08);
+        x = Math.cos(ang) * rad;
+        y = Math.sin(ang) * rad;
+        ok = cells.every((o) => {
+          const da = Math.abs(a - o.a);
+          const d = Math.min(da, CURVE_LEN - da);
+          return d * d + (x - o.x) ** 2 + (y - o.y) ** 2 > (r + o.r) ** 2;
+        });
+      }
+      cells.push({
+        type, a, x, y,
+        va: 0, vx: 0, vy: 0,
+        base: speedLo + Math.random() * (speedHi - speedLo),
+        r, scale,
+        rx: Math.random() * Math.PI * 2,
+        rz: Math.random() * Math.PI * 2,
+        spin: 0.4 + Math.random() * 1.2,
+      });
+    }
   }
 
-  const DOCTORS = ["TF", "TA", "NV", "JM", "AS", "AL", "MM"];
-  const crew = [];
-  DOCTORS.forEach((initials, i) => {
-    const cell = new THREE.Group();
-    const body = new THREE.Mesh(rbcGeo, rbcMat);
-    cell.add(body);
+  // type 0: røde blodlegemer · type 1: hvide · type 2: blodplader
+  spawn(105, 0, ARTERY_R * 0.95, 1.1, 2.1, 0.75, 1.05, 0.44);
+  spawn(3, 1, ARTERY_R * 0.6, 0.7, 1.0, 0.9, 1.1, 0.42);
+  spawn(16, 2, ARTERY_R * 0.95, 1.2, 2.3, 0.8, 1.2, 0.15);
 
-    // Avatar-skilt i fordybningen på begge sider af cellen
-    const avatarMat = new THREE.MeshBasicMaterial({
-      map: makeAvatarTexture(initials, i),
-      transparent: true,
-    });
-    [1, -1].forEach((side) => {
-      const disc = new THREE.Mesh(new THREE.CircleGeometry(0.27, 32), avatarMat);
-      disc.rotation.x = -side * Math.PI / 2;
-      disc.position.y = side * 0.145;
-      cell.add(disc);
-    });
+  const rbcMesh = new THREE.InstancedMesh(rbcGeo, rbcMat, cells.filter(c => c.type === 0).length);
+  const wbcMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 22, 18), wbcMat, cells.filter(c => c.type === 1).length);
+  const pltMesh = new THREE.InstancedMesh(pltGeo, pltMat, cells.filter(c => c.type === 2).length);
+  [rbcMesh, wbcMesh, pltMesh].forEach((m) => { m.renderOrder = 1; scene.add(m); });
+  const meshes = [rbcMesh, wbcMesh, pltMesh];
 
-    cell.scale.setScalar(1.15); // lidt større end de almindelige celler
-    scene.add(cell);
-    crew.push({
-      obj: cell,
-      s: i / DOCTORS.length + Math.random() * 0.05,
-      ang: Math.random() * Math.PI * 2,
-      rad: Math.sqrt(Math.random()) * ARTERY_R * 0.6,
-      speed: 0.00045,
-      rx: Math.random() * Math.PI * 2,
-      rz: Math.random() * Math.PI * 2,
-      spin: 0.25 + Math.random() * 0.2, // roligt tumlende, så skiltet kan læses
-    });
-  });
+  const up = new THREE.Vector3(0, 1, 0);
+  const dummy = new THREE.Object3D();
+  const tmpN = new THREE.Vector3(), tmpB = new THREE.Vector3();
 
-  function placeCrew(t, flow) {
-    crew.forEach((c) => {
-      const profile = 1.25 - 0.6 * (c.rad / ARTERY_R);
-      c.s = (c.s + c.speed * profile * flow) % 1;
-      const p = arteryCurve.getPointAt(c.s);
-      const tan = arteryCurve.getTangentAt(c.s);
+  function physicsStep(dt, flow) {
+    // 1) Flow-kraft og bevægelse
+    for (const c of cells) {
+      const dist = Math.hypot(c.x, c.y);
+      // Laminar profil: hurtigst i midten, langsomst ved væggen
+      const profile = 1.25 - 0.6 * (dist / ARTERY_R);
+      const target = c.base * profile * flow;
+      c.va += (target - c.va) * Math.min(1, dt * 2.5);
+      c.a += c.va * dt;
+      if (c.a >= CURVE_LEN) c.a -= CURVE_LEN;
+
+      // Sideværts: dæmpning, så stød ebber roligt ud
+      c.x += c.vx * dt;
+      c.y += c.vy * dt;
+      c.vx *= Math.max(0, 1 - 1.8 * dt);
+      c.vy *= Math.max(0, 1 - 1.8 * dt);
+
+      // Karvæggen er en fast grænse — blødt bounce indad
+      const lim = ARTERY_R - 0.06 - c.r;
+      const d = Math.hypot(c.x, c.y);
+      if (d > lim) {
+        const nx = c.x / d, ny = c.y / d;
+        c.x = nx * lim;
+        c.y = ny * lim;
+        const vn = c.vx * nx + c.vy * ny;
+        if (vn > 0) {
+          c.vx -= 1.5 * vn * nx; // restitution ~0.5
+          c.vy -= 1.5 * vn * ny;
+        }
+      }
+    }
+
+    // 2) Celle-mod-celle kollisioner (sweep along a-aksen)
+    cells.sort((p, q) => p.a - q.a);
+    const n = cells.length;
+    for (let i = 0; i < n; i++) {
+      const ci = cells[i];
+      for (let j = i + 1; j < n; j++) {
+        const cj = cells[j];
+        const da = cj.a - ci.a;
+        if (da > 1.2) break; // ingen større kollisionsradius end dette
+        const dx = cj.x - ci.x, dy = cj.y - ci.y;
+        const rsum = ci.r + cj.r;
+        const distSq = da * da + dx * dx + dy * dy;
+        if (distSq >= rsum * rsum || distSq < 1e-8) continue;
+
+        const dist = Math.sqrt(distSq);
+        const nxA = da / dist, nxX = dx / dist, nxY = dy / dist;
+        // Skub cellerne fri af hinanden (halvt til hver)
+        const push = (rsum - dist) / 2;
+        ci.a -= nxA * push; cj.a += nxA * push;
+        ci.x -= nxX * push; cj.x += nxX * push;
+        ci.y -= nxY * push; cj.y += nxY * push;
+        // Blødt elastisk stød langs kollisionsnormalen
+        const rel = (cj.va - ci.va) * nxA + (cj.vx - ci.vx) * nxX + (cj.vy - ci.vy) * nxY;
+        if (rel < 0) {
+          const imp = -rel * 0.75 / 2; // restitution 0.75, ens masse
+          ci.va -= imp * nxA; cj.va += imp * nxA;
+          ci.vx -= imp * nxX; cj.vx += imp * nxX;
+          ci.vy -= imp * nxY; cj.vy += imp * nxY;
+        }
+      }
+    }
+  }
+
+  function writeMatrices(t) {
+    const counters = [0, 0, 0];
+    for (const c of cells) {
+      const u = c.a / CURVE_LEN;
+      const p = arteryCurve.getPointAt(u);
+      const tan = arteryCurve.getTangentAt(u);
       tmpN.crossVectors(tan, up).normalize();
       tmpB.crossVectors(tan, tmpN).normalize();
-      c.obj.position.copy(p)
-        .addScaledVector(tmpN, Math.cos(c.ang) * c.rad)
-        .addScaledVector(tmpB, Math.sin(c.ang) * c.rad);
-      c.obj.rotation.set(c.rx + t * c.spin, t * c.spin * 0.6, c.rz + t * c.spin * 0.4);
-    });
+      dummy.position.copy(p)
+        .addScaledVector(tmpN, c.x)
+        .addScaledVector(tmpB, c.y);
+      dummy.rotation.set(c.rx + t * c.spin, t * c.spin * 0.7, c.rz + t * c.spin * 0.5);
+      dummy.scale.setScalar(c.scale);
+      dummy.updateMatrix();
+      meshes[c.type].setMatrixAt(counters[c.type]++, dummy.matrix);
+    }
+    meshes.forEach((m) => { m.instanceMatrix.needsUpdate = true; });
   }
 
   /* ---------- Diskret støv udenfor karret ---------- */
@@ -315,8 +304,8 @@ function init(canvas) {
   const BPS = 63 / 60; // roligt hvilepuls-tempo
 
   function frame() {
-    const t = clock.getElapsedTime();
-    const dt = Math.min(clock.getDelta ? 0.016 : 0.016, 0.05);
+    const dt = Math.min(clock.getDelta(), 0.05);
+    const t = clock.elapsedTime;
 
     // Pulserende flow: hastigheden stiger ved hvert hjerteslag (lub-dub)
     const phase = (t * BPS) % 1;
@@ -325,10 +314,8 @@ function init(canvas) {
       0.45 * Math.exp(-Math.pow((phase - 0.34) / 0.06, 2));
     const flow = 1 + beat * 1.6;
 
-    placeFlock(rbcMesh, rbcs, t, flow);
-    placeFlock(wbcMesh, wbcs, t, flow);
-    placeFlock(pltMesh, plts, t, flow);
-    placeCrew(t, flow);
+    physicsStep(dt, flow);
+    writeMatrices(t);
 
     // Karvæggen udvider sig umærkeligt ved pulsslaget
     const ws = 1 + beat * 0.018;
@@ -348,10 +335,7 @@ function init(canvas) {
   }
 
   if (reducedMotion) {
-    placeFlock(rbcMesh, rbcs, 1.5, 0);
-    placeFlock(wbcMesh, wbcs, 1.5, 0);
-    placeFlock(pltMesh, plts, 1.5, 0);
-    placeCrew(1.5, 0);
+    writeMatrices(1.5);
     renderer.render(scene, camera);
     window.addEventListener("resize", () => { resize(); renderer.render(scene, camera); });
   } else {
