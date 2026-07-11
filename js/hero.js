@@ -98,13 +98,15 @@ function init(canvas) {
   inner.renderOrder = 2;
   scene.add(inner);
 
-  /* ---------- Rødt blodlegeme: bikonkav skive (lathe-profil) ---------- */
+  /* ---------- Rødt blodlegeme: bikonkav skive (lathe-profil) ----------
+     Profilen lukker helt i centrum (x -> 0), så der ikke opstår et
+     synligt hul/søm midt i fordybningen. */
   const rbcProfile = [
-    [0.03, 0.05], [0.14, 0.06], [0.27, 0.1], [0.40, 0.13],
+    [0.0, 0.05], [0.06, 0.052], [0.14, 0.06], [0.27, 0.1], [0.40, 0.13],
     [0.49, 0.1], [0.52, 0.0], [0.49, -0.1], [0.40, -0.13],
-    [0.27, -0.1], [0.14, -0.06], [0.03, -0.05],
+    [0.27, -0.1], [0.14, -0.06], [0.06, -0.052], [0.0, -0.05],
   ].map(([x, y]) => new THREE.Vector2(x, y));
-  const rbcGeo = new THREE.LatheGeometry(rbcProfile, 26);
+  const rbcGeo = new THREE.LatheGeometry(rbcProfile, 32);
   rbcGeo.computeVertexNormals();
 
   const rbcMat = new THREE.MeshPhysicalMaterial({
@@ -189,6 +191,89 @@ function init(canvas) {
   pltMesh.renderOrder = 1;
   scene.add(pltMesh);
 
+  /* ---------- Gimmick: syv blodlegemer bærer lægernes avatarer ----------
+     Initial-avatarer som på personalesiden — skiftes til rigtige
+     fotos, når de er klar. En lille easter egg i blodstrømmen. */
+  function makeAvatarTexture(initials, gradIdx) {
+    const S = 256;
+    const c = document.createElement("canvas");
+    c.width = c.height = S;
+    const g = c.getContext("2d");
+    const grads = [
+      ["#0d3b47", "#0e7c86"],
+      ["#0e7c86", "#35d0c5"],
+      ["#0a4b52", "#128c96"],
+    ];
+    const [c1, c2] = grads[gradIdx % grads.length];
+    const grad = g.createLinearGradient(0, 0, S, S);
+    grad.addColorStop(0, c1);
+    grad.addColorStop(1, c2);
+    // Cirkulær avatar med hvid kant
+    g.beginPath();
+    g.arc(S / 2, S / 2, S / 2 - 4, 0, Math.PI * 2);
+    g.fillStyle = grad;
+    g.fill();
+    g.lineWidth = 10;
+    g.strokeStyle = "rgba(255,255,255,0.92)";
+    g.stroke();
+    g.fillStyle = "#ffffff";
+    g.font = "700 96px Sora, Inter, system-ui, sans-serif";
+    g.textAlign = "center";
+    g.textBaseline = "middle";
+    g.fillText(initials, S / 2, S / 2 + 6);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }
+
+  const DOCTORS = ["TF", "TA", "NV", "JM", "AS", "AL", "MM"];
+  const crew = [];
+  DOCTORS.forEach((initials, i) => {
+    const cell = new THREE.Group();
+    const body = new THREE.Mesh(rbcGeo, rbcMat);
+    cell.add(body);
+
+    // Avatar-skilt i fordybningen på begge sider af cellen
+    const avatarMat = new THREE.MeshBasicMaterial({
+      map: makeAvatarTexture(initials, i),
+      transparent: true,
+    });
+    [1, -1].forEach((side) => {
+      const disc = new THREE.Mesh(new THREE.CircleGeometry(0.27, 32), avatarMat);
+      disc.rotation.x = -side * Math.PI / 2;
+      disc.position.y = side * 0.145;
+      cell.add(disc);
+    });
+
+    cell.scale.setScalar(1.15); // lidt større end de almindelige celler
+    scene.add(cell);
+    crew.push({
+      obj: cell,
+      s: i / DOCTORS.length + Math.random() * 0.05,
+      ang: Math.random() * Math.PI * 2,
+      rad: Math.sqrt(Math.random()) * ARTERY_R * 0.6,
+      speed: 0.00045,
+      rx: Math.random() * Math.PI * 2,
+      rz: Math.random() * Math.PI * 2,
+      spin: 0.25 + Math.random() * 0.2, // roligt tumlende, så skiltet kan læses
+    });
+  });
+
+  function placeCrew(t, flow) {
+    crew.forEach((c) => {
+      const profile = 1.25 - 0.6 * (c.rad / ARTERY_R);
+      c.s = (c.s + c.speed * profile * flow) % 1;
+      const p = arteryCurve.getPointAt(c.s);
+      const tan = arteryCurve.getTangentAt(c.s);
+      tmpN.crossVectors(tan, up).normalize();
+      tmpB.crossVectors(tan, tmpN).normalize();
+      c.obj.position.copy(p)
+        .addScaledVector(tmpN, Math.cos(c.ang) * c.rad)
+        .addScaledVector(tmpB, Math.sin(c.ang) * c.rad);
+      c.obj.rotation.set(c.rx + t * c.spin, t * c.spin * 0.6, c.rz + t * c.spin * 0.4);
+    });
+  }
+
   /* ---------- Diskret støv udenfor karret ---------- */
   const P_COUNT = 200;
   const pPositions = new Float32Array(P_COUNT * 3);
@@ -243,6 +328,7 @@ function init(canvas) {
     placeFlock(rbcMesh, rbcs, t, flow);
     placeFlock(wbcMesh, wbcs, t, flow);
     placeFlock(pltMesh, plts, t, flow);
+    placeCrew(t, flow);
 
     // Karvæggen udvider sig umærkeligt ved pulsslaget
     const ws = 1 + beat * 0.018;
@@ -265,6 +351,7 @@ function init(canvas) {
     placeFlock(rbcMesh, rbcs, 1.5, 0);
     placeFlock(wbcMesh, wbcs, 1.5, 0);
     placeFlock(pltMesh, plts, 1.5, 0);
+    placeCrew(1.5, 0);
     renderer.render(scene, camera);
     window.addEventListener("resize", () => { resize(); renderer.render(scene, camera); });
   } else {
