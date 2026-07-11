@@ -1,9 +1,9 @@
 /* ============================================================
    HEDENSTED LÆGEHUS — 3D/WebGL hero til FORSIDEN
-   Stiliseret æskulapstav: gylden stav med en venlig, mintgrøn
-   slange — glatte, blanke former i lyse farver som en moderne
-   3D-illustration. Tydeligt slangehoved med store øjne og
-   spillende tunge.
+   Stiliseret stetoskop: to buede metal-ørebøjler samles i en
+   blød, mintgrøn slange, der løber i et elegant S ned til
+   bryststykket, hvis membran "banker" roligt som et hjerteslag.
+   Lyse, venlige farver — champagne-metal og frisk mint.
    Renderet med Three.js (global THREE fra js/vendor/three.min.js).
    Falder pænt tilbage til CSS-gradienten hvis WebGL mangler,
    og respekterer "prefers-reduced-motion".
@@ -18,43 +18,6 @@ function webglAvailable() {
   } catch {
     return false;
   }
-}
-
-/* ---------- Rør-geometri med varierende radius (hale → krop → hals) ---------- */
-function taperedTube(curve, segments, radial, radiusAt) {
-  const frames = curve.computeFrenetFrames(segments, false);
-  const positions = [], normals = [], uvs = [], indices = [];
-
-  for (let i = 0; i <= segments; i++) {
-    const t = i / segments;
-    const p = curve.getPointAt(t);
-    const N = frames.normals[i], B = frames.binormals[i];
-    const r = radiusAt(t);
-    for (let j = 0; j <= radial; j++) {
-      const ang = (j / radial) * Math.PI * 2;
-      const sin = Math.sin(ang), cos = Math.cos(ang);
-      const nx = cos * N.x + sin * B.x;
-      const ny = cos * N.y + sin * B.y;
-      const nz = cos * N.z + sin * B.z;
-      positions.push(p.x + r * nx, p.y + r * ny, p.z + r * nz);
-      normals.push(nx, ny, nz);
-      uvs.push(t, j / radial);
-    }
-  }
-  for (let i = 0; i < segments; i++) {
-    for (let j = 0; j < radial; j++) {
-      const a = i * (radial + 1) + j;
-      const b = a + radial + 1;
-      indices.push(a, a + 1, b, b, a + 1, b + 1);
-    }
-  }
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-  geo.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
-  geo.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
-  geo.setIndex(indices);
-  return geo;
 }
 
 function init(canvas) {
@@ -74,174 +37,133 @@ function init(canvas) {
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.set(0, 0.3, 11);
 
-  /* ---------- Lys — lyst og venligt, ingen tunge skygger ---------- */
+  /* ---------- Lys — lyst og venligt ---------- */
   scene.add(new THREE.HemisphereLight(0xfdfaf2, 0xd2ebdd, 1.5));
 
-  const keyLight = new THREE.DirectionalLight(0xfff1da, 1.9); // varm sol
+  const keyLight = new THREE.DirectionalLight(0xfff1da, 1.9);
   keyLight.position.set(5, 7, 6);
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight(0xbdeee2, 0.9); // frisk mint
+  const fillLight = new THREE.DirectionalLight(0xbdeee2, 0.9);
   fillLight.position.set(-6, -1, 4);
   scene.add(fillLight);
 
-  /* ---------- Materialer — glatte og blanke, som poleret legetøj ---------- */
-  const goldMat = new THREE.MeshPhysicalMaterial({
-    color: 0xf2d9a4, roughness: 0.3, metalness: 0.35, // lys champagne
-    clearcoat: 0.6, clearcoatRoughness: 0.25,
-  });
-  const snakeMat = new THREE.MeshPhysicalMaterial({
-    color: 0x66dfc9, roughness: 0.32, metalness: 0.02, // lys, frisk mint
+  /* ---------- Materialer ---------- */
+  const metalMat = new THREE.MeshPhysicalMaterial({
+    color: 0xf0d8a6, roughness: 0.25, metalness: 0.55, // lys champagne
     clearcoat: 0.7, clearcoatRoughness: 0.2,
-    emissive: 0x2a8f7f, emissiveIntensity: 0.08,
+  });
+  const tubeMat = new THREE.MeshPhysicalMaterial({
+    color: 0x66dfc9, roughness: 0.35, metalness: 0.02, // lys, frisk mint
+    clearcoat: 0.65, clearcoatRoughness: 0.25,
+    emissive: 0x2a8f7f, emissiveIntensity: 0.07,
+  });
+  const oliveMat = new THREE.MeshPhysicalMaterial({
+    color: 0x35b3a0, roughness: 0.45, metalness: 0, // dybere mint til øreoliven
+    clearcoat: 0.4, clearcoatRoughness: 0.35,
+  });
+  const membraneMat = new THREE.MeshPhysicalMaterial({
+    color: 0xfbfaf5, roughness: 0.35, metalness: 0.05,
+    emissive: 0x35d0c5, emissiveIntensity: 0.0, // pulserer i render-løkken
   });
 
-  /* ---------- Æskulapstaven ---------- */
-  const aesculap = new THREE.Group();
-  scene.add(aesculap);
+  /* ---------- Stetoskopet ---------- */
+  const steto = new THREE.Group();
+  scene.add(steto);
 
-  const STAFF_H = 8.2;
-  const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.16, STAFF_H, 28), goldMat);
-  aesculap.add(staff);
+  // -- Ørebøjler i metal: klassisk lyre-form, samles i Y'et --
+  const Y_POINT = new THREE.Vector3(0, 1.3, 0.05);
 
-  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.32, 28, 28), goldMat);
-  knob.position.y = STAFF_H / 2 + 0.2;
-  aesculap.add(knob);
-
-  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.05, 12, 24), goldMat);
-  collar.rotation.x = Math.PI / 2;
-  collar.position.y = STAFF_H / 2 - 0.12;
-  aesculap.add(collar);
-
-  const foot = new THREE.Mesh(new THREE.SphereGeometry(0.2, 22, 22), goldMat);
-  foot.position.y = -STAFF_H / 2;
-  aesculap.add(foot);
-
-  /* ---------- Slangen — blød spiral med fyldig krop ---------- */
-  const TURNS = 3.5;
-  const SNAKE_TOP = 2.9;
-  const SNAKE_BOTTOM = -3.4;
-  const COIL_R = 0.5;
-
-  const pts = [];
-  const N = 130;
-  // Faseforskydning så spiralen ender fortil (mod kameraet)
-  const PHASE = Math.PI / 2 - Math.PI * 2 * TURNS;
-  for (let i = 0; i <= N; i++) {
-    const t = i / N;
-    const angle = t * Math.PI * 2 * TURNS + PHASE;
-    const r = COIL_R * (1.05 - 0.14 * t);
-    pts.push(new THREE.Vector3(
-      Math.cos(angle) * r,
-      SNAKE_BOTTOM + (SNAKE_TOP - SNAKE_BOTTOM) * t,
-      Math.sin(angle) * r
-    ));
+  function earTube(side) {
+    const pts = [
+      new THREE.Vector3(side * 0.72, 3.25, 0),
+      new THREE.Vector3(side * 0.84, 2.8, 0.06),
+      new THREE.Vector3(side * 0.62, 2.1, 0.1),
+      new THREE.Vector3(side * 0.22, 1.55, 0.08),
+      Y_POINT.clone(),
+    ];
+    const curve = new THREE.CatmullRomCurve3(pts);
+    curve.curveType = "centripetal";
+    return curve;
   }
-  // Halen svinger blødt ud forneden; hovedet løfter sig frit foroven
-  // og læner sig frem mod beskueren
-  pts[0].multiplyScalar(1.8).setY(SNAKE_BOTTOM - 0.3);
-  const last = pts[N];
-  pts.push(new THREE.Vector3(last.x * 1.5, SNAKE_TOP + 0.55, last.z * 1.5 + 0.55));
 
-  const snakeCurve = new THREE.CatmullRomCurve3(pts);
-
-  // Fyldig, "buttet" krop: spids hale → tyk midte → hals
-  const BODY_R = 0.21;
-  const radiusAt = (t) => {
-    const tail = Math.min(1, t / 0.25);
-    const ease = tail * tail * (3 - 2 * tail);
-    const r = 0.03 + (BODY_R - 0.03) * ease;
-    const neck = t > 0.86 ? (t - 0.86) / 0.14 : 0;
-    return r * (1 - 0.3 * neck * neck);
-  };
-
-  const snake = new THREE.Mesh(taperedTube(snakeCurve, 380, 20, radiusAt), snakeMat);
-  aesculap.add(snake);
-
-  const tailTip = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 12), snakeMat);
-  tailTip.position.copy(snakeCurve.getPoint(0));
-  aesculap.add(tailTip);
-
-  /* ---------- Hovedet — stort, venligt og tydeligt (bygget mod +Z) ---------- */
-  const headPivot = new THREE.Group();
-  const head = new THREE.Group();
-  headPivot.add(head);
-
-  // Kranium: stor afrundet dråbeform
-  const skull = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 26), snakeMat);
-  skull.scale.set(1.0, 0.82, 1.35);
-  head.add(skull);
-  head.scale.setScalar(1.35); // markant, tydeligt hoved
-
-  // Snude: blødt afrundet, let opadvendt
-  const snout = new THREE.Mesh(new THREE.SphereGeometry(0.2, 26, 20), snakeMat);
-  snout.scale.set(0.78, 0.6, 1.1);
-  snout.position.set(0, -0.05, 0.33);
-  head.add(snout);
-
-  // Store, venlige øjne: hvid sklera + mørk pupil + lysglimt
-  const scleraMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.25 });
-  const pupilMat = new THREE.MeshBasicMaterial({ color: 0x143a3d });
-  const glintMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   [-1, 1].forEach((side) => {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.115, 22, 22), scleraMat);
-    eye.position.set(side * 0.19, 0.12, 0.22);
-    head.add(eye);
-    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.062, 16, 16), pupilMat);
-    pupil.position.set(side * 0.2, 0.12, 0.315);
-    head.add(pupil);
-    const glint = new THREE.Mesh(new THREE.SphereGeometry(0.022, 10, 10), glintMat);
-    glint.position.set(side * 0.175, 0.155, 0.36);
-    head.add(glint);
-    // blødt øjenbryn giver karakter
-    const brow = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 12), snakeMat);
-    brow.scale.set(1.1, 0.38, 0.9);
-    brow.position.set(side * 0.19, 0.235, 0.2);
-    head.add(brow);
+    const curve = earTube(side);
+    const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.055, 14), metalMat);
+    steto.add(tube);
+
+    // Øreoliven: blød, afrundet dråbe, vinklet ind mod øret
+    const olive = new THREE.Mesh(new THREE.SphereGeometry(0.13, 18, 16), oliveMat);
+    olive.scale.set(1, 1.25, 1);
+    olive.position.set(side * 0.7, 3.38, 0);
+    olive.rotation.z = -side * 0.35;
+    steto.add(olive);
   });
 
-  // Næsebor
-  const nostrilMat = new THREE.MeshBasicMaterial({ color: 0x0d4b42 });
-  [-1, 1].forEach((side) => {
-    const nostril = new THREE.Mesh(new THREE.SphereGeometry(0.018, 8, 8), nostrilMat);
-    nostril.position.set(side * 0.07, -0.02, 0.51);
-    head.add(nostril);
-  });
+  // Lille fjederbøjle mellem de to metalrør
+  const springCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-0.52, 2.25, 0.12),
+    new THREE.Vector3(0, 2.05, 0.16),
+    new THREE.Vector3(0.52, 2.25, 0.12),
+  ]);
+  const spring = new THREE.Mesh(new THREE.TubeGeometry(springCurve, 32, 0.028, 10), metalMat);
+  steto.add(spring);
 
-  // Kløftet koral-tunge, der spiller
-  const tongue = new THREE.Group();
-  const tongueMat = new THREE.MeshStandardMaterial({ color: 0xf2766b, roughness: 0.5 });
-  const tongueBase = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.26, 8), tongueMat);
-  tongueBase.rotation.x = Math.PI / 2;
-  tongueBase.position.z = 0.13;
-  tongue.add(tongueBase);
-  [-1, 1].forEach((side) => {
-    const fork = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.017, 0.14, 6), tongueMat);
-    fork.rotation.x = Math.PI / 2;
-    fork.rotation.z = side * 0.5;
-    fork.position.set(side * 0.033, 0, 0.3);
-    tongue.add(fork);
-  });
-  tongue.position.set(0, -0.1, 0.5);
-  tongue.scale.z = 0.001;
-  tongue.visible = false;
-  head.add(tongue);
+  // -- Y-muffe hvor metal møder gummislangen --
+  const yoke = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.34, 16), metalMat);
+  yoke.position.copy(Y_POINT);
+  steto.add(yoke);
 
-  // Placér hovedet for enden af kroppen og lad det kigge frem
-  // mod beskueren med et lille løft
-  const headPos = snakeCurve.getPoint(1);
-  const headTangent = snakeCurve.getTangent(1);
-  headPivot.position.copy(headPos).addScaledVector(headTangent, 0.22);
-  headPivot.lookAt(new THREE.Vector3(
-    headPivot.position.x * 1.4,
-    headPivot.position.y + 0.35,
-    headPivot.position.z + 6
-  ));
-  aesculap.add(headPivot);
+  // -- Gummislangen: elegant S-forløb ned til bryststykket --
+  const CHEST = new THREE.Vector3(-0.55, -2.85, 0.2); // hvor slangen ender
+  const tubePts = [
+    Y_POINT.clone(),
+    new THREE.Vector3(0.28, 0.55, 0.22),
+    new THREE.Vector3(0.62, -0.5, 0.12),
+    new THREE.Vector3(0.35, -1.6, -0.05),
+    new THREE.Vector3(-0.25, -2.35, 0.1),
+    CHEST.clone(),
+  ];
+  const tubeCurve = new THREE.CatmullRomCurve3(tubePts);
+  tubeCurve.curveType = "centripetal";
+  const rubber = new THREE.Mesh(new THREE.TubeGeometry(tubeCurve, 140, 0.085, 16), tubeMat);
+  steto.add(rubber);
 
-  aesculap.position.set(3.1, 0, 0);
-  aesculap.rotation.z = -0.08;
-  aesculap.scale.setScalar(0.8); // hele symbolet, inkl. knop og hoved, i billedet
+  // -- Bryststykket: stilk, klokke og lys membran --
+  const chest = new THREE.Group();
+
+  const stemDir = tubeCurve.getTangent(1).normalize();
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.095, 0.5, 16), metalMat);
+  stem.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), stemDir.clone().negate());
+  stem.position.copy(stemDir.clone().multiplyScalar(0.22));
+  chest.add(stem);
+
+  // Klokken: affaset dobbelt-cylinder — membranen vender mod beskueren
+  const drum = new THREE.Group();
+  const bellBack = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.5, 0.16, 36), metalMat);
+  bellBack.position.z = -0.08;
+  bellBack.rotation.x = Math.PI / 2;
+  drum.add(bellBack);
+  const bellFront = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.52, 0.12, 36), metalMat);
+  bellFront.position.z = 0.06;
+  bellFront.rotation.x = Math.PI / 2;
+  drum.add(bellFront);
+  const membrane = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.44, 0.025, 36), membraneMat);
+  membrane.position.z = 0.135;
+  membrane.rotation.x = Math.PI / 2;
+  drum.add(membrane);
+
+  drum.position.copy(stemDir.clone().multiplyScalar(0.55));
+  drum.rotation.x = 0.35; // membranen vipper op mod beskueren
+  drum.rotation.y = -0.25;
+  chest.add(drum);
+
+  chest.position.copy(CHEST);
+  steto.add(chest);
+
+  steto.position.set(3.2, 0.4, 0);
+  steto.rotation.z = -0.05;
+  steto.scale.setScalar(0.95); // hele stetoskopet, inkl. bryststykke, i billedet
 
   /* ---------- Diskret støv i luften ---------- */
   const P_COUNT = 260;
@@ -271,8 +193,8 @@ function init(canvas) {
     const w = hero.clientWidth, h = hero.clientHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // På smalle skærme rykkes staven ind i midten bag teksten
-    aesculap.position.x = w < 760 ? 0.6 : 3.1;
+    // På smalle skærme rykkes stetoskopet ind i midten bag teksten
+    steto.position.x = w < 760 ? 0.7 : 3.2;
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
@@ -281,26 +203,28 @@ function init(canvas) {
   /* ---------- Render-løkke ---------- */
   const clock = new THREE.Clock();
   let rafId = null;
+  const BPS = 63 / 60; // roligt hvilepuls-tempo
 
   function frame() {
     const t = clock.getElapsedTime();
 
-    // Staven svajer blidt fra side til side — hovedet beholder
-    // øjenkontakten med beskueren
-    aesculap.rotation.y = Math.sin(t * 0.32) * 0.38;
-    aesculap.position.y = Math.sin(t * 0.55) * 0.16;
-    aesculap.rotation.z = -0.08 + Math.sin(t * 0.4) * 0.025;
+    // Blid svajen og løft — som om stetoskopet hænger og dingler let
+    steto.rotation.y = Math.sin(t * 0.3) * 0.3;
+    steto.rotation.z = -0.05 + Math.sin(t * 0.42) * 0.03;
+    steto.position.y = 0.4 + Math.sin(t * 0.55) * 0.14;
 
-    // Hovedet vejrer nysgerrigt
-    head.rotation.y = Math.sin(t * 0.6) * 0.16;
-    head.rotation.x = Math.sin(t * 0.45 + 1.2) * 0.08;
+    // Bryststykket svinger ganske let som et pendul
+    chest.rotation.z = Math.sin(t * 0.8) * 0.06;
+    chest.rotation.x = Math.sin(t * 0.65 + 0.8) * 0.05;
 
-    // Tungen spiller ud cirka hvert 4. sekund — to hurtige flik
-    const cycle = t % 4.2;
-    let ext = 0;
-    if (cycle < 0.55) ext = Math.abs(Math.sin((cycle / 0.55) * Math.PI * 2));
-    tongue.visible = ext > 0.03;
-    tongue.scale.z = Math.max(0.001, ext);
+    // Membranen "banker" roligt — dobbeltslag som et hjerte (lub-dub)
+    const phase = (t * BPS) % 1;
+    const beat =
+      Math.exp(-Math.pow((phase - 0.12) / 0.045, 2)) +
+      0.55 * Math.exp(-Math.pow((phase - 0.32) / 0.05, 2));
+    membrane.material.emissiveIntensity = beat * 0.45;
+    const s = 1 + beat * 0.035;
+    membrane.scale.set(s, 1, s);
 
     particles.rotation.y = t * 0.012;
 
@@ -315,13 +239,11 @@ function init(canvas) {
   }
 
   if (reducedMotion) {
-    // Ét statisk, flot frame — ingen animation
     renderer.render(scene, camera);
     window.addEventListener("resize", () => { resize(); renderer.render(scene, camera); });
   } else {
     const loop = () => { frame(); rafId = requestAnimationFrame(loop); };
     loop();
-    // Pausér når fanen er skjult eller hero er scrollet ud af syne
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) { cancelAnimationFrame(rafId); rafId = null; }
       else if (!rafId) loop();
