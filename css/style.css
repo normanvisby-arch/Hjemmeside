@@ -207,7 +207,8 @@ h1, h2, h3, h4 {
 }
 /* Løft teksten og hold manchetten smallere, så den ikke rammer
    den lyse stålklokke nederst til højre */
-.hero.hero-photo .hero-content { padding: 60px 0 220px; }
+.hero.hero-photo .hero-content { padding: 60px 0 220px; max-width: 700px; }
+.hero.hero-photo h1 { font-size: clamp(2.2rem, 4.6vw, 3.5rem); }
 .hero.hero-photo p.lede { max-width: 46ch; }
 @media (max-width: 760px) {
   .hero.hero-photo { background-position: 0 0, 76% center, 0 0; }
