@@ -196,6 +196,18 @@ h1, h2, h3, h4 {
 .hero.hero-deep .btn-ghost:hover { background: rgba(255,255,255,0.16); }
 .hero.hero-deep .scroll-hint { color: rgba(255,255,255,0.55); }
 .hero.hero-deep .scroll-hint::after { background: linear-gradient(180deg, var(--mint), transparent); }
+
+/* Foto-hero: roligt stilbillede i stedet for 3D-animation.
+   Mørkt venstre-skær sikrer tekstlæsbarhed oven på billedet. */
+.hero.hero-photo {
+  background:
+    linear-gradient(90deg, rgba(4, 22, 28, 0.78) 0%, rgba(4, 22, 28, 0.35) 42%, rgba(4, 22, 28, 0) 68%),
+    url("../assets/hero-stetoskop.jpg") 72% center / cover no-repeat,
+    linear-gradient(168deg, #051d24 0%, #072a33 100%);
+}
+@media (max-width: 760px) {
+  .hero.hero-photo { background-position: 0 0, 76% center, 0 0; }
+}
 .hero.hero-sub.hero-lab { min-height: 62vh; }
 
 #hero-canvas {
