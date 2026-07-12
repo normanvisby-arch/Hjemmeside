@@ -149,11 +149,21 @@ if (typeof SITE_DATA !== "undefined") {
   }
 
   // Patientinformation:  <div class="accordion prose" data-patientinfo>…</div>
-  // tekst er rig HTML (afsnit, lister), så den indsættes direkte i acc-body.
+  // tekst er rig HTML; et emne kan referere en struktureret prisliste
+  // (attester/vacciner), som indsættes ved markøren [[PRISER]] i teksten.
+  const prisliste = (rows) => (Array.isArray(rows) && rows.length)
+    ? `<div class="pris-liste">${rows.map((r) =>
+        `<div class="pris-row"><span class="pris-navn">${r.ydelse || r.navn || ""}</span><span class="pris-vaerdi">${r.pris || ""}</span></div>`
+      ).join("")}</div>`
+    : "";
   const piWrap = document.querySelector("[data-patientinfo]");
   if (piWrap && Array.isArray(SITE_DATA.patientinfo) && SITE_DATA.patientinfo.length) {
-    piWrap.innerHTML = SITE_DATA.patientinfo.map((e) =>
-      `<details><summary>${e.titel}</summary><div class="acc-body">${e.tekst}</div></details>`).join("");
+    piWrap.innerHTML = SITE_DATA.patientinfo.map((e) => {
+      let body = e.tekst || "";
+      const tbl = e.priser ? prisliste(SITE_DATA[e.priser]) : "";
+      body = body.includes("[[PRISER]]") ? body.replace("[[PRISER]]", tbl) : body + tbl;
+      return `<details><summary>${e.titel}</summary><div class="acc-body">${body}</div></details>`;
+    }).join("");
   }
 }
 

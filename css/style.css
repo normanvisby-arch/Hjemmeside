@@ -447,6 +447,13 @@ h1, h2, h3, h4 {
 .accordion .acc-body p:first-child { margin-top: 0; }
 .accordion .acc-body p:last-child { margin-bottom: 0; }
 
+/* Strukturerede prislister (attester, vaccinationer) */
+.pris-liste { margin: 14px 0; }
+.pris-row { display: flex; justify-content: space-between; gap: 18px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.pris-row:last-child { border-bottom: none; }
+.pris-navn { color: var(--ink); }
+.pris-vaerdi { white-space: nowrap; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+
 /* ---------- Nyheder ---------- */
 .news-item {
   display: flex; gap: 22px; align-items: flex-start;

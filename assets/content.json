@@ -191,7 +191,8 @@
     },
     {
       "titel": "Attester og erklæringer — priser",
-      "tekst": "<p>Priser på attester og erklæringer (alle priser er inkl. moms):</p><ul><li>Kørekortsattest* — 500,00 kr.</li><li>Ansøgning om enkelttilskud — 250,00 kr.</li><li>Mulighedserklæring — 750,00 kr.</li><li>Sygemelding betalt af arbejdsgiver — 1.070,00 kr.</li><li>Kort frihåndsattest betalt af patienten — 500,00 kr.</li><li>Bokserattest — 1.235,00 kr.</li></ul><p>*Kørekortsattesten er overgået til en digital løsning. Du bedes derfor udfylde Del A på forhånd. Del A skal være udfyldt senest dagen før din tid i klinikken.</p><p>Attester uden aftalte takster mellem lægeforeningen og rekvirent faktureres med honorar efter tidsforbrug med 500 kr. pr. påbegyndt 15 min. inkl. forberedelse. Administrationsgebyr ved udskrift af journalmateriale afregnes ligeledes efter tidsforbrug.</p>"
+      "tekst": "<p>Priser på attester og erklæringer (alle priser er inkl. moms):</p>[[PRISER]]<p>*Kørekortsattesten er overgået til en digital løsning. Du bedes derfor udfylde Del A på forhånd. Del A skal være udfyldt senest dagen før din tid i klinikken.</p><p>Attester uden aftalte takster mellem lægeforeningen og rekvirent faktureres med honorar efter tidsforbrug med 500 kr. pr. påbegyndt 15 min. inkl. forberedelse. Administrationsgebyr ved udskrift af journalmateriale afregnes ligeledes efter tidsforbrug.</p>",
+      "priser": "attester"
     },
     {
       "titel": "Blodprøver på Horsens og Vejle Sygehus",
@@ -227,7 +228,8 @@
     },
     {
       "titel": "Rejsevaccination",
-      "tekst": "<p>Vi tilbyder rådgivning og vaccinationer i forbindelse med udlandsrejser ved vores sygeplejersker. Bestil tid hos sekretæren på <a href=\"tel:75891811\">75 89 18 11</a>.</p><p>Det er vigtigt, at du bestiller tid i god tid, så sygeplejersken kan tilrettelægge et vaccinationsprogram tilpasset din rejse — de fleste vaccinationer skal gives med måneders interval.</p><p><strong>Vaccinationspriser</strong></p><ul><li>Hepatitis A+B, Twinrix (x3) — 16 år og op: 900 kr./stk.</li><li>Hepatitis A+B, Twinrix (x3) — børn 0–15 år: 600 kr./stk.</li><li>Hepatitis A+B, Ambrix (x2) — børn 0–15 år: 700 kr./stk.</li><li>Havrix, Hepatitis A (x2) — 16 år og op: 725 kr./stk.</li><li>Havrix, Hepatitis A (x2) — børn 0–15 år: 615 kr./stk.</li><li>Engerix, Hepatitis B (x3) — 16 år og op: 660 kr./stk.</li><li>Engerix, Hepatitis B (x3) — børn 0–15 år: 575 kr./stk.</li><li>Japansk Encephalit (x2): 1.350 kr./stk.</li><li>Typhim (tyfus): 550 kr./stk.</li><li>Gul feber: 625 kr./stk.</li><li>Meningococ: 900 kr./stk.</li><li>Rabies (x2): 975 kr./stk.</li><li>TBE (skovflåt, x3) — 16 år og op: 625 kr./stk.</li><li>TBE (x3) — børn 0–15 år: 585 kr./stk.</li><li>Di-Te (ved udlandsrejse): 425 kr./stk.</li><li>Pneumovax: 600 kr./stk.</li><li>Polio: 400 kr./stk.</li><li>Varicella (skoldkopper): 850 kr./stk.</li><li>Dukoral (kolera): 900 kr. for 2 stk.</li><li>Recept på fx malaria (inkl. konsultation): 400 kr.</li></ul><p>Vi anlægger ikke Mantoux i forbindelse med udlandsrejse; her henviser vi til Lungeambulatoriet, Aarhus Universitetshospital (hverdage 08.15–14.00, tlf. 78 46 20 89). Se desuden <a href=\"https://www.ssi.dk\" target=\"_blank\" rel=\"noopener\">Statens Serum Institut</a>.</p>"
+      "tekst": "<p>Vi tilbyder rådgivning og vaccinationer i forbindelse med udlandsrejser ved vores sygeplejersker. Bestil tid hos sekretæren på <a href=\"tel:75891811\">75 89 18 11</a>.</p><p>Det er vigtigt, at du bestiller tid i god tid, så sygeplejersken kan tilrettelægge et vaccinationsprogram tilpasset din rejse — de fleste vaccinationer skal gives med måneders interval.</p><p><strong>Vaccinationspriser</strong></p>[[PRISER]]<p>Vi anlægger ikke Mantoux i forbindelse med udlandsrejse; her henviser vi til Lungeambulatoriet, Aarhus Universitetshospital (hverdage 08.15–14.00, tlf. 78 46 20 89). Se desuden <a href=\"https://www.ssi.dk\" target=\"_blank\" rel=\"noopener\">Statens Serum Institut</a>.</p>",
+      "priser": "vacciner"
     },
     {
       "titel": "Medicinsk cannabis",
@@ -280,6 +282,114 @@
     {
       "titel": "Fnatbehandling",
       "tekst": "<p>Fnat behandles med enten <strong>Nix</strong> (creme) eller <strong>Scatol</strong> (tabletter på recept). Følg vejledningen nøje — behandlingen gentages efter 7 dage.</p><p><strong>Behandling med Nix</strong></p><p>Nix smøres omhyggeligt på ren og tør hud i et tyndt lag. Husk også mellem fingre og tæer, øre, neglebånd, under arme, i navle, på kønsorganerne og omkring endetarmen. Nix skal være på huden mellem 8 og 12 timer — smør bedst om aftenen og vask af næste morgen. Efter håndvask smøres hænderne igen med Nix i de 8–12 timer, behandlingen skal virke. Brug engangshandsker ved opvask og andet vådt arbejde, og smør hænderne igen med Nix, når handskerne tages af. Behandlingen gentages efter 7 dage.</p><p><strong>Behandling med Scatol</strong></p><p>Tabletterne er på recept, og antallet udregnes efter kropsvægt. Der behandles to gange med en uges mellemrum: tabletterne indtages på én gang, og samme antal tages igen på 7.-dagen. Det er vigtigt, at tabletterne tages med et glas vand på tom mave — mindst 2 timer før eller efter et måltid. Vi anbefaler indtag eftermiddag/aften, og at du dagen efter påbegynder vask og rengøring af hjemmet. Til børn kan tabletterne knuses inden indtagelse. Det anbefales, at tætte relationer (husstand, kæreste, værelseskammerater og lignende) behandles samtidigt.</p><p><strong>Forholdsregler — vask og rengøring</strong></p><ul><li>Tag et grundigt brusebad dagen efter behandling, skift til rent tøj og brug separate håndklæder og vaskeklude.</li><li>Skift sengelinned (tag handsker på). Møbler rengøres og støvsuges grundigt, og støvsugerposen udskiftes.</li><li>Tøj, sengetøj, puder, dyner, håndklæder, bamser, løse tæpper o.l. vaskes ved <strong>minimum 60 grader</strong>, hvis det har været brugt inden for de sidste 7 dage. Det, der ikke tåler 60 grader, lægges i en lukket plastpose i 4 døgn ved 20 grader (eller 7 døgn ved lavere temperatur/høj fugtighed).</li><li>Fnatmiden kan overleve i tøj og tekstiler i op til 4–7 døgn. Derfor må dagligt benyttede tekstilmøbler (fx stofsofa og seng inkl. madras) <strong>ikke</strong> benyttes i 7 døgn. Har du ikke en anden seng/madras/bilsæde, kan du afdække med plastik (fx male-afdækningsplast) i de 7 dage.</li><li>Bilsæder (inkl. autostole) støvsuges grundigt og dækkes eventuelt med plastik.</li></ul><p>Samme procedure gentages efter 7 dage i forbindelse med genbehandlingen, for at fjerne eventuelle nyudklækkede mider.</p><p><strong>Hvornår er man smittefri?</strong></p><p>Man er normalt smittefri 12 timer efter første behandling. Børn kan derfor komme i dagtilbud eller skole igen 12 timer efter påbegyndt behandling. Undgå tæt fysisk kontakt under hele behandlingen.</p><p><strong>Det klør stadig</strong></p><p>Det er normalt med kløe i nogle uger efter behandling. Smøring med binyrebarkhormon-creme 1 gang dagligt i 1–2 uger afhjælper kløen. Huden kan opleves tør — smør med en god fugtighedscreme. Kommer der pludselig kløe igen efter flere uger uden, skal man mistænke fornyet smitte. I starten af behandlingen kan kløen forværres, men det varer som regel ikke længe.</p><p><strong>Godt at vide</strong></p><p>Der kan gå 4–8 uger, fra man smittes, til man udvikler kløe første gang. Anden gang går der normalt kun 2–3 dage.</p>"
+    }
+  ],
+  "attester": [
+    {
+      "ydelse": "Kørekortsattest*",
+      "pris": "500,00 kr."
+    },
+    {
+      "ydelse": "Ansøgning om enkelttilskud",
+      "pris": "250,00 kr."
+    },
+    {
+      "ydelse": "Mulighedserklæring",
+      "pris": "750,00 kr."
+    },
+    {
+      "ydelse": "Sygemelding betalt af arbejdsgiver",
+      "pris": "1.070,00 kr."
+    },
+    {
+      "ydelse": "Kort frihåndsattest betalt af patienten",
+      "pris": "500,00 kr."
+    },
+    {
+      "ydelse": "Bokserattest",
+      "pris": "1.235,00 kr."
+    }
+  ],
+  "vacciner": [
+    {
+      "navn": "Hepatitis A+B, Twinrix (x3) — 16 år og op",
+      "pris": "900 kr./stk."
+    },
+    {
+      "navn": "Hepatitis A+B, Twinrix (x3) — børn 0–15 år",
+      "pris": "600 kr./stk."
+    },
+    {
+      "navn": "Hepatitis A+B, Ambrix (x2) — børn 0–15 år",
+      "pris": "700 kr./stk."
+    },
+    {
+      "navn": "Havrix, Hepatitis A (x2) — 16 år og op",
+      "pris": "725 kr./stk."
+    },
+    {
+      "navn": "Havrix, Hepatitis A (x2) — børn 0–15 år",
+      "pris": "615 kr./stk."
+    },
+    {
+      "navn": "Engerix, Hepatitis B (x3) — 16 år og op",
+      "pris": "660 kr./stk."
+    },
+    {
+      "navn": "Engerix, Hepatitis B (x3) — børn 0–15 år",
+      "pris": "575 kr./stk."
+    },
+    {
+      "navn": "Japansk Encephalit (x2)",
+      "pris": "1.350 kr./stk."
+    },
+    {
+      "navn": "Typhim (tyfus)",
+      "pris": "550 kr./stk."
+    },
+    {
+      "navn": "Gul feber",
+      "pris": "625 kr./stk."
+    },
+    {
+      "navn": "Meningococ",
+      "pris": "900 kr./stk."
+    },
+    {
+      "navn": "Rabies (x2)",
+      "pris": "975 kr./stk."
+    },
+    {
+      "navn": "TBE (skovflåt, x3) — 16 år og op",
+      "pris": "625 kr./stk."
+    },
+    {
+      "navn": "TBE (x3) — børn 0–15 år",
+      "pris": "585 kr./stk."
+    },
+    {
+      "navn": "Di-Te (ved udlandsrejse)",
+      "pris": "425 kr./stk."
+    },
+    {
+      "navn": "Pneumovax",
+      "pris": "600 kr./stk."
+    },
+    {
+      "navn": "Polio",
+      "pris": "400 kr./stk."
+    },
+    {
+      "navn": "Varicella (skoldkopper)",
+      "pris": "850 kr./stk."
+    },
+    {
+      "navn": "Dukoral (kolera)",
+      "pris": "900 kr. for 2 stk."
+    },
+    {
+      "navn": "Recept på fx malaria (inkl. konsultation)",
+      "pris": "400 kr."
     }
   ]
 }
