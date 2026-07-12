@@ -559,6 +559,8 @@ h1, h2, h3, h4 {
   stroke-linecap: round;
   stroke-linejoin: round;
   opacity: 0.55;
+}
+html.js .ekg-divider path {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
   transition: stroke-dashoffset 2.4s cubic-bezier(0.4, 0, 0.3, 1) 0.15s;
@@ -626,8 +628,10 @@ h1, h2, h3, h4 {
   .ekg-word .trace path { stroke-dashoffset: 0; animation: none; }
 }
 
-/* ---------- Reveal-animationer ---------- */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+/* ---------- Reveal-animationer ----------
+   Skjules KUN når JS kører (html.js sættes af main.js) — uden
+   JS er alt indhold synligt fra start. */
+html.js .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.in { opacity: 1; transform: none; }
 .reveal-d1 { transition-delay: 0.08s; }
 .reveal-d2 { transition-delay: 0.16s; }
