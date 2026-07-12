@@ -93,6 +93,9 @@ h1, h2, h3, h4 {
   from { opacity: 0; transform: translateY(9px); }
 }
 
+/* Anker-links (#sektion) lander under den faste header i stedet for skjult bag den */
+html { scroll-padding-top: 84px; }
+
 /* ---------- Header ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 100;
