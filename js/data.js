@@ -42,6 +42,12 @@ const SITE_DATA = {
       "under": "Husk",
       "titel": "Husk sundhedskortet",
       "tekst": "Scan dit sundhedskort (eller kort i app) ved ankomst, så vi kan se, at du er kommet. Det gælder også ved quicktider, hvor du tjekker ind hos sekretæren kl. 8.45–9.30."
+    },
+    {
+      "badge": "!",
+      "under": "Bemærk",
+      "titel": "Ny læge",
+      "tekst": "Ida er vores nye læge."
     }
   ],
   "laeger": [
