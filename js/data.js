@@ -27,6 +27,12 @@ const SITE_DATA = {
   ],
   "nyheder": [
     {
+      "badge": "1",
+      "under": "Sep 2026",
+      "titel": "Ny læge og kompagnon",
+      "tekst": "Ida bliver vores nye kompagnon."
+    },
+    {
       "badge": "14",
       "under": "Jan 2025",
       "titel": "Lukket for tilgang af nye patienter",
@@ -43,12 +49,6 @@ const SITE_DATA = {
       "under": "Husk",
       "titel": "Husk sundhedskortet",
       "tekst": "Scan dit sundhedskort (eller kort i app) ved ankomst, så vi kan se, at du er kommet. Det gælder også ved quicktider, hvor du tjekker ind hos sekretæren kl. 8.45–9.30."
-    },
-    {
-      "badge": "1",
-      "under": "Sep 2026",
-      "titel": "Ny læge og kompagnon",
-      "tekst": "Ida bliver vores nye kompagnon."
     }
   ],
   "laeger": [
