@@ -25,7 +25,7 @@ live på ca. 1 minut.
 | `personale.html` | Alle medarbejdere; portrætter vises automatisk fra `assets/personale/` (fallback: initialer) |
 | `praktisk.html` | Lægevagt, lægevalg, FAQ, links |
 | `kontakt.html` | Kontaktinfo, åbningstider, kort |
-| `js/data.js` | **Nyheder + hele personalelisten — det primære sted at rette indhold** |
+| `js/data.js` | **Nyhedsstream (topbjælke) + nyheder + hele personalelisten — det primære sted at rette indhold** |
 | `css/style.css` | Alt design |
 | `js/main.js` | Menu, scroll-effekter, tal-optælling, kort-tilt, tekst-reveal |
 | `js/hero-ekg.js` | EKG-animationen på laboratoriesiden (Three.js) |
@@ -45,8 +45,11 @@ live på ca. 1 minut.
 - **Ved ændret personaleantal**: husk også statistikkortene på
   forsiden (`data-count`) og evt. "otte faste læger"-formuleringer —
   de følger IKKE data.js automatisk.
-- **Banner øverst** ("lukket for tilgang"): `<div class="alert-bar">` i
-  hver HTML-fil — fjern/ret i alle seks filer.
+- **Nyhedsstream øverst** (den mørke bjælke, fx "lukket for tilgang"):
+  rettes i `ticker`-listen i `js/data.js` — slår igennem på alle sider.
+  Flere beskeder skifter automatisk hvert 6. sekund. Teksten, der står
+  hardcodet i `<div class="alert-bar" data-ticker>` i HTML-filerne, er
+  kun no-JS-fallback — hold den i sync med første ticker-punkt.
 - **Personalefotos**: læg kvadratiske jpg-filer i `assets/personale/`
   med navnene fra LÆSMIG.txt — intet andet skal ændres.
 

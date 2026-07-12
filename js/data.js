@@ -26,6 +26,14 @@
 
 const SITE_DATA = {
 
+  /* ---------- NYHEDSSTREAM (den mørke bjælke ØVERST på alle sider) ----------
+     Korte beskeder på én linje. Er der flere, skifter de automatisk
+     hvert 6. sekund. Slet dem, der ikke længere gælder.            */
+  ticker: [
+    "<strong>Bemærk:</strong> Klinikken er lukket for tilgang af nye patienter (pr. 14.01.2025).",
+    "<strong>Husk:</strong> Scan dit sundhedskort ved ankomst — også ved quicktider.",
+  ],
+
   /* ---------- NYHEDER (vises på forsiden, nyeste øverst) ----------
      badge   = det store i den lille boks (fx en dato-dag eller ✓)
      under   = den lille tekst under badge (fx måned/år)          */

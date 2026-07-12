@@ -24,6 +24,33 @@ document.querySelectorAll(".main-nav a[href]").forEach((a) => {
   if (target === here) a.setAttribute("aria-current", "page");
 });
 
+// ---------- Nyhedsstream i topbjælken (redigeres i js/data.js) ----------
+const tickerBar = document.querySelector("[data-ticker]");
+if (tickerBar && typeof SITE_DATA !== "undefined" &&
+    Array.isArray(SITE_DATA.ticker) && SITE_DATA.ticker.length) {
+  const items = SITE_DATA.ticker;
+  let tickerIdx = 0;
+  const visTicker = (i) => {
+    tickerBar.innerHTML = `<span class="ticker-item">${items[i]}</span>`;
+  };
+  visTicker(0);
+  if (items.length > 1) {
+    setInterval(() => {
+      if (prefersReduced) {
+        tickerIdx = (tickerIdx + 1) % items.length;
+        visTicker(tickerIdx);
+      } else {
+        const el = tickerBar.querySelector(".ticker-item");
+        if (el) el.classList.add("out");
+        setTimeout(() => {
+          tickerIdx = (tickerIdx + 1) % items.length;
+          visTicker(tickerIdx);
+        }, 350);
+      }
+    }, 6000);
+  }
+}
+
 // ---------- Dynamisk indhold fra js/data.js ----------
 // Nyheder og personale ligger i én lille, letredigérbar datafil,
 // så indholdet kan rettes uden at røre HTML'en.
