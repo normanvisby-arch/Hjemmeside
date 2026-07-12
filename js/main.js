@@ -147,6 +147,14 @@ if (typeof SITE_DATA !== "undefined") {
     faqWrap.innerHTML = SITE_DATA.faq.map((q) =>
       `<details><summary>${q.sp}</summary><div class="acc-body"><p>${q.svar}</p></div></details>`).join("");
   }
+
+  // Patientinformation:  <div class="accordion prose" data-patientinfo>…</div>
+  // tekst er rig HTML (afsnit, lister), så den indsættes direkte i acc-body.
+  const piWrap = document.querySelector("[data-patientinfo]");
+  if (piWrap && Array.isArray(SITE_DATA.patientinfo) && SITE_DATA.patientinfo.length) {
+    piWrap.innerHTML = SITE_DATA.patientinfo.map((e) =>
+      `<details><summary>${e.titel}</summary><div class="acc-body">${e.tekst}</div></details>`).join("");
+  }
 }
 
 // Scroll-reveal (inkl. EKG-skillelinjer, der tegner sig selv)

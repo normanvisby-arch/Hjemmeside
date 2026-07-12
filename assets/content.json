@@ -177,10 +177,21 @@
     "laboratoriet_hero_lede": "Vores eget laboratorium tager blodprøver og EKG med faste tider, så du hurtigt kan komme videre med din dag.",
     "personale_hero_lede": "Otte faste læger, konsultationssygeplejersker, bioanalytikere, lægesekretærer, fysioterapeut og praksismanager — vi arbejder tæt sammen om din behandling.",
     "praktisk_hero_lede": "Alt det praktiske — fra lægevagt og lægevalg til sundhedskort og nyttige links.",
-    "kontakt_hero_lede": "Vi holder til på Årupvej 6 i Hedensted — tæt på byen og med gode transportmuligheder."
+    "kontakt_hero_lede": "Vi holder til på Årupvej 6 i Hedensted — tæt på byen og med gode transportmuligheder.",
+    "patientinfo_hero_lede": "Priser, regler og praktiske oplysninger — fra attester og vaccinationer til recepter, prøver og meget mere."
   },
   "links": {
     "selvbetjening": "https://patientportal.egclinea.com/?id=671",
     "minlaege": "https://minlaegeapp.dk"
-  }
+  },
+  "patientinfo": [
+    {
+      "titel": "Afhængighedsskabende lægemidler",
+      "tekst": "<p>(Beroligende medicin og stærkt smertestillende.) I Hedensted Lægehus henholder vi os til Sundhedsstyrelsens retningslinjer. Derfor er det kun muligt at få fornyet recepter på potentielt afhængighedsskabende medicin ved fremmøde i klinikken.</p><p>Der skal desuden afholdes en eller to kontroller årligt, hvor den fremtidige behandling drøftes. Bestil gerne tid til dette via <strong>Min Læge</strong>-appen eller Tidsbestilling på forsiden.</p><p>I Sundhedsstyrelsens retningslinjer inden for området er følgende anført:</p><p><em>«Ordination og fornyelse af recepter på afhængighedsskabende lægemidler skal, medmindre særlige omstændigheder taler herfor, ske ved personlig konsultation, således at læge og patient har mulighed for at drøfte behandlingen og risikoen for afhængighed af midlerne. Konsultationen må ikke finde sted over internettet eller per telefon.»</em></p>"
+    },
+    {
+      "titel": "Attester og erklæringer — priser",
+      "tekst": "<p>Priser på attester og erklæringer (alle priser er inkl. moms):</p><ul><li>Kørekortsattest* — 500,00 kr.</li><li>Ansøgning om enkelttilskud — 250,00 kr.</li><li>Mulighedserklæring — 750,00 kr.</li><li>Sygemelding betalt af arbejdsgiver — 1.070,00 kr.</li><li>Kort frihåndsattest betalt af patienten — 500,00 kr.</li><li>Bokserattest — 1.235,00 kr.</li></ul><p>*Kørekortsattesten er overgået til en digital løsning. Du bedes derfor udfylde Del A på forhånd. Del A skal være udfyldt senest dagen før din tid i klinikken.</p><p>Attester uden aftalte takster mellem lægeforeningen og rekvirent faktureres med honorar efter tidsforbrug med 500 kr. pr. påbegyndt 15 min. inkl. forberedelse. Administrationsgebyr ved udskrift af journalmateriale afregnes ligeledes efter tidsforbrug.</p>"
+    }
+  ]
 }
