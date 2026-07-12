@@ -192,6 +192,50 @@
     {
       "titel": "Attester og erklæringer — priser",
       "tekst": "<p>Priser på attester og erklæringer (alle priser er inkl. moms):</p><ul><li>Kørekortsattest* — 500,00 kr.</li><li>Ansøgning om enkelttilskud — 250,00 kr.</li><li>Mulighedserklæring — 750,00 kr.</li><li>Sygemelding betalt af arbejdsgiver — 1.070,00 kr.</li><li>Kort frihåndsattest betalt af patienten — 500,00 kr.</li><li>Bokserattest — 1.235,00 kr.</li></ul><p>*Kørekortsattesten er overgået til en digital løsning. Du bedes derfor udfylde Del A på forhånd. Del A skal være udfyldt senest dagen før din tid i klinikken.</p><p>Attester uden aftalte takster mellem lægeforeningen og rekvirent faktureres med honorar efter tidsforbrug med 500 kr. pr. påbegyndt 15 min. inkl. forberedelse. Administrationsgebyr ved udskrift af journalmateriale afregnes ligeledes efter tidsforbrug.</p>"
+    },
+    {
+      "titel": "Blodprøver på Horsens og Vejle Sygehus",
+      "tekst": "<p>Følg nedenstående links for tidsbestilling på sygehuslaboratorierne. Vær opmærksom på, at lægen eller den rekvirerende sygehusafdeling skal have lagt blodprøverne ud på serveren, før du kan booke en tid.</p><ul><li><a href=\"https://www.regionshospitalet-horsens.dk/afdelinger/blodprover-og-biokemi/\" target=\"_blank\" rel=\"noopener\">Horsens Sygehus — book blodprøve</a></li><li><a href=\"https://booking.rsyd.dk/mineaftaler\" target=\"_blank\" rel=\"noopener\">Vejle Sygehus — book blodprøve</a></li></ul><p><strong>OBS:</strong> Region Midt vedtog pr. 01.07.2016 besparelser på laboratorieområdet i lægepraksis. Det betyder, at det ikke længere er muligt at komme i Laboratoriet i Hedensted Lægehus, hvis du skal have taget blodprøver og/eller EKG, der er bestilt til en sygehusafdeling. Der kan fortsat bestilles tid til blodprøver mv. til speciallæger.</p><p>Ønsker du at klage over ordningen eller har spørgsmål, kan du skrive til <a href=\"mailto:naere.sundhedstilbud@rm.dk\">naere.sundhedstilbud@rm.dk</a>.</p>"
+    },
+    {
+      "titel": "Brug af tolk",
+      "tekst": "<p>En lovændring pr. 1. juli 2018 betyder, at borgere, som har boet mere end 3 år i Danmark, skal betale for brug af tolk i sundhedsvæsenet. Tolkningen er gratis, hvis du har boet i Danmark i mindre end 3 år.</p><p>Skal du betale for tolkningen, får du tilsendt en regning fra din bopælsregion — i din e-Boks eller med almindelig brevpost.</p><p>Læs mere på <a href=\"https://www.sundhed.dk/borger/patientrettigheder/tilskud-stoettemuligheder/tolkebistand/\" target=\"_blank\" rel=\"noopener\">sundhed.dk om tolkebistand</a>.</p>"
+    },
+    {
+      "titel": "Børnevaccination",
+      "tekst": "<p>Der skal bestilles en fast konsultationstid til børnevaccination — se nedenfor, om det skal være ved læge eller sygeplejerske.</p><p><strong>Børnevaccinationsprogrammet</strong></p><ul><li>3 måneder: Di-Te-Ki-Pol-Hib + Pneumokok — bestil tid ved sygeplejerske</li><li>5 måneder: Di-Te-Ki-Pol-Hib + Pneumokok — bestil tid ved læge</li><li>12 måneder: Di-Te-Ki-Pol-Hib + Pneumokok — bestil tid ved læge</li><li>15 måneder: MFR 1 — bestil tid ved sygeplejerske</li><li>4 år: MFR 2 — bestil tid ved sygeplejerske</li><li>5 år: Di-Te-Ki-Pol revaccination — bestil tid ved læge</li></ul><p><strong>HPV-vaccination</strong> (mod livmoderhalskræft, analkræft og kønsvorter):</p><ul><li>Piger og drenge fra 12 til og med 14 år: to vaccinationer med mindst 5 måneders interval.</li><li>Piger og drenge fra 15 til og med 17 år: tre vaccinationer — 2. vaccine efter 2 måneder og 3. vaccine efter 6 måneder.</li></ul><p>Vi henviser desuden til <a href=\"https://www.sst.dk\" target=\"_blank\" rel=\"noopener\">Sundhedsstyrelsens hjemmeside</a> og deres pjece om Børnevaccinationsprogrammet.</p>"
+    },
+    {
+      "titel": "Graviditet",
+      "tekst": "<p>Sundhedsstyrelsen anbefaler 3 graviditetsundersøgelser hos egen læge:</p><ul><li>Uge 8–10</li><li>Uge 25</li><li>Uge 32</li></ul><p>Husk at bestille tid til disse undersøgelser — gerne i god tid.</p><p>Sundhedsstyrelsen har udviklet appen <strong>«Gravid»</strong>, som du kan bruge som vejledning og inspiration. Se desuden pjecen «Sunde vaner før, under og efter graviditet» (findes på flere sprog) på <a href=\"https://www.sst.dk\" target=\"_blank\" rel=\"noopener\">sst.dk</a>.</p>"
+    },
+    {
+      "titel": "Husk sundhedskortet / app'en",
+      "tekst": "<p>Sundhedskortet (tidligere sygesikringsbeviset) er dit personlige «adgangskort» til den offentlige sygesikrings ydelser. Det er et vigtigt dokument, der skal medbringes ved alle henvendelser i klinikken.</p><p>Ved ankomst registrerer du dig med dit sundhedskort i ankomststanderen. Er kortet defekt, skal du bestille et nyt via Borgerservice inden næste konsultation.</p><p><strong>App'en Sundhedskortet:</strong> Siden 1. juni 2021 findes appen «Sundhedskortet». Du kan med fordel oprette dig selv og dine børn på den og altid have kortene med dig. Find den i din app-store og læs mere på <a href=\"https://www.borger.dk\" target=\"_blank\" rel=\"noopener\">borger.dk</a>.</p>"
+    },
+    {
+      "titel": "Lungefunktionsundersøgelse",
+      "tekst": "<p>Vigtig information forud for undersøgelsen.</p><p><strong>Lungefunktionsundersøgelse:</strong> Formålet er at vurdere lungernes størrelse og funktion. Undersøgelsen varer cirka 15 minutter.</p><p><strong>Lungefunktionsundersøgelse med medicintest:</strong> Formålet er at vurdere lungernes funktion og størrelse samt effekten af luftvejsudvidende medicin. Undersøgelsen varer cirka 45 minutter.</p>"
+    },
+    {
+      "titel": "Cookiepolitik",
+      "tekst": "<p>Denne hjemmeside er en enkel, statisk side og bruger <strong>ingen cookies</strong> til statistik, markedsføring eller sporing. Der placeres ingen cookies, der kræver dit samtykke, og siden indsamler ikke personoplysninger om dig.</p>"
+    },
+    {
+      "titel": "Min Læge-app",
+      "tekst": "<p>Vi anbefaler, at du downloader <strong>Min Læge</strong>-appen. Ud over videokonsultation kan du bruge appen til e-konsultation, receptfornyelse og tidsbestilling.</p><p><strong>E-konsultation</strong> er egnet til korte, præcise spørgsmål, der ikke kræver længere udredning — fx svar på prøver eller undersøgelser. Har du brug for et mere uddybende svar, så bestil en fast tid i klinikken. E-konsultation må <strong>ikke</strong> bruges til akutte henvendelser (der kan være nogle dages svartid) eller til medicin- og tidsbestilling, som har egne moduler. Er din læge på kursus eller ferie, lukkes der for e-konsultationen; den åbnes igen, når lægen er tilbage.</p><p><strong>Receptfornyelse:</strong> Undgå telefonkøen ved at forny din faste medicin i dette modul. Der kan være et par dages ekspeditionstid, så bestil i god tid — men ikke for tidligt, da anmodninger kan blive afvist. Hold øje med, at du får en bekræftelse. Er dine faste ordinationer ikke tilgængelige, så kontakt sekretæren. Vanedannende medicin skal fornyes ved fremmøde (husk årlig kontrol ved din faste læge). Er medicinen ordineret på en sygehusafdeling, skal du kontakte afdelingen.</p><p><strong>Tidsbestilling:</strong> Bestil tid ved læge, sygeplejerske eller bioanalytiker, og beskriv kort, hvad det drejer sig om. Brug ikke dit eget cpr-nr. til at bestille tid til dine børn — kontakt sekretæren for at oprette børnene til e-service. De fleste årskontroller ved egen læge skal forudgås af en tid hos sygeplejersken (book gerne mindst 1 uge før lægetiden). Ved kørekortsattest: mød 10 minutter før din tid, så du kan nå at udfylde spørgeskema og betale. Bestil <strong>ikke</strong> lægeerklæringer, attester eller akutte konsultationer via tidsbestillingsmodulet — ring i stedet i telefontiden på <a href=\"tel:75891811\">75 89 18 11</a>.</p>"
+    },
+    {
+      "titel": "Rejsevaccination",
+      "tekst": "<p>Vi tilbyder rådgivning og vaccinationer i forbindelse med udlandsrejser ved vores sygeplejersker. Bestil tid hos sekretæren på <a href=\"tel:75891811\">75 89 18 11</a>.</p><p>Det er vigtigt, at du bestiller tid i god tid, så sygeplejersken kan tilrettelægge et vaccinationsprogram tilpasset din rejse — de fleste vaccinationer skal gives med måneders interval. Kontakt sekretæren for de aktuelle vaccinationspriser.</p><p>Vi anlægger ikke Mantoux i forbindelse med udlandsrejse; her henviser vi til Lungeambulatoriet, Aarhus Universitetshospital (hverdage 08.15–14.00, tlf. 78 46 20 89). Se desuden <a href=\"https://www.ssi.dk\" target=\"_blank\" rel=\"noopener\">Statens Serum Institut</a>.</p>"
+    },
+    {
+      "titel": "Medicinsk cannabis",
+      "tekst": "<p>De praktiserende lægers fagvidenskabelige selskab, Dansk Selskab for Almen Medicin (DSAM), har af hensyn til patienternes sikkerhed frarådet praktiserende læger at udskrive medicinsk cannabis.</p>"
+    },
+    {
+      "titel": "Patientdataforordning",
+      "tekst": "<p>Fra den 25. maj 2018 gælder databeskyttelsesforordningen (GDPR) for brug af personlige oplysninger. Du kan læse mere om dine patientrettigheder og behandlingen af persondata på <a href=\"https://www.sundhed.dk\" target=\"_blank\" rel=\"noopener\">sundhed.dk</a>.</p>"
     }
   ]
 }
