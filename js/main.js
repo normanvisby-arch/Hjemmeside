@@ -24,6 +24,45 @@ document.querySelectorAll(".main-nav a[href]").forEach((a) => {
   if (target === here) a.setAttribute("aria-current", "page");
 });
 
+// ---------- Dynamisk indhold fra js/data.js ----------
+// Nyheder og personale ligger i én lille, letredigérbar datafil,
+// så indholdet kan rettes uden at røre HTML'en.
+if (typeof SITE_DATA !== "undefined") {
+  const slug = (navn) => navn.toLowerCase()
+    .replace(/æ/g, "ae").replace(/ø/g, "oe").replace(/å/g, "aa")
+    .replace(/\s+/g, "-");
+  const initialer = (navn) =>
+    navn.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+
+  const staffCard = (p, i) => `
+    <div class="staff-card reveal${i % 3 === 1 ? " reveal-d1" : i % 3 === 2 ? " reveal-d2" : ""}">
+      <div class="avatar">
+        <span aria-hidden="true">${initialer(p.navn)}</span>
+        <img src="assets/personale/${slug(p.navn)}.jpg" alt="Portræt af ${p.navn}" loading="lazy" onerror="this.remove()">
+      </div>
+      <h3>${p.navn}</h3>
+      <div class="role">${p.rolle}</div>
+      ${p.info ? `<p>${p.info}</p>` : ""}
+    </div>`;
+
+  document.querySelectorAll("[data-staff]").forEach((el) => {
+    const liste = SITE_DATA[el.dataset.staff] || [];
+    el.innerHTML = liste.map(staffCard).join("");
+  });
+
+  const newsWrap = document.querySelector("[data-nyheder]");
+  if (newsWrap && SITE_DATA.nyheder) {
+    newsWrap.innerHTML = SITE_DATA.nyheder.map((n, i) => `
+      <article class="news-item reveal${i % 3 === 1 ? " reveal-d1" : i % 3 === 2 ? " reveal-d2" : ""}">
+        <div class="news-date" aria-hidden="true"><span class="d">${n.badge}</span><span class="m">${n.under}</span></div>
+        <div>
+          <h3>${n.titel}</h3>
+          <p>${n.tekst}</p>
+        </div>
+      </article>`).join("");
+  }
+}
+
 // Scroll-reveal (inkl. EKG-skillelinjer, der tegner sig selv)
 const revealables = document.querySelectorAll(".reveal, .ekg-divider");
 if ("IntersectionObserver" in window && revealables.length) {

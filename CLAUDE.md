@@ -25,6 +25,7 @@ live på ca. 1 minut.
 | `personale.html` | Alle medarbejdere; portrætter vises automatisk fra `assets/personale/` (fallback: initialer) |
 | `praktisk.html` | Lægevagt, lægevalg, FAQ, links |
 | `kontakt.html` | Kontaktinfo, åbningstider, kort |
+| `js/data.js` | **Nyheder + hele personalelisten — det primære sted at rette indhold** |
 | `css/style.css` | Alt design |
 | `js/main.js` | Menu, scroll-effekter, tal-optælling, kort-tilt, tekst-reveal |
 | `js/hero-ekg.js` | EKG-animationen på laboratoriesiden (Three.js) |
@@ -34,14 +35,16 @@ live på ca. 1 minut.
 
 ## Typiske opgaver
 
+- **Nyheder og personale: RET ALTID i `js/data.js`** — én lille
+  datafil med vejledning i toppen, skrevet så ikke-teknikere kan
+  rette den. HTML-siderne renderer indholdet automatisk derfra
+  (containere med `data-nyheder`/`data-staff`-attributter).
 - **Ret åbningstider/telefontider**: findes i `index.html` (info-bar +
   hours-panel), `konsultation.html` (telefonsektion) og `kontakt.html`.
   Ret ALLE steder, så de stemmer overens.
-- **Tilføj/fjern medarbejder**: personalesiden er håndskrevet HTML —
-  kopiér et eksisterende `staff-card` og ret navn/rolle/initialer.
-  Husk også statistikkortene på forsiden (`data-count`) og evt.
-  "otte faste læger"-formuleringer.
-- **Nyheder**: `news-item`-blokke i `index.html`.
+- **Ved ændret personaleantal**: husk også statistikkortene på
+  forsiden (`data-count`) og evt. "otte faste læger"-formuleringer —
+  de følger IKKE data.js automatisk.
 - **Banner øverst** ("lukket for tilgang"): `<div class="alert-bar">` i
   hver HTML-fil — fjern/ret i alle seks filer.
 - **Personalefotos**: læg kvadratiske jpg-filer i `assets/personale/`

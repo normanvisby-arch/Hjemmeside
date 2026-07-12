@@ -183,29 +183,8 @@
           <span class="eyebrow">Nyt fra klinikken</span>
           <h2>Seneste nyheder</h2>
         </div>
-        <div class="news-stack">
-          <article class="news-item reveal">
-            <div class="news-date" aria-hidden="true"><span class="d">14</span><span class="m">Jan 2025</span></div>
-            <div>
-              <h3>Lukket for tilgang af nye patienter</h3>
-              <p>Klinikken er pr. 14.01.2025 lukket for tilgang af nye patienter. Vi åbner igen for tilgang, så snart kapaciteten tillader det — følg med her på siden.</p>
-            </div>
-          </article>
-          <article class="news-item reveal reveal-d1">
-            <div class="news-date" aria-hidden="true"><span class="d">✓</span><span class="m">Info</span></div>
-            <div>
-              <h3>Brug Min Læge-appen</h3>
-              <p>Med appen <strong>Min Læge</strong> kan du bestille tid, forny recepter og skrive e-konsultationer — når det passer dig. Hent den i App Store eller Google Play og log på med MitID.</p>
-            </div>
-          </article>
-          <article class="news-item reveal reveal-d2">
-            <div class="news-date" aria-hidden="true"><span class="d">!</span><span class="m">Husk</span></div>
-            <div>
-              <h3>Husk sundhedskortet</h3>
-              <p>Scan dit sundhedskort (eller kort i app) ved ankomst, så vi kan se, at du er kommet. Det gælder også ved quicktider, hvor du tjekker ind hos sekretæren kl. 8.45–9.30.</p>
-            </div>
-          </article>
-        </div>
+        <!-- Nyhederne redigeres i js/data.js — ikke her -->
+        <div class="news-stack" data-nyheder></div>
       </div>
     </section>
 
@@ -315,6 +294,7 @@
     </div>
   </footer>
 
+  <script src="js/data.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>
