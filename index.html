@@ -52,7 +52,7 @@
         <div class="hero-content">
           <span class="eyebrow">Praktiserende læger i Hedensted</span>
           <h1><span class="ekg-word"><span class="txt">Levende</span><svg class="trace" viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1000" vector-effect="non-scaling-stroke" d="M0,32 H58 c3,0 5,-7 9,-7 c4,0 6,7 9,7 h10 l3,5 4,-31 4,34 3,-8 h12 c8,0 10,-12 16,-12 c5,0 7,12 11,12 H300"/></svg></span> lægehus med <span class="accent">mennesket</span> i centrum</h1>
-          <p class="lede">Vi er et lægehus med otte faste læger, erfarne sygeplejersker og eget laboratorium. Vores vision er at drive en moderne lægepraksis med et højt sundhedsfagligt niveau — og med tid til dig.</p>
+          <p class="lede" data-tekst="forside_hero_lede">Vi er et lægehus med otte faste læger, erfarne sygeplejersker og eget laboratorium. Vores vision er at drive en moderne lægepraksis med et højt sundhedsfagligt niveau — og med tid til dig.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="konsultation.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
@@ -165,7 +165,7 @@
         </div>
         <div class="hours-panel reveal reveal-d1">
           <h3>Telefonen · man–fre</h3>
-          <ul class="hours-list">
+          <ul class="hours-list" data-telefontider>
             <li><span class="time">8.00–9.00</span><span>Kun henvendelser om <strong>sygdom, der kræver lægekontakt samme dag</strong>, samt anmodning om sygebesøg.</span></li>
             <li><span class="time">9.00–14.00</span><span>Lægesekretæren besvarer opkald, tager imod tidsbestillinger og øvrige henvendelser.</span></li>
             <li><span class="time">14.00–16.00</span><span>Ved <strong>akutte henvendelser</strong> træffes sekretæren på 75 89 18 11.</span></li>
@@ -200,8 +200,8 @@
         <div class="reveal">
           <span class="eyebrow" style="color:var(--teal)">Om klinikken</span>
           <h2>Et hus fyldt med erfaring</h2>
-          <p style="color:var(--ink-soft)">Hedensted Lægehus har eksisteret siden 1967 og er i dag et af områdets store lægehuse med <strong>otte faste læger</strong>, konsultationssygeplejersker, bioanalytikere, lægesekretærer, fysioterapeut og praksismanager — i alt over 20 medarbejdere.</p>
-          <p style="color:var(--ink-soft)">Vi lægger vægt på kontinuitet, faglighed og et trygt forløb: du møder så vidt muligt din egen læge, og vi arbejder tæt sammen på tværs af faggrupper.</p>
+          <p style="color:var(--ink-soft)" data-tekst="forside_om_1">Hedensted Lægehus har eksisteret siden 1967 og er i dag et af områdets store lægehuse med <strong>otte faste læger</strong>, konsultationssygeplejersker, bioanalytikere, lægesekretærer, fysioterapeut og praksismanager — i alt over 20 medarbejdere.</p>
+          <p style="color:var(--ink-soft)" data-tekst="forside_om_2">Vi lægger vægt på kontinuitet, faglighed og et trygt forløb: du møder så vidt muligt din egen læge, og vi arbejder tæt sammen på tværs af faggrupper.</p>
           <a class="btn btn-dark" href="personale.html" style="margin-top:10px">
             Mød personalet
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -262,9 +262,9 @@
         <div>
           <h4>Kontakt</h4>
           <ul>
-            <li>Årupvej 6, 8722 Hedensted</li>
-            <li><a href="tel:75891811">Tlf. 75 89 18 11</a></li>
-            <li>Man–fre kl. 8.00–15.00</li>
+            <li><span data-kontakt="adresse">Årupvej 6</span>, <span data-kontakt="postnr_by">8722 Hedensted</span></li>
+            <li>Tlf. <a href="tel:75891811" data-kontakt="telefon">75 89 18 11</a></li>
+            <li data-aabning>Man–fre kl. 8.00–15.00</li>
           </ul>
         </div>
         <div>
@@ -280,16 +280,16 @@
         <div>
           <h4>Akut hjælp</h4>
           <ul>
-            <li><a href="tel:70113131">Lægevagten: 70 11 31 31</a></li>
+            <li>Lægevagten: <a href="tel:70113131" data-kontakt="laegevagt">70 11 31 31</a></li>
             <li><a href="tel:112">Alarm: 112</a></li>
             <li><a href="praktisk.html#laegevagten">Læs om lægevagten</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 Hedensted Lægehus I/S · CVR 19144011</span>
+        <span>© 2026 Hedensted Lægehus I/S · CVR <span data-kontakt="cvr">19144011</span></span>
         <span>Fotos: Anders Brohus</span>
-        <span>Årupvej 6 · 8722 Hedensted · Tlf. 75 89 18 11</span>
+        <span><span data-kontakt="adresse">Årupvej 6</span> · <span data-kontakt="postnr_by">8722 Hedensted</span> · Tlf. <span data-kontakt="telefon">75 89 18 11</span></span>
       </div>
     </div>
   </footer>

@@ -92,6 +92,54 @@ if (typeof SITE_DATA !== "undefined") {
         </div>
       </article>`).join("");
   }
+
+  // ---------- Redigerbar sidetekst, kontaktinfo, tider og FAQ ----------
+  // Alle blokke er FALLBACK-BEVARENDE: teksten i HTML'en beholdes og
+  // overskrives kun, hvis der findes en værdi i content.json. Uden JS (eller
+  // uden en værdi) vises sidens indbyggede tekst.
+
+  // Fri tekst pr. nøgle:  <p data-tekst="forside_hero_lede">…fallback…</p>
+  const tekster = SITE_DATA.tekster || {};
+  document.querySelectorAll("[data-tekst]").forEach((el) => {
+    const v = tekster[el.dataset.tekst];
+    if (v) el.innerHTML = v;
+  });
+
+  // Faste kontaktoplysninger:  <span data-kontakt="telefon">…</span>
+  // På et <a> sættes også tel:-linket for telefon/lægevagt.
+  const kontakt = SITE_DATA.kontakt || {};
+  document.querySelectorAll("[data-kontakt]").forEach((el) => {
+    const v = kontakt[el.dataset.kontakt];
+    if (!v) return;
+    el.textContent = v;
+    if (el.tagName === "A" &&
+        (el.dataset.kontakt === "telefon" || el.dataset.kontakt === "laegevagt")) {
+      el.setAttribute("href", "tel:" + v.replace(/\s+/g, ""));
+    }
+  });
+
+  // Åbningstid-linje:  <li data-aabning>Man–fre kl. 8.00–15.00</li>
+  if (SITE_DATA.aabningstekst) {
+    document.querySelectorAll("[data-aabning]").forEach((el) => {
+      el.textContent = SITE_DATA.aabningstekst;
+    });
+  }
+
+  // Telefontider (samme kanoniske liste i alle paneler):
+  //   <ul class="hours-list" data-telefontider>…fallback-rækker…</ul>
+  if (Array.isArray(SITE_DATA.telefontider) && SITE_DATA.telefontider.length) {
+    document.querySelectorAll("[data-telefontider]").forEach((ul) => {
+      ul.innerHTML = SITE_DATA.telefontider.map((t) =>
+        `<li><span class="time">${t.tid}</span><span>${t.tekst}</span></li>`).join("");
+    });
+  }
+
+  // FAQ:  <div class="accordion prose" data-faq>…fallback-details…</div>
+  const faqWrap = document.querySelector("[data-faq]");
+  if (faqWrap && Array.isArray(SITE_DATA.faq) && SITE_DATA.faq.length) {
+    faqWrap.innerHTML = SITE_DATA.faq.map((q) =>
+      `<details><summary>${q.sp}</summary><div class="acc-body"><p>${q.svar}</p></div></details>`).join("");
+  }
 }
 
 // Scroll-reveal (inkl. EKG-skillelinjer, der tegner sig selv)

@@ -51,7 +51,7 @@
         <div class="hero-content">
           <span class="eyebrow">Praktisk information</span>
           <h1>Godt at <span class="accent">vide</span></h1>
-          <p class="lede">Alt det praktiske — fra lægevagt og lægevalg til sundhedskort og nyttige links.</p>
+          <p class="lede" data-tekst="praktisk_hero_lede">Alt det praktiske — fra lægevagt og lægevalg til sundhedskort og nyttige links.</p>
         </div>
       </div>
     </section>
@@ -102,7 +102,7 @@
           <span class="eyebrow">Vejledninger</span>
           <h2>Ofte stillede spørgsmål</h2>
         </div>
-        <div class="accordion prose" style="max-width:860px">
+        <div class="accordion prose" style="max-width:860px" data-faq>
           <details>
             <summary>Hvornår skal jeg bruge en quicktid?</summary>
             <div class="acc-body"><p>Quicktiden er til én kort og ukompliceret problemstilling. Tjek ind hos sekretæren mellem kl. 8.45 og 9.30 — så bliver du set af en læge eller sygeplejerske. Quicktider kan ikke bruges til attester, kontroller eller psykiske problemstillinger.</p></div>
@@ -174,9 +174,9 @@
         <div>
           <h4>Kontakt</h4>
           <ul>
-            <li>Årupvej 6, 8722 Hedensted</li>
-            <li><a href="tel:75891811">Tlf. 75 89 18 11</a></li>
-            <li>Man–fre kl. 8.00–15.00</li>
+            <li><span data-kontakt="adresse">Årupvej 6</span>, <span data-kontakt="postnr_by">8722 Hedensted</span></li>
+            <li>Tlf. <a href="tel:75891811" data-kontakt="telefon">75 89 18 11</a></li>
+            <li data-aabning>Man–fre kl. 8.00–15.00</li>
           </ul>
         </div>
         <div>
@@ -192,16 +192,16 @@
         <div>
           <h4>Akut hjælp</h4>
           <ul>
-            <li><a href="tel:70113131">Lægevagten: 70 11 31 31</a></li>
+            <li>Lægevagten: <a href="tel:70113131" data-kontakt="laegevagt">70 11 31 31</a></li>
             <li><a href="tel:112">Alarm: 112</a></li>
             <li><a href="praktisk.html#laegevagten">Læs om lægevagten</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 Hedensted Lægehus I/S · CVR 19144011</span>
+        <span>© 2026 Hedensted Lægehus I/S · CVR <span data-kontakt="cvr">19144011</span></span>
         <span>Fotos: Anders Brohus</span>
-        <span>Årupvej 6 · 8722 Hedensted · Tlf. 75 89 18 11</span>
+        <span><span data-kontakt="adresse">Årupvej 6</span> · <span data-kontakt="postnr_by">8722 Hedensted</span> · Tlf. <span data-kontakt="telefon">75 89 18 11</span></span>
       </div>
     </div>
   </footer>

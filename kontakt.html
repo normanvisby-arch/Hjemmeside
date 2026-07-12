@@ -51,7 +51,7 @@
         <div class="hero-content">
           <span class="eyebrow">Kontakt</span>
           <h1>Kontakt &amp; <span class="accent">find os</span></h1>
-          <p class="lede">Vi holder til på Årupvej 6 i Hedensted — tæt på byen og med gode transportmuligheder.</p>
+          <p class="lede" data-tekst="kontakt_hero_lede">Vi holder til på Årupvej 6 i Hedensted — tæt på byen og med gode transportmuligheder.</p>
         </div>
       </div>
     </section>
@@ -61,13 +61,13 @@
         <div class="contact-tiles" style="grid-template-columns:repeat(4,1fr)">
           <div class="contact-tile reveal">
             <h3>Telefon</h3>
-            <a class="big" href="tel:75891811">75 89 18 11</a>
+            <a class="big" href="tel:75891811" data-kontakt="telefon">75 89 18 11</a>
             <p>Man–fre kl. 8.00–15.00 (se telefontider nedenfor)</p>
           </div>
           <div class="contact-tile reveal reveal-d1">
             <h3>Adresse</h3>
-            <span class="big">Årupvej 6</span>
-            <p>8722 Hedensted</p>
+            <span class="big" data-kontakt="adresse">Årupvej 6</span>
+            <p data-kontakt="postnr_by">8722 Hedensted</p>
           </div>
           <div class="contact-tile reveal reveal-d2">
             <h3>Åbningstider</h3>
@@ -76,7 +76,7 @@
           </div>
           <div class="contact-tile reveal reveal-d3">
             <h3>Akut efter kl. 16</h3>
-            <a class="big" href="tel:70113131">70 11 31 31</a>
+            <a class="big" href="tel:70113131" data-kontakt="laegevagt">70 11 31 31</a>
             <p>Lægevagten Region Midtjylland · Livsfare: 112</p>
           </div>
         </div>
@@ -88,7 +88,7 @@
         <div class="reveal">
           <span class="eyebrow" style="color:var(--teal)">Telefontider</span>
           <h2>Hvornår skal du ringe?</h2>
-          <ul class="hours-list" style="color:var(--ink-soft)">
+          <ul class="hours-list" style="color:var(--ink-soft)" data-telefontider>
             <li style="border-color:var(--line)"><span class="time" style="color:var(--teal)">8.00–9.00</span><span>Akut sygdom, der kræver lægekontakt samme dag, samt sygebesøg.</span></li>
             <li style="border-color:var(--line)"><span class="time" style="color:var(--teal)">9.00–14.00</span><span>Tidsbestilling, prøvesvar og øvrige henvendelser.</span></li>
             <li style="border-color:var(--line)"><span class="time" style="color:var(--teal)">14.00–16.00</span><span>Akutte henvendelser.</span></li>
@@ -135,9 +135,9 @@
         <div>
           <h4>Kontakt</h4>
           <ul>
-            <li>Årupvej 6, 8722 Hedensted</li>
-            <li><a href="tel:75891811">Tlf. 75 89 18 11</a></li>
-            <li>Man–fre kl. 8.00–15.00</li>
+            <li><span data-kontakt="adresse">Årupvej 6</span>, <span data-kontakt="postnr_by">8722 Hedensted</span></li>
+            <li>Tlf. <a href="tel:75891811" data-kontakt="telefon">75 89 18 11</a></li>
+            <li data-aabning>Man–fre kl. 8.00–15.00</li>
           </ul>
         </div>
         <div>
@@ -153,16 +153,16 @@
         <div>
           <h4>Akut hjælp</h4>
           <ul>
-            <li><a href="tel:70113131">Lægevagten: 70 11 31 31</a></li>
+            <li>Lægevagten: <a href="tel:70113131" data-kontakt="laegevagt">70 11 31 31</a></li>
             <li><a href="tel:112">Alarm: 112</a></li>
             <li><a href="praktisk.html#laegevagten">Læs om lægevagten</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 Hedensted Lægehus I/S · CVR 19144011</span>
+        <span>© 2026 Hedensted Lægehus I/S · CVR <span data-kontakt="cvr">19144011</span></span>
         <span>Fotos: Anders Brohus</span>
-        <span>Årupvej 6 · 8722 Hedensted · Tlf. 75 89 18 11</span>
+        <span><span data-kontakt="adresse">Årupvej 6</span> · <span data-kontakt="postnr_by">8722 Hedensted</span> · Tlf. <span data-kontakt="telefon">75 89 18 11</span></span>
       </div>
     </div>
   </footer>
