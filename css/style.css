@@ -454,6 +454,24 @@ h1, h2, h3, h4 {
 .pris-navn { color: var(--ink); }
 .pris-vaerdi { white-space: nowrap; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
 
+/* ---------- Blød sideovergang mellem interne links ----------
+   Cross-document View Transitions: sideskift sker med en blid overtoning
+   i stedet for et hårdt genindlæsnings-"blink". Menu, topbjælke og footer
+   holdes på plads (de er ens på alle sider), så kun indholdet toner over.
+   Ren CSS, ingen JS, intet build. Browsere uden understøttelse navigerer
+   præcis som før — ingen ulempe. */
+@view-transition { navigation: auto; }
+.alert-bar   { view-transition-name: alert-bar; }
+.site-header { view-transition-name: site-header; }
+.site-footer { view-transition-name: site-footer; }
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.26s; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
 /* ---------- Nyheder ---------- */
 .news-item {
   display: flex; gap: 22px; align-items: flex-start;
