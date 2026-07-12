@@ -105,6 +105,13 @@ if (typeof SITE_DATA !== "undefined") {
     if (v) el.innerHTML = v;
   });
 
+  // Selvbetjenings-links:  <a data-link="selvbetjening" href="…fallback…">
+  const links = SITE_DATA.links || {};
+  document.querySelectorAll("[data-link]").forEach((a) => {
+    const v = links[a.dataset.link];
+    if (v) a.setAttribute("href", v);
+  });
+
   // Faste kontaktoplysninger:  <span data-kontakt="telefon">…</span>
   // På et <a> sættes også tel:-linket for telefon/lægevagt.
   const kontakt = SITE_DATA.kontakt || {};

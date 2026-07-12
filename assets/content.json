@@ -178,5 +178,9 @@
     "personale_hero_lede": "Otte faste læger, konsultationssygeplejersker, bioanalytikere, lægesekretærer, fysioterapeut og praksismanager — vi arbejder tæt sammen om din behandling.",
     "praktisk_hero_lede": "Alt det praktiske — fra lægevagt og lægevalg til sundhedskort og nyttige links.",
     "kontakt_hero_lede": "Vi holder til på Årupvej 6 i Hedensted — tæt på byen og med gode transportmuligheder."
+  },
+  "links": {
+    "selvbetjening": "https://patientportal.egclinea.com/?id=671",
+    "minlaege": "https://minlaegeapp.dk"
   }
 }
