@@ -1,25 +1,4 @@
-/* ============================================================
-   HJEMMESIDENS DATA — nyhedsstream, nyheder og personale
-   ============================================================
-
-   DENNE FIL GENERERES AUTOMATISK. Ret normalt IKKE her.
-
-   Indholdet redigeres nemmest ét af to steder:
-   1) I laegeplan-programmet under "🌐 Hjemmeside" (formular —
-      ingen kode), eller
-   2) direkte i assets/content.json her på GitHub (ren tekst).
-   Begge dele opdaterer denne fil automatisk.
-
-   Retter du alligevel her i hånden: hold filen i sync med
-   assets/content.json, ellers overskrives din ændring næste
-   gang der publiceres fra laegeplan.
-
-   HUSK OGSÅ (rettes i index.html — eller bed Claude om det):
-   - Tallene på forsiden ("8 faste speciallæger", "4 konsultations-
-     sygeplejersker") følger IKKE denne fil automatisk
-   ============================================================ */
-
-const SITE_DATA = {
+{
   "ticker": [
     "<strong>Bemærk:</strong> Klinikken er lukket for tilgang af nye patienter (pr. 14.01.2025).",
     "<strong>Husk:</strong> Scan dit sundhedskort ved ankomst — også ved quicktider."
@@ -131,4 +110,4 @@ const SITE_DATA = {
       "rolle": "Bioanalytiker"
     }
   ]
-};
+}

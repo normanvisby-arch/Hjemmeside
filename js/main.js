@@ -55,9 +55,13 @@ if (tickerBar && typeof SITE_DATA !== "undefined" &&
 // Nyheder og personale ligger i én lille, letredigérbar datafil,
 // så indholdet kan rettes uden at røre HTML'en.
 if (typeof SITE_DATA !== "undefined") {
+  // Samme regel som laegeplan (avatars._slug) og hjemmeside-editoren,
+  // så et uploadet portræt får præcis det filnavn, siden slår op.
   const slug = (navn) => navn.toLowerCase()
     .replace(/æ/g, "ae").replace(/ø/g, "oe").replace(/å/g, "aa")
-    .replace(/\s+/g, "-");
+    .replace(/é/g, "e").replace(/è/g, "e").replace(/ü/g, "ue")
+    .replace(/ö/g, "oe").replace(/ä/g, "ae")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   const initialer = (navn) =>
     navn.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
