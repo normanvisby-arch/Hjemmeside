@@ -22,7 +22,8 @@
 const SITE_DATA = {
   "ticker": [
     "<strong>Bemærk:</strong> Klinikken er lukket for tilgang af nye patienter (pr. 14.01.2025).",
-    "<strong>Husk:</strong> Scan dit sundhedskort ved ankomst — også ved quicktider."
+    "<strong>Husk:</strong> Scan dit sundhedskort ved ankomst — også ved quicktider.",
+    "Dette er en test. Vi kan redigere hjemmesiden"
   ],
   "nyheder": [
     {
