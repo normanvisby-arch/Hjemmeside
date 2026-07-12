@@ -15,11 +15,17 @@ Filnavne (skal ramme præcist, små bogstaver, .jpg):
     alena-litskalava-jensen.jpg
     maiken-moeller-aasted.jpg
     charlotte-paaskesen.jpg
+    ida-bech-roedgaard.jpg
 
   Sygeplejersker:
     dorte-ligaard.jpg
     lone-rothausen.jpg
     susanne-harrild-moeller.jpg
+    mette-sommerfeldt.jpg
+
+  Bioanalytikere:
+    anna-petersen.jpg
+    susanne-westland.jpg
 
 Anbefaling: kvadratiske billeder, mindst 400 x 400 px. Billederne
 beskæres automatisk til en cirkel og skaleres, så alle størrelser virker.

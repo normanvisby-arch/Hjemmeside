@@ -505,6 +505,20 @@ h1, h2, h3, h4 {
   filter: saturate(0.9);
 }
 
+/* ---------- Fotos fra klinikken ---------- */
+.photo-card {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  object-fit: cover;
+}
+.photo-band {
+  max-height: 440px;
+  object-position: center 30%;
+}
+.photo-pull { margin-top: -46px; position: relative; z-index: 5; }
+
 /* ---------- Footer ---------- */
 .site-footer {
   margin-top: 96px;
