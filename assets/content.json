@@ -24,10 +24,10 @@
       "tekst": "Scan dit sundhedskort (eller kort i app) ved ankomst, så vi kan se, at du er kommet. Det gælder også ved quicktider, hvor du tjekker ind hos sekretæren kl. 8.45–9.30."
     },
     {
-      "badge": "!",
-      "under": "Bemærk",
-      "titel": "Ny læge",
-      "tekst": "Ida er vores nye læge."
+      "badge": "1",
+      "under": "Sep 2026",
+      "titel": "Ny læge og kompagnon",
+      "tekst": "Ida bliver vores nye kompagnon."
     }
   ],
   "laeger": [
@@ -122,8 +122,7 @@
     "postnr_by": "8722 Hedensted",
     "telefon": "75 89 18 11",
     "laegevagt": "70 11 31 31",
-    "cvr": "19144011",
-    "email": ""
+    "cvr": "19144011"
   },
   "aabningstekst": "Man–fre kl. 8.00–15.00",
   "telefontider": [
