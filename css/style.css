@@ -663,6 +663,11 @@ html.js .ekg-divider.in path { stroke-dashoffset: 0; }
   html.js .hero.h-in .hero-actions { opacity: 1; transform: none; }
 }
 
+/* Sikkerhedsnet: en gammel, cachet forside med .ekg-word-markup i
+   overskriften må ikke tegne EKG-kurven som sort flade, nu hvor
+   effektens styling er fjernet */
+.ekg-word .trace { display: none; }
+
 /* ---------- Reveal-animationer ----------
    Skjules KUN når JS kører (html.js sættes af main.js) — uden
    JS er alt indhold synligt fra start. */
