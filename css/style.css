@@ -256,11 +256,13 @@ html {
      glider ned i fotoets egen mørke baggrund */
   .hero.hero-photo {
     background:
-      linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.9) 58%, rgba(6, 35, 43, 0.42) 74%, rgba(6, 35, 43, 0) 88%),
+      linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.88) 50%, rgba(6, 35, 43, 0.5) 66%, rgba(6, 35, 43, 0) 84%),
       url("../assets/hero-stetoskop.jpg") center bottom / 100% auto no-repeat,
       linear-gradient(168deg, #051d24 0%, #072a33 100%);
   }
-  .hero.hero-photo .hero-content { padding: 90px 0 250px; }
+  .hero.hero-photo .hero-content { padding: 80px 0 150px; }
+  /* Scroll-pilen er overflødig på touch og kolliderede med hjælpeteksten */
+  .hero .scroll-hint { display: none; }
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
 
