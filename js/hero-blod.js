@@ -283,7 +283,7 @@ function init(canvas) {
     group.renderOrder = 1;
     scene.add(group);
 
-    const scale = 1.6; // markant større end de almindelige celler, så ansigtet kan ses
+    const scale = 0.95; // samme størrelse som de almindelige blodlegemer
     const r = 0.52 * scale;
     const { x, y } = placeFree(r);
     // Fordel medaljonerne jævnt langs karret, startende i det synlige udsnit
