@@ -282,14 +282,6 @@ html {
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
 .hero.hero-sub.hero-blod { min-height: 62vh; }
-/* Diskret EKG-linje i bunden af personale-heroen (tegnes af hero-blod.js) */
-.hero-ekg-strip {
-  position: absolute; left: 0; right: 0; bottom: 8px;
-  width: 100%; height: 56px;
-  /* z-index 3: skal ligge OVER heroens lyse bund-fade (::after, z-index 2),
-     ellers vaskes linjen ud */
-  z-index: 3; pointer-events: none; opacity: 0.85;
-}
 
 /* Foto-hero med lægehuset (kontaktsiden): lys venstre-tone
    holder den mørke tekst læsbar oven på bygningsfotoet */

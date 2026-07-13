@@ -439,53 +439,6 @@ function init(canvas) {
   scene.add(particles);
 
 
-  /* ---------- Diskret EKG-linje i bunden — synkron med pulsen ----------
-     Kurven løber fra venstre mod højre; R-takken fødes ved venstre kant
-     præcis i det øjeblik, slaget skubber cellerne. Naturtro kompleks:
-     P-tak, smal og høj QRS, T-tak. */
-  const ekgCanvas = document.createElement("canvas");
-  ekgCanvas.className = "hero-ekg-strip";
-  ekgCanvas.setAttribute("aria-hidden", "true");
-  canvas.parentElement.appendChild(ekgCanvas);
-  const ekgCtx = ekgCanvas.getContext("2d");
-  const EKG_VINDUE = 5; // sekunder synligt ad gangen
-
-  function bump(p, c, w, a) {
-    let d = p - c;
-    d -= Math.round(d); // korteste afstand på den cykliske fase
-    return a * Math.exp(-(d * d) / (w * w));
-  }
-  // Naturtro PQRST med R-takken i fase 0 (periode 2 s ved 30/min):
-  // P ~180 ms før R, smal og høj QRS (~90 ms), T ~300 ms efter R
-  function ekgVaerdi(fase) {
-    return bump(fase, -0.090, 0.020, 0.11)  // P-tak
-         + bump(fase, -0.014, 0.005, -0.08) // Q
-         + bump(fase,  0.000, 0.007, 1.00)  // R — smal og høj
-         + bump(fase,  0.016, 0.006, -0.16) // S
-         + bump(fase,  0.150, 0.042, 0.22); // T-tak
-  }
-
-  function tegnEkg(t) {
-    const w = ekgCanvas.width, h = ekgCanvas.height;
-    if (!w) return;
-    ekgCtx.clearRect(0, 0, w, h);
-    ekgCtx.strokeStyle = "#041b1f"; // næsten sort — tydelig mod den lyse bund-fade
-    ekgCtx.lineWidth = Math.max(2, h / 28);
-    ekgCtx.lineJoin = "round";
-    ekgCtx.shadowColor = "rgba(14, 124, 134, 0.55)";
-    ekgCtx.shadowBlur = 6;
-    const basis = h * 0.66, amp = h * 0.58;
-    const fart = w / EKG_VINDUE; // px pr. sekund
-    ekgCtx.beginPath();
-    for (let x = 0; x <= w; x += 2) {
-      const tx = t - x / fart; // nyeste ved VENSTRE kant -> kurven løber mod højre
-      const fase = (tx - 1.5) / PULS_INTERVAL;
-      const y = basis - ekgVaerdi(fase - Math.floor(fase)) * amp;
-      if (x === 0) ekgCtx.moveTo(x, y); else ekgCtx.lineTo(x, y);
-    }
-    ekgCtx.stroke();
-  }
-
   /* ---------- Interaktion ---------- */
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   window.addEventListener("pointermove", (e) => {
@@ -499,9 +452,6 @@ function init(canvas) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    ekgCanvas.width = Math.round(w * dpr * 0.5) * 2; // lige tal, skarp streg
-    ekgCanvas.height = Math.round(56 * dpr);
   }
   window.addEventListener("resize", resize);
   resize();
@@ -533,7 +483,6 @@ function init(canvas) {
     physicsStep(dt, 1 + puls);
     if (bloodGlow) bloodGlow.intensity = 9 + puls * 5;
     writeMatrices(t);
-    tegnEkg(t);
 
     particles.rotation.y = t * 0.01;
 
