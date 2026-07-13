@@ -440,8 +440,9 @@ function init(canvas) {
 
 
   /* ---------- Diskret EKG-linje i bunden — synkron med pulsen ----------
-     Kurven ruller mod venstre; R-takken rammer højre kant præcis i det
-     øjeblik, slaget skubber cellerne. Klassisk PQRST-kompleks. */
+     Kurven løber fra venstre mod højre; R-takken fødes ved venstre kant
+     præcis i det øjeblik, slaget skubber cellerne. Naturtro kompleks:
+     P-tak, smal og høj QRS, T-tak. */
   const ekgCanvas = document.createElement("canvas");
   ekgCanvas.className = "hero-ekg-strip";
   ekgCanvas.setAttribute("aria-hidden", "true");
@@ -454,29 +455,30 @@ function init(canvas) {
     d -= Math.round(d); // korteste afstand på den cykliske fase
     return a * Math.exp(-(d * d) / (w * w));
   }
-  // PQRST med R-takken i fase 0
+  // Naturtro PQRST med R-takken i fase 0 (periode 2 s ved 30/min):
+  // P ~180 ms før R, smal og høj QRS (~90 ms), T ~300 ms efter R
   function ekgVaerdi(fase) {
-    return bump(fase, -0.20, 0.045, 0.10)   // P
-         + bump(fase, -0.030, 0.010, -0.09) // Q
-         + bump(fase,  0.000, 0.013, 1.00)  // R
-         + bump(fase,  0.032, 0.012, -0.20) // S
-         + bump(fase,  0.170, 0.060, 0.24); // T
+    return bump(fase, -0.090, 0.020, 0.11)  // P-tak
+         + bump(fase, -0.014, 0.005, -0.08) // Q
+         + bump(fase,  0.000, 0.007, 1.00)  // R — smal og høj
+         + bump(fase,  0.016, 0.006, -0.16) // S
+         + bump(fase,  0.150, 0.042, 0.22); // T-tak
   }
 
   function tegnEkg(t) {
     const w = ekgCanvas.width, h = ekgCanvas.height;
     if (!w) return;
     ekgCtx.clearRect(0, 0, w, h);
-    ekgCtx.strokeStyle = "#35d0c5";
+    ekgCtx.strokeStyle = "#0e7c86"; // mørkere grøn (husets teal)
     ekgCtx.lineWidth = Math.max(1.5, h / 34);
     ekgCtx.lineJoin = "round";
-    ekgCtx.shadowColor = "rgba(53, 208, 197, 0.8)";
-    ekgCtx.shadowBlur = 8;
-    const basis = h * 0.68, amp = h * 0.52;
+    ekgCtx.shadowColor = "rgba(14, 124, 134, 0.7)";
+    ekgCtx.shadowBlur = 7;
+    const basis = h * 0.66, amp = h * 0.58;
     const fart = w / EKG_VINDUE; // px pr. sekund
     ekgCtx.beginPath();
     for (let x = 0; x <= w; x += 2) {
-      const tx = t - (w - x) / fart;
+      const tx = t - x / fart; // nyeste ved VENSTRE kant -> kurven løber mod højre
       const fase = (tx - 1.5) / PULS_INTERVAL;
       const y = basis - ekgVaerdi(fase - Math.floor(fase)) * amp;
       if (x === 0) ekgCtx.moveTo(x, y); else ekgCtx.lineTo(x, y);
@@ -508,12 +510,12 @@ function init(canvas) {
   const clock = new THREE.Clock();
   let rafId = null;
 
-  /* ---------- Hjerteslag: regelmæssig puls, ca. 45/min ----------
-     Hvert 1,33 sekund sender "hjertet" et slag gennem karret: cellerne
+  /* ---------- Hjerteslag: regelmæssig puls, 30/min ----------
+     Hvert 2. sekund sender "hjertet" et slag gennem karret: cellerne
      får et skub og blæses afsted, flowet forstærkes kortvarigt, og den
      indre glød blusser op — hvorefter strømmen når at falde til ro,
      inden næste slag rammer. */
-  const PULS_INTERVAL = 60 / 45;
+  const PULS_INTERVAL = 60 / 30;
   let naestePuls = 1.5;
   let puls = 0;
 

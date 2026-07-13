@@ -197,10 +197,10 @@ function init(canvas) {
   const ys = new Float32Array(SAMPLES);
 
   function updateTrace(time) {
-    // 1) Beregn kurvens y-værdier (signalet ruller mod venstre)
+    // 1) Beregn kurvens y-værdier (signalet ruller mod HØJRE)
     for (let i = 0; i < SAMPLES; i++) {
       const x = X_MIN + i * DX;
-      ys[i] = BASE_Y + AMP * ecg(x * BEATS_PER_UNIT + time * BPS);
+      ys[i] = BASE_Y + AMP * ecg(x * BEATS_PER_UNIT - time * BPS);
     }
     // 2) Byg røret omkring kurven — retningen følger kurvens hældning,
     //    så selv de stejle QRS-flanker får jævn tykkelse
@@ -303,7 +303,7 @@ function init(canvas) {
     headGlow.position.set(HEAD_X, headY, 0.1);
     pulseLight.position.set(HEAD_X, headY, 1.2);
 
-    const u = HEAD_X * BEATS_PER_UNIT + t * BPS;
+    const u = HEAD_X * BEATS_PER_UNIT - t * BPS;
     const phase = u - Math.floor(u);
     const dR = phase - 0.255;
     const pulse = Math.exp(-(dR * dR) / (2 * 0.03 * 0.03));
