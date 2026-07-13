@@ -139,7 +139,7 @@ function init(canvas) {
   // så kurven strækkes længere ud til begge sider
   const SAMPLES = 560;
   const RADIAL = 8;
-  const X_MIN = -16, X_MAX = 7.2; // kurven ender i "skrivespidsen" i højre side
+  const X_MIN = -7.2, X_MAX = 16; // kurven udspringer fra "skrivespidsen" i venstre side
   const DX = (X_MAX - X_MIN) / (SAMPLES - 1);
   const AMP = 1.55;         // R-takkens højde i world-units
   const BASE_Y = -0.15;     // kurvens baselinje
@@ -167,12 +167,12 @@ function init(canvas) {
     }
   }
 
-  // Farve: bleg mod halen (venstre), dyb teal mod hovedet (højre)
+  // Farve: dyb teal mod hovedet (venstre), bleg mod halen (højre)
   const tail = new THREE.Color(0xbfe3d9);
   const headCol = new THREE.Color(0x0e7c86);
   const tmpCol = new THREE.Color();
   for (let i = 0; i < SAMPLES; i++) {
-    const f = Math.pow(i / (SAMPLES - 1), 1.6);
+    const f = Math.pow(1 - i / (SAMPLES - 1), 1.6);
     tmpCol.copy(tail).lerp(headCol, f);
     for (let j = 0; j < RADIAL; j++) {
       const o = (i * RADIAL + j) * 3;
@@ -188,9 +188,9 @@ function init(canvas) {
   const trace = new THREE.Mesh(traceGeo, traceMat);
   ekg.add(trace);
 
-  // Radius: tynd hale → kraftigt hoved
+  // Radius: kraftigt hoved (venstre) → tynd hale (højre)
   function radiusAt(i) {
-    const f = i / (SAMPLES - 1);
+    const f = 1 - i / (SAMPLES - 1);
     return 0.014 + 0.05 * Math.pow(f, 1.5);
   }
 
@@ -274,11 +274,11 @@ function init(canvas) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     // På smalle skærme skaleres sceneriet ned og forskydes,
-    // så skrivespidsen forbliver synlig i højre side
+    // så skrivespidsen forbliver synlig i venstre side
     const narrow = w < 760;
     ekg.scale.setScalar(narrow ? 0.72 : 1);
     ekg.position.y = narrow ? 0.6 : 0;
-    ekg.position.x = narrow ? -2.9 : 0;
+    ekg.position.x = narrow ? 2.9 : 0;
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
@@ -288,9 +288,9 @@ function init(canvas) {
   const clock = new THREE.Clock();
   let rafId = null;
 
-  // Skrivespidsen sidder for enden af kurven — signalet strømmer ud fra den
-  const HEAD_I = SAMPLES - 1;
-  const HEAD_X = X_MIN + HEAD_I * DX;
+  // Skrivespidsen sidder i venstre ende — signalet strømmer ud fra den mod højre
+  const HEAD_I = 0;
+  const HEAD_X = X_MIN;
 
   function frame() {
     const t = clock.getElapsedTime();
