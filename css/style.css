@@ -253,13 +253,14 @@ html {
 .hero.hero-photo h1 { font-size: clamp(2.2rem, 4.6vw, 3.5rem); }
 .hero.hero-photo p.lede { max-width: 46ch; }
 @media (max-width: 760px) {
-  /* Mobil: vis HELE stetoskopet — fotoet som ubeskåret bånd i bunden
-     (100% auto) i stedet for cover-zoom; mørk toning over tekstdelen
-     glider ned i fotoets egen mørke baggrund */
+  /* Mobil: stetoskopet er løftet, så klokken står frit ved siden af
+     knapperne og slangen snor sig bag brødteksten; mørk toning øverst
+     sikrer læsbarhed, og bund-faden skjuler fotoets nederste kant */
   .hero.hero-photo {
     background:
-      linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.88) 50%, rgba(6, 35, 43, 0.5) 66%, rgba(6, 35, 43, 0) 84%),
-      url("../assets/hero-stetoskop.jpg") right bottom / 150% auto no-repeat,
+      linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.9) 36%, rgba(6, 35, 43, 0.5) 50%, rgba(6, 35, 43, 0) 62%),
+      linear-gradient(180deg, rgba(6, 32, 40, 0) calc(100% - 300px), rgba(6, 32, 40, 0.85) calc(100% - 235px), #062028 calc(100% - 218px)),
+      url("../assets/hero-stetoskop.jpg") right -20px bottom 220px / 160% auto no-repeat,
       linear-gradient(168deg, #051d24 0%, #072a33 100%);
   }
   .hero.hero-photo .hero-content { padding: 80px 0 150px; }
