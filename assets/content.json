@@ -2,7 +2,7 @@
   "ticker": [
     "<strong>Bemærk:</strong> Klinikken er lukket for tilgang af nye patienter (pr. 14.01.2025).",
     "<strong>Husk:</strong> Scan dit sundhedskort ved ankomst — også ved quicktider.",
-    "Dette er en test. Vi kan redigere hjemmesiden"
+    "Mandage er ofte meget travle i Quick-tiden.. Overvej evt at komme en anden dag på ugen."
   ],
   "nyheder": [
     {
@@ -131,12 +131,12 @@
       "tekst": "Kun henvendelser om <strong>sygdom, der kræver lægekontakt samme dag</strong>, samt anmodning om sygebesøg."
     },
     {
-      "tid": "9.00–12.30",
+      "tid": "9.00–14.00",
       "tekst": "Lægesekretæren besvarer opkald, tager imod tidsbestillinger og øvrige henvendelser."
     },
     {
-      "tid": "12.30–16.00",
-      "tekst": "Kun ved <strong>akutte henvendelser</strong> — sekretæren træffes på 75 89 18 11."
+      "tid": "14.00–16.00",
+      "tekst": "Ved <strong>akutte henvendelser</strong> træffes sekretæren på 75 89 18 11."
     },
     {
       "tid": "Efter 16.00",
@@ -158,7 +158,7 @@
     },
     {
       "sp": "Hvordan får jeg svar på mine prøver?",
-      "svar": "Du kan se dine prøvesvar på sundhed.dk og i Min Læge-appen. Du er også velkommen til at ringe på hverdage kl. 9.00–12.30. Ved svar, der kræver handling, kontakter vi dig."
+      "svar": "Du kan se dine prøvesvar på sundhed.dk og i Min Læge-appen. Du er også velkommen til at ringe på hverdage kl. 9.00–14.00. Ved svar, der kræver handling, kontakter vi dig."
     },
     {
       "sp": "Kan jeg få taget blodprøver uden at komme til Hedensted?",
@@ -166,7 +166,7 @@
     },
     {
       "sp": "Hvad gør jeg, hvis jeg bliver akut syg?",
-      "svar": "På hverdage kl. 8.00–9.00 ringer du til os på 75 89 18 11 ved sygdom, der kræver lægekontakt samme dag. Kl. 12.30–16.00 træffes sekretæren på samme nummer — kun ved akutte henvendelser. Efter kl. 16.00 kontakter du lægevagten på 70 11 31 31 — og ved livsfare ringer du altid 112."
+      "svar": "På hverdage kl. 8.00–9.00 ringer du til os på 75 89 18 11 ved sygdom, der kræver lægekontakt samme dag. Kl. 14.00–16.00 træffes sekretæren på samme nummer ved akutte henvendelser. Efter kl. 16.00 kontakter du lægevagten på 70 11 31 31 — og ved livsfare ringer du altid 112."
     }
   ],
   "tekster": {
