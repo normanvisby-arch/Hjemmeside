@@ -257,6 +257,7 @@ document.querySelectorAll("[data-count]").forEach((el) => {
 // 3D-tilt på kort — kun med mus, aldrig på touch
 if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !prefersReduced) {
   document.querySelectorAll(".card").forEach((card) => {
+    if (card.querySelector(".btn, details")) return; // kort med knapper/foldere skal stå stille
     card.addEventListener("pointermove", (e) => {
       const r = card.getBoundingClientRect();
       const rx = ((e.clientY - r.top) / r.height - 0.5) * -7;
