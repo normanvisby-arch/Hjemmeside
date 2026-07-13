@@ -15,14 +15,27 @@
 /* Personale i blodstrømmen — én linje pr. person.
    foto: sti til kvadratisk(-ish) portræt · initialer: fallback */
 const MEDALJONER = [
-  // DEMO: Susanne optræder tre gange, så strøm-effekten kan opleves.
-  // Når resten af personalet tilføjes (én linje pr. person), fjernes
-  // dubletterne — så flyder hele holdet igennem efter tur.
+  // Læger
+  { foto: "assets/personale/tine-friis-andersen.jpg", initialer: "TF" },
+  { foto: "assets/personale/troels-arent-olesen.jpg", initialer: "TA" },
+  { foto: "assets/personale/norman-visby.jpg", initialer: "NV" },
+  { foto: "assets/personale/jette-mikkelsen.jpg", initialer: "JM" },
+  { foto: "assets/personale/anne-silkjaer-moeller.jpg", initialer: "AS" },
+  { foto: "assets/personale/alena-litskalava-jensen.jpg", initialer: "AL" },
+  { foto: "assets/personale/maiken-moeller-aasted.jpg", initialer: "MM" },
+  { foto: "assets/personale/charlotte-paaskesen.jpg", initialer: "CP" },
+  { foto: "assets/personale/ida-bech-roedgaard.jpg", initialer: "IB" },
+  // Uddannelseslæger
+  { foto: "assets/personale/mikkel-suurballe-lunen.jpg", initialer: "MS" },
+  { foto: "assets/personale/elin-naes-beck.jpg", initialer: "EN" },
+  // Sygeplejersker
+  { foto: "assets/personale/dorte-ligaard.jpg", initialer: "DL" },
+  { foto: "assets/personale/lone-rothausen.jpg", initialer: "LR" },
+  { foto: "assets/personale/susanne-harrild-moeller.jpg", initialer: "SH" },
+  { foto: "assets/personale/mette-sommerfeldt.jpg", initialer: "MS" },
+  // Bioanalytikere
+  { foto: "assets/personale/anna-petersen.jpg", initialer: "AP" },
   { foto: "assets/personale/susanne-westland.jpg", initialer: "SW" },
-  { foto: "assets/personale/susanne-westland.jpg", initialer: "SW" },
-  { foto: "assets/personale/susanne-westland.jpg", initialer: "SW" },
-  // Tilføj resten af personalet her, fx:
-  // { foto: "assets/personale/norman-visby.jpg", initialer: "NV" },
 ];
 
 const canvas = document.getElementById("hero-canvas");
