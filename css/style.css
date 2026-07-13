@@ -609,6 +609,14 @@ html { scroll-padding-top: 84px; }
 .site-footer a:hover { color: var(--mint-soft); }
 .footer-brand .brand-text .name { font-size: 18px; }
 .footer-brand p { max-width: 34ch; margin-top: 16px; }
+/* Miniature æskulapstav i footeren — samme emblem som forsidens hero */
+.footer-aesculap {
+  display: block;
+  height: 42px; width: auto;
+  color: var(--mint);
+  opacity: 0.75;
+  margin-top: 18px;
+}
 .footer-bottom {
   border-top: 1px solid rgba(255,255,255,0.1);
   padding-top: 26px;
