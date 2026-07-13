@@ -275,6 +275,7 @@ html {
   .hero .scroll-hint { display: none; }
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
+.hero.hero-sub.hero-blod { min-height: 62vh; }
 
 /* Foto-hero med lægehuset (kontaktsiden): lys venstre-tone
    holder den mørke tekst læsbar oven på bygningsfotoet */

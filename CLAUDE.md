@@ -22,13 +22,14 @@ live på ca. 1 minut.
 | `index.html` | Forside: foto-hero (stetoskop), selvbetjenings-panel, genveje, telefontider, nyheder, visioner & mål, statistik (tal tæller op), EKG-skillelinjer |
 | `konsultation.html` | Tidsbestilling, telefontider, quicktider, video, e-kons |
 | `laboratoriet.html` | Blodprøver/EKG — har animeret EKG-kurve i hero (`js/hero-ekg.js`) |
-| `personale.html` | Alle medarbejdere; portrætter vises automatisk fra `assets/personale/` (fallback: initialer) |
+| `personale.html` | Alle medarbejdere; portrætter vises automatisk fra `assets/personale/` (fallback: initialer); 3D-arterie-hero med foto-medaljon-blodlegemer (`js/hero-blod.js`) |
 | `praktisk.html` | Lægevagt, lægevalg, FAQ, links |
 | `kontakt.html` | Kontaktinfo, åbningstider, kort |
 | `js/data.js` | **Nyhedsstream (topbjælke) + nyheder + hele personalelisten — det primære sted at rette indhold** |
 | `css/style.css` | Alt design |
 | `js/main.js` | Menu, scroll-effekter, tal-optælling, kort-tilt, tekst-reveal |
 | `js/hero-ekg.js` | EKG-animationen på laboratoriesiden (Three.js) |
+| `js/hero-blod.js` | Arterie-animationen på personalesiden (Three.js) — personale-medaljoner tilføjes i `MEDALJONER`-listen øverst i filen |
 | `js/vendor/three.min.js` | Three.js, vendored lokalt |
 | `assets/fotos/` | Situationsfotos (fotograf: Anders Brohus — krediteret i footer) |
 | `assets/personale/LÆSMIG.txt` | Filnavne til personaleportrætter |
