@@ -431,6 +431,13 @@ html { scroll-padding-top: 84px; }
   flex: none; width: 118px; font-family: var(--font-head); font-weight: 600; color: var(--mint-soft);
 }
 .hours-note { font-size: 13.5px; color: #9dc4bf; margin-top: 18px; }
+/* Mobil: tid på egen linje — den faste tidskolonne + panel-padding
+   efterlod ellers kun ~120px til teksten (1-2 ord pr. linje) */
+@media (max-width: 640px) {
+  .hours-panel { padding: 30px 22px; }
+  .hours-list li { flex-direction: column; gap: 4px; }
+  .hours-list .time { width: auto; }
+}
 
 /* ---------- Personale ---------- */
 .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -584,6 +591,10 @@ html { scroll-padding-top: 84px; }
 .photo-card {
   display: block;
   width: 100%;
+  /* height: auto er vigtig: img-elementernes width/height-attributter
+     reserverer plads via aspect-ratio (ingen layout-skift), men må ikke
+     tvinge en fast pixelhøjde — det gav ekstrem beskæring på mobil */
+  height: auto;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   object-fit: cover;
