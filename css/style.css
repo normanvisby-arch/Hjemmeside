@@ -629,12 +629,14 @@ html.js .ekg-divider.in path { stroke-dashoffset: 0; }
   }
   .hero h1.in-words .w { opacity: 1; transform: none; }
   html.js .hero p.lede,
+  html.js .hero p.hero-help,
   html.js .hero .hero-actions {
     opacity: 0;
     transform: translateY(14px);
     transition: opacity 0.7s ease 0.6s, transform 0.7s ease 0.6s;
   }
   html.js .hero.h-in p.lede,
+  html.js .hero.h-in p.hero-help,
   html.js .hero.h-in .hero-actions { opacity: 1; transform: none; }
 }
 
