@@ -22,7 +22,7 @@ live på ca. 1 minut.
 | `index.html` | Forside: foto-hero (stetoskop), selvbetjenings-panel, genveje, telefontider, nyheder, visioner & mål, statistik (tal tæller op), EKG-skillelinjer |
 | `konsultation.html` | Tidsbestilling, telefontider, quicktider, video, e-kons |
 | `laboratoriet.html` | Blodprøver/EKG — har animeret EKG-kurve i hero (`js/hero-ekg.js`) |
-| `personale.html` | Alle medarbejdere; portrætter vises automatisk fra `assets/personale/` (fallback: initialer); 3D-arterie-hero med foto-medaljon-blodlegemer (`js/hero-blod.js`) |
+| `personale.html` | Alle medarbejdere; portrætter vises automatisk fra `assets/personale/` (fallback: tegnet avatar fra `assets/avatars/`, dernæst initialer); 3D-arterie-hero med foto-medaljon-blodlegemer (`js/hero-blod.js`) |
 | `praktisk.html` | Lægevagt, lægevalg, FAQ, links |
 | `kontakt.html` | Kontaktinfo, åbningstider, kort |
 | `js/data.js` | **Nyhedsstream (topbjælke) + nyheder + hele personalelisten — det primære sted at rette indhold** |

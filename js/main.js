@@ -69,7 +69,8 @@ if (typeof SITE_DATA !== "undefined") {
     <div class="staff-card reveal${i % 3 === 1 ? " reveal-d1" : i % 3 === 2 ? " reveal-d2" : ""}">
       <div class="avatar">
         <span aria-hidden="true">${initialer(p.navn)}</span>
-        <img src="assets/personale/${slug(p.navn)}.jpg" alt="Portræt af ${p.navn}" loading="lazy" onerror="this.remove()">
+        <img src="assets/personale/${slug(p.navn)}.jpg" alt="Portræt af ${p.navn}" loading="lazy"
+             onerror="if(!this.dataset.avatarForsoegt){this.dataset.avatarForsoegt=1;this.src='assets/avatars/${slug(p.navn)}.jpg';}else{this.remove();}">
       </div>
       <h3>${p.navn}</h3>
       <div class="role">${p.rolle}</div>
