@@ -19,7 +19,7 @@ live på ca. 1 minut.
 
 | Fil | Indhold |
 |---|---|
-| `index.html` | Forside: foto-hero (stetoskop), EKG-animation på ordet "Moderne", genveje, telefontider, nyheder, statistik (tal tæller op), EKG-skillelinjer |
+| `index.html` | Forside: foto-hero (stetoskop), selvbetjenings-panel, genveje, telefontider, nyheder, visioner & mål, statistik (tal tæller op), EKG-skillelinjer |
 | `konsultation.html` | Tidsbestilling, telefontider, quicktider, video, e-kons |
 | `laboratoriet.html` | Blodprøver/EKG — har animeret EKG-kurve i hero (`js/hero-ekg.js`) |
 | `personale.html` | Alle medarbejdere; portrætter vises automatisk fra `assets/personale/` (fallback: initialer) |
