@@ -13,29 +13,33 @@
    ============================================================ */
 
 /* Personale i blodstrømmen — én linje pr. person.
-   foto: sti til kvadratisk(-ish) portræt · initialer: fallback */
+   Medaljonen prøver i rækkefølge:
+     1) rigtigt portræt:  assets/personale/<slug>.jpg
+     2) tegnet avatar:    assets/avatars/<slug>.jpg  (fra laegeplans husplan)
+     3) initialer på husets gradient
+   Læg et rigtigt foto i assets/personale/, så vinder det automatisk. */
 const MEDALJONER = [
   // Læger
-  { foto: "assets/personale/tine-friis-andersen.jpg", initialer: "TF" },
-  { foto: "assets/personale/troels-arent-olesen.jpg", initialer: "TA" },
-  { foto: "assets/personale/norman-visby.jpg", initialer: "NV" },
-  { foto: "assets/personale/jette-mikkelsen.jpg", initialer: "JM" },
-  { foto: "assets/personale/anne-silkjaer-moeller.jpg", initialer: "AS" },
-  { foto: "assets/personale/alena-litskalava-jensen.jpg", initialer: "AL" },
-  { foto: "assets/personale/maiken-moeller-aasted.jpg", initialer: "MM" },
-  { foto: "assets/personale/charlotte-paaskesen.jpg", initialer: "CP" },
-  { foto: "assets/personale/ida-bech-roedgaard.jpg", initialer: "IB" },
+  { slug: "tine-friis-andersen", initialer: "TF" },
+  { slug: "troels-arent-olesen", initialer: "TA" },
+  { slug: "norman-visby", initialer: "NV" },
+  { slug: "jette-mikkelsen", initialer: "JM" },
+  { slug: "anne-silkjaer-moeller", initialer: "AS" },
+  { slug: "alena-litskalava-jensen", initialer: "AL" },
+  { slug: "maiken-moeller-aasted", initialer: "MM" },
+  { slug: "charlotte-paaskesen", initialer: "CP" },
+  { slug: "ida-bech-roedgaard", initialer: "IB" },
   // Uddannelseslæger
-  { foto: "assets/personale/mikkel-suurballe-lunen.jpg", initialer: "MS" },
-  { foto: "assets/personale/elin-naes-beck.jpg", initialer: "EN" },
+  { slug: "mikkel-suurballe-lunen", initialer: "MS" },
+  { slug: "elin-naes-beck", initialer: "EN" },
   // Sygeplejersker
-  { foto: "assets/personale/dorte-ligaard.jpg", initialer: "DL" },
-  { foto: "assets/personale/lone-rothausen.jpg", initialer: "LR" },
-  { foto: "assets/personale/susanne-harrild-moeller.jpg", initialer: "SH" },
-  { foto: "assets/personale/mette-sommerfeldt.jpg", initialer: "MS" },
+  { slug: "dorte-ligaard", initialer: "DL" },
+  { slug: "lone-rothausen", initialer: "LR" },
+  { slug: "susanne-harrild-moeller", initialer: "SH" },
+  { slug: "mette-sommerfeldt", initialer: "MS" },
   // Bioanalytikere
-  { foto: "assets/personale/anna-petersen.jpg", initialer: "AP" },
-  { foto: "assets/personale/susanne-westland.jpg", initialer: "SW" },
+  { slug: "anna-petersen", initialer: "AP" },
+  { slug: "susanne-westland", initialer: "SW" },
 ];
 
 const canvas = document.getElementById("hero-canvas");
@@ -284,14 +288,16 @@ function init(canvas) {
       disc.position.y = side * 0.14;
       group.add(disc);
     });
-    if (person.foto) {
-      fotoTexture(person.foto).then((tex) => {
+    // Rigtigt portræt vinder over tegnet avatar; initialerne er sidste udvej
+    fotoTexture("assets/personale/" + person.slug + ".jpg")
+      .catch(() => fotoTexture("assets/avatars/" + person.slug + ".jpg"))
+      .then((tex) => {
         medMat.map = tex;
         medMat.needsUpdate = true;
         // Ved reduced-motion er der kun ét statisk billede — tegn det igen
         if (reducedMotion) renderer.render(scene, camera);
-      }).catch(() => { /* initialerne bliver stående */ });
-    }
+      })
+      .catch(() => { /* initialerne bliver stående */ });
 
     group.renderOrder = 1;
     scene.add(group);
