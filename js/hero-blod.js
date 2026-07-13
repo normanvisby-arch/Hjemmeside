@@ -67,6 +67,7 @@ function init(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   const scene = new THREE.Scene();
+  let bloodGlow = null; // sættes i den mørke variant — pulsen får den til at blusse
   scene.fog = new THREE.FogExp2(DARK ? 0x072a33 : 0xeaf5ef, DARK ? 0.028 : 0.016);
 
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
@@ -82,7 +83,7 @@ function init(canvas) {
     const rimLight = new THREE.DirectionalLight(0x35d0c5, 1.1);
     rimLight.position.set(-6, -2, -4);
     scene.add(rimLight);
-    const bloodGlow = new THREE.PointLight(0xff6a55, 9, 20, 1.9);
+    bloodGlow = new THREE.PointLight(0xff6a55, 9, 20, 1.9);
     bloodGlow.position.set(1.5, 0.6, 1.5);
     scene.add(bloodGlow);
   } else {
@@ -458,12 +459,27 @@ function init(canvas) {
   const clock = new THREE.Clock();
   let rafId = null;
 
+  /* ---------- Hjerteslag: kraftig puls en gang imellem ----------
+     Med tilfældige mellemrum sender "hjertet" et kraftigt slag gennem
+     karret: cellerne får et skub og blæses afsted, flowet forstærkes
+     kortvarigt, og den indre glød blusser op — hvorefter alt falder
+     roligt til ro igen. */
+  let naestePuls = 4 + Math.random() * 4;
+  let puls = 0;
+
   function frame() {
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
 
-    // Roligt, jævnt flow uden pulsation
-    physicsStep(dt, 1);
+    if (t >= naestePuls) {
+      puls = 5;
+      for (const c of cells) c.va += c.base * (2 + Math.random() * 1.5); // slaget blæser cellerne afsted
+      naestePuls = t + 6 + Math.random() * 7; // næste slag om 6-13 sekunder
+    }
+    puls = Math.max(0, puls - dt * 4); // klinger af på godt et sekund
+
+    physicsStep(dt, 1 + puls);
+    if (bloodGlow) bloodGlow.intensity = 9 + puls * 5;
     writeMatrices(t);
 
     particles.rotation.y = t * 0.01;
