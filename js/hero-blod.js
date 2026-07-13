@@ -438,6 +438,52 @@ function init(canvas) {
   }));
   scene.add(particles);
 
+
+  /* ---------- Diskret EKG-linje i bunden — synkron med pulsen ----------
+     Kurven ruller mod venstre; R-takken rammer højre kant præcis i det
+     øjeblik, slaget skubber cellerne. Klassisk PQRST-kompleks. */
+  const ekgCanvas = document.createElement("canvas");
+  ekgCanvas.className = "hero-ekg-strip";
+  ekgCanvas.setAttribute("aria-hidden", "true");
+  canvas.parentElement.appendChild(ekgCanvas);
+  const ekgCtx = ekgCanvas.getContext("2d");
+  const EKG_VINDUE = 5; // sekunder synligt ad gangen
+
+  function bump(p, c, w, a) {
+    let d = p - c;
+    d -= Math.round(d); // korteste afstand på den cykliske fase
+    return a * Math.exp(-(d * d) / (w * w));
+  }
+  // PQRST med R-takken i fase 0
+  function ekgVaerdi(fase) {
+    return bump(fase, -0.20, 0.045, 0.10)   // P
+         + bump(fase, -0.030, 0.010, -0.09) // Q
+         + bump(fase,  0.000, 0.013, 1.00)  // R
+         + bump(fase,  0.032, 0.012, -0.20) // S
+         + bump(fase,  0.170, 0.060, 0.24); // T
+  }
+
+  function tegnEkg(t) {
+    const w = ekgCanvas.width, h = ekgCanvas.height;
+    if (!w) return;
+    ekgCtx.clearRect(0, 0, w, h);
+    ekgCtx.strokeStyle = "#35d0c5";
+    ekgCtx.lineWidth = Math.max(1.5, h / 34);
+    ekgCtx.lineJoin = "round";
+    ekgCtx.shadowColor = "rgba(53, 208, 197, 0.8)";
+    ekgCtx.shadowBlur = 8;
+    const basis = h * 0.68, amp = h * 0.52;
+    const fart = w / EKG_VINDUE; // px pr. sekund
+    ekgCtx.beginPath();
+    for (let x = 0; x <= w; x += 2) {
+      const tx = t - (w - x) / fart;
+      const fase = (tx - 1.5) / PULS_INTERVAL;
+      const y = basis - ekgVaerdi(fase - Math.floor(fase)) * amp;
+      if (x === 0) ekgCtx.moveTo(x, y); else ekgCtx.lineTo(x, y);
+    }
+    ekgCtx.stroke();
+  }
+
   /* ---------- Interaktion ---------- */
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   window.addEventListener("pointermove", (e) => {
@@ -451,6 +497,9 @@ function init(canvas) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    ekgCanvas.width = Math.round(w * dpr * 0.5) * 2; // lige tal, skarp streg
+    ekgCanvas.height = Math.round(56 * dpr);
   }
   window.addEventListener("resize", resize);
   resize();
@@ -482,6 +531,7 @@ function init(canvas) {
     physicsStep(dt, 1 + puls);
     if (bloodGlow) bloodGlow.intensity = 9 + puls * 5;
     writeMatrices(t);
+    tegnEkg(t);
 
     particles.rotation.y = t * 0.01;
 
