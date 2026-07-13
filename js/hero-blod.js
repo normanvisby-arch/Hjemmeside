@@ -469,11 +469,11 @@ function init(canvas) {
     const w = ekgCanvas.width, h = ekgCanvas.height;
     if (!w) return;
     ekgCtx.clearRect(0, 0, w, h);
-    ekgCtx.strokeStyle = "#0e7c86"; // mørkere grøn (husets teal)
-    ekgCtx.lineWidth = Math.max(1.5, h / 34);
+    ekgCtx.strokeStyle = "#041b1f"; // næsten sort — tydelig mod den lyse bund-fade
+    ekgCtx.lineWidth = Math.max(2, h / 28);
     ekgCtx.lineJoin = "round";
-    ekgCtx.shadowColor = "rgba(14, 124, 134, 0.7)";
-    ekgCtx.shadowBlur = 7;
+    ekgCtx.shadowColor = "rgba(14, 124, 134, 0.55)";
+    ekgCtx.shadowBlur = 6;
     const basis = h * 0.66, amp = h * 0.58;
     const fart = w / EKG_VINDUE; // px pr. sekund
     ekgCtx.beginPath();

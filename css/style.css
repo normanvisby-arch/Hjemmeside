@@ -286,7 +286,9 @@ html {
 .hero-ekg-strip {
   position: absolute; left: 0; right: 0; bottom: 8px;
   width: 100%; height: 56px;
-  z-index: 2; pointer-events: none; opacity: 0.5;
+  /* z-index 3: skal ligge OVER heroens lyse bund-fade (::after, z-index 2),
+     ellers vaskes linjen ud */
+  z-index: 3; pointer-events: none; opacity: 0.85;
 }
 
 /* Foto-hero med lægehuset (kontaktsiden): lys venstre-tone
