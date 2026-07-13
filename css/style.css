@@ -502,7 +502,7 @@ html { scroll-padding-top: 84px; }
 .site-header { view-transition-name: site-header; }
 .site-footer { view-transition-name: site-footer; }
 ::view-transition-old(root),
-::view-transition-new(root) { animation-duration: 0.26s; }
+::view-transition-new(root) { animation-duration: 0.14s; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
