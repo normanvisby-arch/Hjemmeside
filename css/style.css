@@ -95,7 +95,13 @@ h1, h2, h3, h4 {
 }
 
 /* Anker-links (#sektion) lander under den faste header i stedet for skjult bag den */
-html { scroll-padding-top: 84px; }
+html {
+  scroll-padding-top: 84px;
+  /* Stop mobil-browseres automatiske opskalering af tekst — den fik
+     bl.a. header-brandet til at vokse og ombryde på iPhone */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 /* ---------- Header ---------- */
 .site-header {
@@ -169,6 +175,15 @@ html { scroll-padding-top: 84px; }
   .main-nav.open { display: flex; }
   .main-nav a { padding: 13px 16px; border-radius: 12px; }
   .nav-cta { margin-left: 0; text-align: center; margin-top: 8px; }
+}
+/* Kompakt header på mobil: navnet på én linje, undertitlen væk,
+   mindre mærke — brandet fyldte ellers tre linjer på smalle skærme */
+@media (max-width: 640px) {
+  .header-inner { min-height: 58px; gap: 12px; }
+  .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+  .brand-mark svg { width: 20px; height: 20px; }
+  .brand-text .name { font-size: 16px; white-space: nowrap; }
+  .brand-text .tag { display: none; }
 }
 
 /* ---------- Hero ---------- */
