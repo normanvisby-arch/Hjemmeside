@@ -254,6 +254,19 @@ document.querySelectorAll("[data-count]").forEach((el) => {
   io.observe(el);
 });
 
+// Bløde anker-spring KUN ved klik på samme side — sideskift med #anker lander direkte
+if (!prefersReduced) {
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.classList.contains("skip-link")) return;
+    const el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    e.preventDefault();
+    history.pushState(null, "", a.getAttribute("href"));
+    el.scrollIntoView({ behavior: "smooth" });
+  });
+}
+
 // 3D-tilt på kort — kun med mus, aldrig på touch
 if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !prefersReduced) {
   document.querySelectorAll(".card").forEach((card) => {

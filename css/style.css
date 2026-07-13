@@ -34,9 +34,10 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+/* Ingen global scroll-behavior: smooth — den ville også animere browserens
+   automatiske spring til #anker ved sideindlæsning ("glidetur fra toppen").
+   Bløde spring ved klik på samme side håndteres i js/main.js. */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
@@ -327,7 +328,9 @@ html { scroll-padding-top: 84px; }
 
 /* Scroll-hint */
 .scroll-hint {
-  position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
+  /* bottom > 84px: info-baren trækkes 84px op over heroens bund og ville
+     ellers dække pilen (og opsluge klik) på store skærme */
+  position: absolute; left: 50%; bottom: 110px; transform: translateX(-50%);
   z-index: 3; color: rgba(11,37,48,0.5); font-size: 12px; letter-spacing: 0.2em;
   text-transform: uppercase; text-decoration: none;
   display: flex; flex-direction: column; align-items: center; gap: 6px;
