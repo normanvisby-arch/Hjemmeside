@@ -267,7 +267,7 @@ html {
   .hero.hero-photo {
     background:
       linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.88) 50%, rgba(6, 35, 43, 0.5) 66%, rgba(6, 35, 43, 0) 84%),
-      url("../assets/hero-stetoskop.jpg") center bottom / 100% auto no-repeat,
+      url("../assets/hero-stetoskop.jpg") right bottom / 150% auto no-repeat,
       linear-gradient(168deg, #051d24 0%, #072a33 100%);
   }
   .hero.hero-photo .hero-content { padding: 80px 0 150px; }
