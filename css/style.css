@@ -61,6 +61,16 @@ h1, h2, h3, h4 {
   margin: 0 0 0.5em;
   letter-spacing: -0.015em;
 }
+/* Lange danske sammensatte ord (fx "Konsultationssygeplejersker") må
+   ikke stikke ud af smalle skærme: automatisk orddeling, med hårdt
+   ordbrud som fallback hvor browseren ikke kan dele på dansk */
+@media (max-width: 640px) {
+  h1, h2, h3 {
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+}
 
 .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
 
@@ -596,7 +606,9 @@ html {
 
 /* ---------- Kontakt ---------- */
 .contact-tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-@media (max-width: 640px) { .contact-tiles { grid-template-columns: 1fr; } }
+.contact-tiles.cols-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .contact-tiles.cols-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .contact-tiles, .contact-tiles.cols-4 { grid-template-columns: 1fr; } }
 .contact-tile {
   background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 24px;
