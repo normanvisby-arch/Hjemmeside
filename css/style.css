@@ -251,8 +251,16 @@ html {
 .hero.hero-photo h1 { font-size: clamp(2.2rem, 4.6vw, 3.5rem); }
 .hero.hero-photo p.lede { max-width: 46ch; }
 @media (max-width: 760px) {
-  .hero.hero-photo { background-position: 0 0, 76% center, 0 0; }
-  .hero.hero-photo .hero-content { padding: 90px 0 170px; }
+  /* Mobil: vis HELE stetoskopet — fotoet som ubeskåret bånd i bunden
+     (100% auto) i stedet for cover-zoom; mørk toning over tekstdelen
+     glider ned i fotoets egen mørke baggrund */
+  .hero.hero-photo {
+    background:
+      linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.9) 58%, rgba(6, 35, 43, 0.42) 74%, rgba(6, 35, 43, 0) 88%),
+      url("../assets/hero-stetoskop.jpg") center bottom / 100% auto no-repeat,
+      linear-gradient(168deg, #051d24 0%, #072a33 100%);
+  }
+  .hero.hero-photo .hero-content { padding: 90px 0 250px; }
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
 
