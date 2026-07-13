@@ -459,12 +459,13 @@ function init(canvas) {
   const clock = new THREE.Clock();
   let rafId = null;
 
-  /* ---------- Hjerteslag: kraftig puls en gang imellem ----------
-     Med tilfældige mellemrum sender "hjertet" et kraftigt slag gennem
-     karret: cellerne får et skub og blæses afsted, flowet forstærkes
-     kortvarigt, og den indre glød blusser op — hvorefter alt falder
-     roligt til ro igen. */
-  let naestePuls = 4 + Math.random() * 4;
+  /* ---------- Hjerteslag: regelmæssig puls, ca. 45/min ----------
+     Hvert 1,33 sekund sender "hjertet" et slag gennem karret: cellerne
+     får et skub og blæses afsted, flowet forstærkes kortvarigt, og den
+     indre glød blusser op — hvorefter strømmen når at falde til ro,
+     inden næste slag rammer. */
+  const PULS_INTERVAL = 60 / 45;
+  let naestePuls = 1.5;
   let puls = 0;
 
   function frame() {
@@ -472,11 +473,11 @@ function init(canvas) {
     const t = clock.elapsedTime;
 
     if (t >= naestePuls) {
-      puls = 5;
-      for (const c of cells) c.va += c.base * (2 + Math.random() * 1.5); // slaget blæser cellerne afsted
-      naestePuls = t + 6 + Math.random() * 7; // næste slag om 6-13 sekunder
+      puls = 3.5;
+      for (const c of cells) c.va += c.base * (1.2 + Math.random() * 0.6); // slaget skubber cellerne afsted
+      naestePuls += PULS_INTERVAL; // fast rytme uden drift
     }
-    puls = Math.max(0, puls - dt * 4); // klinger af på godt et sekund
+    puls = Math.max(0, puls - dt * 5.5); // klinger af inden næste slag
 
     physicsStep(dt, 1 + puls);
     if (bloodGlow) bloodGlow.intensity = 9 + puls * 5;
