@@ -243,7 +243,7 @@ html {
    hvidt venstre-skær, så den mørke tekst står læsbart ovenpå */
 .hero.hero-photo {
   background:
-    linear-gradient(90deg, rgba(251, 253, 253, 0.95) 0%, rgba(250, 253, 253, 0.82) 46%, rgba(249, 252, 252, 0.25) 78%, rgba(249, 252, 252, 0.05) 100%),
+    linear-gradient(90deg, rgba(251, 253, 253, 0.55) 0%, rgba(250, 253, 253, 0.8) 26%, rgba(250, 253, 253, 0.78) 50%, rgba(249, 252, 252, 0.22) 78%, rgba(249, 252, 252, 0.05) 100%),
     url("../assets/fotos/konsultation.jpg") center 28% / cover no-repeat,
     linear-gradient(168deg, #fbfdfd 0%, #eef8f4 100%);
 }
@@ -273,8 +273,6 @@ html {
     url("../assets/fotos/blodtryksmaaler.jpg") right -140px center / cover no-repeat,
     linear-gradient(168deg, #051d24 0%, #072a33 100%);
 }
-/* Billedbåndet under heroen må ikke trækkes op over apparatet */
-.hero.hero-sub.hero-tryk + .photo-pull { margin-top: 28px; }
 /* Kortere bund-fade, så apparatet ikke vaskes hvidt ud i bunden */
 .hero.hero-sub.hero-tryk::after {
   background: linear-gradient(180deg, rgba(4, 26, 33, 0.3) 0%, transparent 28%, transparent 82%, rgba(244, 250, 249, 0.9) 100%);
