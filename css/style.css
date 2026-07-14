@@ -244,7 +244,7 @@ html {
 .hero.hero-photo {
   background:
     linear-gradient(90deg, rgba(251, 253, 253, 0.55) 0%, rgba(250, 253, 253, 0.8) 26%, rgba(250, 253, 253, 0.78) 50%, rgba(249, 252, 252, 0.22) 78%, rgba(249, 252, 252, 0.05) 100%),
-    url("../assets/fotos/konsultation.jpg") center 28% / cover no-repeat,
+    url("../assets/fotos/konsultation.jpg") center 62% / cover no-repeat,
     linear-gradient(168deg, #fbfdfd 0%, #eef8f4 100%);
 }
 .hero.hero-photo .hero-content { padding: 60px 0 220px; max-width: 700px; }
@@ -252,7 +252,7 @@ html {
 .hero.hero-photo p.lede { max-width: 46ch; }
 /* Knapperne skubbes lidt ned, så drengens hage står fri af "Bestil tid" */
 @media (min-width: 761px) {
-  .hero.hero-photo .hero-actions { margin-top: 52px; }
+  .hero.hero-photo .hero-actions { margin-top: 84px; }
 }
 @media (max-width: 760px) {
   /* Mobil: teksten øverst i sit eget lyse felt, hele fotoet som
