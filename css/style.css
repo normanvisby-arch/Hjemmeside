@@ -287,9 +287,11 @@ html {
   min-height: 62vh;
   background:
     linear-gradient(90deg, rgba(4, 22, 28, 0.82) 0%, rgba(4, 22, 28, 0.42) 42%, rgba(4, 22, 28, 0) 66%),
-    url("../assets/fotos/blodtryksmaaler.jpg") right center / cover no-repeat,
+    url("../assets/fotos/blodtryksmaaler.jpg") right -140px center / cover no-repeat,
     linear-gradient(168deg, #051d24 0%, #072a33 100%);
 }
+/* Billedbåndet under heroen må ikke trækkes op over apparatet */
+.hero.hero-sub.hero-tryk + .photo-pull { margin-top: 28px; }
 /* Kortere bund-fade, så apparatet ikke vaskes hvidt ud i bunden */
 .hero.hero-sub.hero-tryk::after {
   background: linear-gradient(180deg, rgba(4, 26, 33, 0.3) 0%, transparent 28%, transparent 82%, rgba(244, 250, 249, 0.9) 100%);
