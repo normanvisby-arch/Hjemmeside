@@ -281,6 +281,31 @@ html {
   .hero.hero-photo .hero-actions { margin-top: 178px; flex-direction: column; align-items: flex-start; }
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
+/* Foto-hero med blodtryksmåler (konsultationssiden): apparatet står i
+   højre side af fotoet, så teksten får et mørkt venstre-skær */
+.hero.hero-sub.hero-tryk {
+  min-height: 62vh;
+  background:
+    linear-gradient(90deg, rgba(4, 22, 28, 0.82) 0%, rgba(4, 22, 28, 0.42) 42%, rgba(4, 22, 28, 0) 66%),
+    url("../assets/fotos/blodtryksmaaler.jpg") right center / cover no-repeat,
+    linear-gradient(168deg, #051d24 0%, #072a33 100%);
+}
+/* Kortere bund-fade, så apparatet ikke vaskes hvidt ud i bunden */
+.hero.hero-sub.hero-tryk::after {
+  background: linear-gradient(180deg, rgba(4, 26, 33, 0.3) 0%, transparent 28%, transparent 82%, rgba(244, 250, 249, 0.9) 100%);
+}
+@media (max-width: 760px) {
+  /* Mobil: apparatet lægges i bunden under teksten (ubeskåret bredde),
+     mørk toning øverst glider ned i fotoets egen mørke baggrund;
+     teksten løftes fri af apparatet med ekstra bund-luft */
+  .hero.hero-sub.hero-tryk {
+    background:
+      linear-gradient(180deg, rgba(5, 29, 36, 0.94) 0%, rgba(6, 35, 43, 0.85) 38%, rgba(6, 35, 43, 0.35) 52%, rgba(6, 35, 43, 0) 68%),
+      url("../assets/fotos/blodtryksmaaler.jpg") right bottom / 165% auto no-repeat,
+      linear-gradient(168deg, #051d24 0%, #072a33 100%);
+  }
+  .hero.hero-sub.hero-tryk .hero-content { padding-bottom: 235px; }
+}
 .hero.hero-sub.hero-blod { min-height: 62vh; }
 
 /* Foto-hero med lægehuset (kontaktsiden): lys venstre-tone
