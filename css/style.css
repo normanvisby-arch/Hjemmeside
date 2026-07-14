@@ -239,46 +239,29 @@ html {
 .hero.hero-deep .scroll-hint { color: rgba(255,255,255,0.55); }
 .hero.hero-deep .scroll-hint::after { background: linear-gradient(180deg, var(--mint), transparent); }
 
-/* Foto-hero: roligt stilbillede i stedet for 3D-animation.
-   Mørkt venstre-skær sikrer tekstlæsbarhed oven på billedet. */
+/* Foto-hero: lyst stilbillede (dreng måles i konsultationen) med
+   hvidt venstre-skær, så den mørke tekst står læsbart ovenpå */
 .hero.hero-photo {
   background:
-    linear-gradient(90deg, rgba(4, 22, 28, 0.78) 0%, rgba(4, 22, 28, 0.35) 42%, rgba(4, 22, 28, 0) 68%),
-    url("../assets/hero-stetoskop.jpg") 72% center / cover no-repeat,
-    linear-gradient(168deg, #051d24 0%, #072a33 100%);
+    linear-gradient(90deg, rgba(251, 253, 253, 0.95) 0%, rgba(250, 253, 253, 0.82) 46%, rgba(249, 252, 252, 0.25) 78%, rgba(249, 252, 252, 0.05) 100%),
+    url("../assets/fotos/konsultation.jpg") center 28% / cover no-repeat,
+    linear-gradient(168deg, #fbfdfd 0%, #eef8f4 100%);
 }
-/* Løft teksten og hold manchetten smallere, så den ikke rammer
-   den lyse stålklokke nederst til højre */
 .hero.hero-photo .hero-content { padding: 60px 0 220px; max-width: 700px; }
 .hero.hero-photo h1 { font-size: clamp(2.2rem, 4.6vw, 3.5rem); }
 .hero.hero-photo p.lede { max-width: 46ch; }
 @media (max-width: 760px) {
-  /* Bred mobil/lille tablet: knapperne står på én række, og klokken
-     står frit til højre for dem; slangen snor sig bag teksten */
+  /* Mobil: teksten øverst i sit eget lyse felt, hele fotoet som
+     ubeskåret bånd i bunden — løftet fri af Telefontider-kortet */
   .hero.hero-photo {
     background:
-      linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.9) 36%, rgba(6, 35, 43, 0.5) 50%, rgba(6, 35, 43, 0) 62%),
-      linear-gradient(180deg, rgba(6, 32, 40, 0) calc(100% - 300px), rgba(6, 32, 40, 0.85) calc(100% - 235px), #062028 calc(100% - 218px)),
-      url("../assets/hero-stetoskop.jpg") right -20px bottom 220px / min(160%, 660px) auto no-repeat,
-      linear-gradient(168deg, #051d24 0%, #072a33 100%);
+      linear-gradient(180deg, rgba(251, 253, 253, 0.97) 0%, rgba(250, 253, 253, 0.92) 46%, rgba(250, 253, 253, 0.45) 62%, rgba(250, 253, 253, 0) 78%),
+      url("../assets/fotos/konsultation.jpg") center bottom 84px / 100% auto no-repeat,
+      linear-gradient(168deg, #fbfdfd 0%, #eef8f4 100%);
   }
-  .hero.hero-photo .hero-content { padding: 80px 0 150px; }
+  .hero.hero-photo .hero-content { padding: 70px 0 300px; }
   /* Scroll-pilen er overflødig på touch og kolliderede med hjælpeteksten */
   .hero .scroll-hint { display: none; }
-}
-@media (max-width: 640px) {
-  /* Smal mobil: knapperne stables og skubbes ned, så stetoskopet står
-     helt frit mellem brødteksten og knapperne; mørk toning øverst
-     sikrer læsbarhed, og bund-faden skjuler fotoets nederste kant */
-  .hero.hero-photo {
-    background:
-      linear-gradient(180deg, rgba(5, 29, 36, 0.96) 0%, rgba(6, 35, 43, 0.9) 30%, rgba(6, 35, 43, 0.5) 42%, rgba(6, 35, 43, 0) 52%),
-      linear-gradient(180deg, rgba(6, 32, 40, 0) calc(100% - 448px), rgba(6, 32, 40, 0.85) calc(100% - 383px), #062028 calc(100% - 368px)),
-      url("../assets/hero-stetoskop.jpg") right -20px bottom 370px / min(160%, 660px) auto no-repeat,
-      linear-gradient(168deg, #051d24 0%, #072a33 100%);
-  }
-  /* Knapperne stables altid her, så klokken har et fast, frit felt */
-  .hero.hero-photo .hero-actions { margin-top: 178px; flex-direction: column; align-items: flex-start; }
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
 /* Foto-hero med blodtryksmåler (konsultationssiden): apparatet står i
