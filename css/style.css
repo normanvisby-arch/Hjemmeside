@@ -250,9 +250,11 @@ html {
 .hero.hero-photo .hero-content { padding: 60px 0 220px; max-width: 700px; }
 .hero.hero-photo h1 { font-size: clamp(2.2rem, 4.6vw, 3.5rem); }
 .hero.hero-photo p.lede { max-width: 46ch; }
-/* Knapperne skubbes lidt ned, så drengens hage står fri af "Bestil tid" */
+/* Knapperne skubbes lidt ned, så drengens hage står fri af "Bestil tid",
+   og hele tekstkolonnen rykkes lidt mod højre, væk fra drengen */
 @media (min-width: 761px) {
   .hero.hero-photo .hero-actions { margin-top: 84px; }
+  .hero.hero-photo .hero-content { margin-left: 56px; }
 }
 @media (max-width: 760px) {
   /* Mobil: teksten øverst i sit eget lyse felt, hele fotoet som
