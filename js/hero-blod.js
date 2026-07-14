@@ -1,5 +1,16 @@
 /* ============================================================
    HEDENSTED LÆGEHUS — 3D/WebGL hero til PERSONALESIDEN
+   >>> PT. IKKE I BRUG — men gemt til senere. <<<
+   Sådan genindsættes den på personale.html:
+     1) Skift hero-sektionens klasser til
+          <section class="hero hero-sub hero-deep hero-blod">
+        og indsæt som første linje i sektionen:
+          <canvas id="hero-canvas" aria-hidden="true"></canvas>
+     2) Tilføj før </body> (efter js/main.js):
+          <script src="js/vendor/three.min.js" defer></script>
+          <script src="js/hero-blod.js" defer></script>
+   Det hele ligger klar — inkl. alle 17 personale-medaljoner.
+
    En stor, halvgennemsigtig arterie løber hen over skærmen, og
    indeni strømmer røde blodlegemer (bikonkave skiver). Udvalgte
    blodlegemer er "medaljoner": personalets portrætfoto fylder
