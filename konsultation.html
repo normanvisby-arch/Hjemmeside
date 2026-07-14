@@ -46,11 +46,6 @@
   <main id="main">
 
     <section class="hero hero-sub hero-deep hero-tryk">
-      <!-- Rødt hjerte lagt præcis oven på fotoets display-hjerte;
-           positioneres af scriptet nederst og banker 60 slag/min -->
-      <span class="tryk-hjerte" aria-hidden="true">
-        <svg viewBox="0 0 24 22"><path d="M12 21 C5 15.5 1.5 11.5 1.5 7.3 C1.5 3.9 4.1 1.5 7.1 1.5 C9 1.5 10.9 2.5 12 4.3 C13.1 2.5 15 1.5 16.9 1.5 C19.9 1.5 22.5 3.9 22.5 7.3 C22.5 11.5 19 15.5 12 21 Z" fill="#e0524a"/></svg>
-      </span>
       <div class="wrap">
         <div class="hero-content">
           <span class="eyebrow">Konsultation</span>
@@ -266,41 +261,5 @@
 
   <script src="js/data.js" defer></script>
   <script src="js/main.js" defer></script>
-  <script>
-    // Placér det røde hjerte oven på fotoets display-hjerte.
-    // Gengiver baggrundens egen skalering (cover / 165% auto), så
-    // hjertet følger med ved alle skærmstørrelser.
-    (function () {
-      var hj = document.querySelector(".tryk-hjerte");
-      var hero = document.querySelector(".hero-tryk");
-      if (!hj || !hero) return;
-      var IW = 1976, IH = 796;      // fotoets pixelmål
-      var HX = 1528, HY = 427;      // hjertets centrum i fotoet
-      function plads() {
-        var w = hero.clientWidth, h = hero.clientHeight, s, left, top;
-        if (w > 760) {              // desktop: cover, right -140px center
-          s = Math.max(w / IW, h / IH);
-          left = w + 140 - IW * s;
-          top = (h - IH * s) / 2;
-        } else {                    // mobil: 165% auto, right bottom
-          s = (1.65 * w) / IW;
-          left = w - IW * s;
-          top = h - IH * s;
-        }
-        var size = 26 * s;          // lidt større end fotoets eget hjerte, så det dækkes helt
-        hj.style.width = size + "px";
-        hj.style.height = size + "px";
-        hj.style.left = (left + HX * s - size / 2) + "px";
-        hj.style.top = (top + HY * s - size / 2) + "px";
-        hj.style.display = "block";
-      }
-      window.addEventListener("resize", plads);
-      // Kør igen når webfonte og billeder er på plads — heroens højde
-      // (og dermed fotoets bund-forankring) kan ændre sig undervejs
-      window.addEventListener("load", plads);
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(plads);
-      plads();
-    })();
-  </script>
 </body>
 </html>
