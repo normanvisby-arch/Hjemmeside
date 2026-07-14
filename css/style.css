@@ -296,6 +296,29 @@ html {
 .hero.hero-sub.hero-tryk::after {
   background: linear-gradient(180deg, rgba(4, 26, 33, 0.3) 0%, transparent 28%, transparent 82%, rgba(244, 250, 249, 0.9) 100%);
 }
+/* Rødt hjerte på apparatets display — banker 60 slag/min.
+   Positioneres af scriptet i konsultation.html; skjult uden JS. */
+.tryk-hjerte {
+  position: absolute; z-index: 3; display: none; pointer-events: none;
+  transform: rotate(-8deg); /* følger displayets lette hældning */
+}
+.tryk-hjerte svg {
+  width: 100%; height: 100%; display: block;
+  filter: drop-shadow(0 0 5px rgba(224, 82, 74, 0.6));
+  transform-origin: 50% 55%;
+  animation: tryk-puls 1s ease-in-out infinite;
+}
+@keyframes tryk-puls {
+  0%   { transform: scale(1); }
+  12%  { transform: scale(1.3); }
+  24%  { transform: scale(0.95); }
+  34%  { transform: scale(1.15); }
+  50%  { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tryk-hjerte svg { animation: none; }
+}
 @media (max-width: 760px) {
   /* Mobil: apparatet lægges i bunden under teksten (ubeskåret bredde),
      mørk toning øverst glider ned i fotoets egen mørke baggrund;
