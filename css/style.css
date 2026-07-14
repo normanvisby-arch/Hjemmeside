@@ -268,28 +268,28 @@ html {
   .hero .scroll-hint { display: none; }
 }
 .hero.hero-sub.hero-lab { min-height: 62vh; }
-/* Foto-hero med blodtryksmåler (konsultationssiden): apparatet står i
-   højre side af fotoet, så teksten får et mørkt venstre-skær */
+/* Foto-hero med blodtryksmåler (konsultationssiden): lyst udtryk —
+   apparatet står i højre side, og teksten får et hvidt venstre-skær */
 .hero.hero-sub.hero-tryk {
   min-height: 62vh;
   background:
-    linear-gradient(90deg, rgba(4, 22, 28, 0.82) 0%, rgba(4, 22, 28, 0.42) 42%, rgba(4, 22, 28, 0) 66%),
+    linear-gradient(90deg, rgba(251, 253, 253, 0.92) 0%, rgba(250, 253, 253, 0.72) 42%, rgba(249, 252, 252, 0.12) 66%, rgba(249, 252, 252, 0) 100%),
     url("../assets/fotos/blodtryksmaaler.jpg") right -140px center / cover no-repeat,
-    linear-gradient(168deg, #051d24 0%, #072a33 100%);
+    linear-gradient(168deg, #fbfdfd 0%, #eef8f4 100%);
 }
-/* Kortere bund-fade, så apparatet ikke vaskes hvidt ud i bunden */
+/* Kortere bund-fade, så apparatet ikke vaskes ud i bunden */
 .hero.hero-sub.hero-tryk::after {
-  background: linear-gradient(180deg, rgba(4, 26, 33, 0.3) 0%, transparent 28%, transparent 82%, rgba(244, 250, 249, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 28%, transparent 82%, rgba(244, 250, 249, 0.9) 100%);
 }
 @media (max-width: 760px) {
   /* Mobil: apparatet lægges i bunden under teksten (ubeskåret bredde),
-     mørk toning øverst glider ned i fotoets egen mørke baggrund;
+     lys toning øverst glider ned i fotoets egen lyse baggrund;
      teksten løftes fri af apparatet med ekstra bund-luft */
   .hero.hero-sub.hero-tryk {
     background:
-      linear-gradient(180deg, rgba(5, 29, 36, 0.94) 0%, rgba(6, 35, 43, 0.85) 38%, rgba(6, 35, 43, 0.35) 52%, rgba(6, 35, 43, 0) 68%),
+      linear-gradient(180deg, rgba(251, 253, 253, 0.96) 0%, rgba(250, 253, 253, 0.88) 38%, rgba(250, 253, 253, 0.4) 52%, rgba(250, 253, 253, 0) 68%),
       url("../assets/fotos/blodtryksmaaler.jpg") right bottom / 165% auto no-repeat,
-      linear-gradient(168deg, #051d24 0%, #072a33 100%);
+      linear-gradient(168deg, #fbfdfd 0%, #eef8f4 100%);
   }
   .hero.hero-sub.hero-tryk .hero-content { padding-bottom: 235px; }
 }
