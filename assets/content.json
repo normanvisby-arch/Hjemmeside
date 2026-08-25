@@ -127,7 +127,9 @@
     {
       "navn": "Anette",
       "rolle": "Lægesekretær"
-    },
+    }
+  ],
+  "praksismanager": [
     {
       "navn": "Tina",
       "rolle": "Praksismanager"

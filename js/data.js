@@ -148,7 +148,9 @@ const SITE_DATA = {
     {
       "navn": "Anette",
       "rolle": "Lægesekretær"
-    },
+    }
+  ],
+  "praksismanager": [
     {
       "navn": "Tina",
       "rolle": "Praksismanager"
