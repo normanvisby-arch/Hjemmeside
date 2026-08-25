@@ -82,6 +82,20 @@ if (typeof SITE_DATA !== "undefined") {
     el.innerHTML = liste.map(staffCard).join("");
   });
 
+  // Forsidens "Mød holdet"-række: de faste læger fra data.js.
+  // Portræt fra assets/personale/ hvis det findes — ellers initialer.
+  const holdWrap = document.querySelector("[data-hold]");
+  if (holdWrap && Array.isArray(SITE_DATA.laeger)) {
+    holdWrap.innerHTML = SITE_DATA.laeger.map((p) => `
+      <a class="hold-person" href="personale.html" title="${p.navn} · ${p.rolle}">
+        <span class="h-avatar">
+          <span aria-hidden="true">${initialer(p.navn)}</span>
+          <img src="assets/personale/${slug(p.navn)}.jpg" alt="" loading="lazy" onerror="this.remove();">
+        </span>
+        <span class="h-navn">${p.navn.split(" ")[0]}</span>
+      </a>`).join("");
+  }
+
   const newsWrap = document.querySelector("[data-nyheder]");
   if (newsWrap && SITE_DATA.nyheder) {
     newsWrap.innerHTML = SITE_DATA.nyheder.map((n, i) => `

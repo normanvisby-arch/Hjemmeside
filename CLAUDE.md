@@ -46,9 +46,10 @@ live på ca. 1 minut.
   telefonstatus-linjen nederst i `js/main.js` (bjælken under headeren
   med grøn/gul/rød prik, der viser hvad telefonen kan bruges til lige
   nu; håndterer selv weekend og danske helligdage).
-- **Ved ændret personaleantal**: husk også statistikkortene på
-  forsiden (`data-count`) og evt. "otte faste læger"-formuleringer —
-  de følger IKKE data.js automatisk.
+- **Ved ændret personaleantal**: ansigtsrækken i forsidens "Mød
+  holdet"-sektion følger data.js automatisk, men tal-chips'ene og
+  "otte faste læger"-formuleringer (overskrift m.m.) gør IKKE — ret
+  dem manuelt i `index.html`.
 - **Nyhedsstream øverst** (den mørke bjælke, fx "lukket for tilgang"):
   rettes i `ticker`-listen i `js/data.js` — slår igennem på alle sider.
   Flere beskeder skifter automatisk hvert 6. sekund. Teksten, der står
