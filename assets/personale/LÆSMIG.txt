@@ -31,5 +31,12 @@ Filnavne (skal ramme præcist, små bogstaver, .jpg):
     anna-petersen.jpg
     susanne-westland.jpg
 
+  Sekretariat & drift:
+    pia.jpg
+    anne-marie.jpg
+    heidi.jpg
+    anette.jpg
+    tina.jpg
+
 Anbefaling: kvadratiske billeder, mindst 400 x 400 px. Billederne
 beskæres automatisk til en cirkel og skaleres, så alle størrelser virker.

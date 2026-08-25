@@ -111,6 +111,28 @@
       "rolle": "Bioanalytiker"
     }
   ],
+  "sekretariat": [
+    {
+      "navn": "Pia",
+      "rolle": "Praksisassistent"
+    },
+    {
+      "navn": "Anne Marie",
+      "rolle": "Lægesekretær"
+    },
+    {
+      "navn": "Heidi",
+      "rolle": "Lægesekretær"
+    },
+    {
+      "navn": "Anette",
+      "rolle": "Lægesekretær"
+    },
+    {
+      "navn": "Tina",
+      "rolle": "Praksismanager"
+    }
+  ],
   "kontakt": {
     "adresse": "Årupvej 6",
     "postnr_by": "8722 Hedensted",
