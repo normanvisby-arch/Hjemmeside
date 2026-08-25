@@ -52,11 +52,6 @@ const SITE_DATA = {
   ],
   "laeger": [
     {
-      "navn": "Tine Friis Andersen",
-      "rolle": "Speciallæge i almen medicin",
-      "info": "Uddannet læge i 1991 · i klinikken siden 2002."
-    },
-    {
       "navn": "Troels Arent Olesen",
       "rolle": "Speciallæge i almen medicin",
       "info": "Uddannet læge i 2001 · i klinikken siden 2007."
@@ -93,8 +88,8 @@ const SITE_DATA = {
     },
     {
       "navn": "Ida Bech Rødgaard",
-      "rolle": "Vikarierende læge",
-      "info": "Uddannet læge i 2015 · vikar i klinikken."
+      "rolle": "Speciallæge i almen medicin",
+      "info": "Uddannet læge i 2015 · praktiserende læge i klinikken siden 2026."
     }
   ],
   "uddannelseslaeger": [
