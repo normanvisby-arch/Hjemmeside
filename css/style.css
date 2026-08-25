@@ -282,13 +282,13 @@ html {
     url("../assets/fotos/konsultation.jpg") center 62% / cover no-repeat,
     linear-gradient(168deg, #fbfdfd 0%, #eef8f4 100%);
 }
+/* Kortere hero: handlingskortene nedenunder skal kunne ses uden scroll */
+.hero.hero-photo { min-height: 64vh; }
 .hero.hero-photo .hero-content { padding: 60px 0 220px; max-width: 700px; }
 .hero.hero-photo h1 { font-size: clamp(2.2rem, 4.6vw, 3.5rem); }
 .hero.hero-photo p.lede { max-width: 46ch; }
-/* Knapperne skubbes lidt ned, så drengens hage står fri af "Bestil tid",
-   og hele tekstkolonnen rykkes lidt mod højre, væk fra drengen */
+/* Eyebrow-linjen rykkes lidt mod højre, væk fra drengen */
 @media (min-width: 761px) {
-  .hero.hero-photo .hero-actions { margin-top: 84px; }
   .hero.hero-photo .hero-content { margin-left: 56px; }
 }
 @media (max-width: 760px) {
@@ -457,6 +457,25 @@ html {
 .info-card p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
 .info-card a.more { font-size: 14px; font-weight: 600; text-decoration: none; }
 @media (max-width: 920px) { .info-grid { grid-template-columns: 1fr; } .info-bar { margin-top: -60px; } }
+
+/* Handlingskort på forsiden (forslag A): hele kortet er ét link */
+.task-card {
+  flex-direction: column; gap: 12px;
+  text-decoration: none; color: inherit;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.task-card:hover { transform: translateY(-4px); box-shadow: 0 30px 80px -22px rgba(6, 45, 55, 0.45); }
+.task-card .ico { width: 52px; height: 52px; border-radius: 14px; }
+.task-card h3 { margin: 2px 0 0; font-size: 20px; }
+.task-card p { margin: 0; font-size: 15px; color: var(--ink-soft); }
+.task-card .more { font-weight: 600; font-size: 15px; color: var(--teal); }
+.task-card .more::after { content: " →"; }
+.task-tlf {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin: 26px 0 0; font-size: 14.5px; color: var(--ink-muted);
+}
+.task-tlf svg { width: 16px; height: 16px; flex: none; }
+.task-tlf a { color: var(--ink-soft); font-weight: 600; }
 
 /* ---------- Sektioner ---------- */
 .section { padding: 96px 0; }
