@@ -42,7 +42,10 @@ live på ca. 1 minut.
   (containere med `data-nyheder`/`data-staff`-attributter).
 - **Ret åbningstider/telefontider**: findes i `index.html` (info-bar +
   hours-panel), `konsultation.html` (telefonsektion) og `kontakt.html`.
-  Ret ALLE steder, så de stemmer overens.
+  Ret ALLE steder, så de stemmer overens — OGSÅ tidsrummene i
+  telefonstatus-linjen nederst i `js/main.js` (bjælken under headeren
+  med grøn/gul/rød prik, der viser hvad telefonen kan bruges til lige
+  nu; håndterer selv weekend og danske helligdage).
 - **Ved ændret personaleantal**: husk også statistikkortene på
   forsiden (`data-count`) og evt. "otte faste læger"-formuleringer —
   de følger IKKE data.js automatisk.

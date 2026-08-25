@@ -196,6 +196,41 @@ html {
   .brand-text .tag { display: none; }
 }
 
+/* ---------- Telefonstatus-linje (indsættes af js/main.js) ---------- */
+.tlf-status {
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 10px 40px -12px rgba(6, 45, 55, 0.12);
+  position: relative; z-index: 6;
+}
+.tlf-status-inner { display: flex; align-items: center; gap: 14px; padding-top: 11px; padding-bottom: 11px; }
+.tlf-status .dot { width: 11px; height: 11px; border-radius: 999px; flex: none; background: var(--ink-muted); }
+.tlf-status[data-farve="groen"] .dot { background: #22aa6e; animation: tlfPuls 2s infinite; }
+.tlf-status[data-farve="gul"] .dot { background: var(--amber); }
+.tlf-status[data-farve="roed"] .dot { background: var(--coral); }
+@keyframes tlfPuls {
+  0% { box-shadow: 0 0 0 0 rgba(34, 170, 110, 0.35); }
+  70% { box-shadow: 0 0 0 9px rgba(34, 170, 110, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 170, 110, 0); }
+}
+.tlf-status p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+.tlf-status strong { color: var(--ink); }
+.tlf-status .tid { color: var(--ink-muted); }
+.tlf-ring {
+  margin-left: auto; flex: none;
+  font-family: var(--font-head); font-weight: 600; font-size: 13.5px;
+  padding: 8px 16px; border-radius: 999px; white-space: nowrap;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid rgba(11, 37, 48, 0.22);
+  text-decoration: none;
+}
+.tlf-ring:hover { background: #eaf5f2; color: var(--ink); }
+@media (max-width: 640px) {
+  .tlf-ring { display: none; } /* nummeret står i teksterne — spar pladsen */
+  .tlf-status p { font-size: 13.5px; }
+  .tlf-status-inner { gap: 10px; }
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;

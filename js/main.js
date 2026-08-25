@@ -283,3 +283,85 @@ if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !prefersR
     });
   });
 }
+
+// ---------- Telefonstatus-linje under headeren (alle sider) ----------
+// Viser hvad telefonen kan bruges til LIGE NU: grøn = tidsbestilling m.m.,
+// gul = kun akut, rød = lukket (så peger vi på Lægevagten).
+// VIGTIGT: Tidsrummene her skal følges ad med telefontiderne i indholdet
+// (index.html, konsultation.html, kontakt.html og js/data.js) — ret ALLE
+// steder, hvis telefontiderne ændres.
+(() => {
+  const header = document.querySelector(".site-header");
+  if (!header) return;
+
+  // Dansk tid, uanset hvor den besøgende befinder sig
+  const cphNu = () => {
+    const dele = {};
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Copenhagen", hour12: false, weekday: "short",
+      year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric",
+    }).formatToParts(new Date()).forEach((p) => { dele[p.type] = p.value; });
+    return {
+      aar: +dele.year, md: +dele.month, dag: +dele.day,
+      ugedag: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(dele.weekday),
+      min: ((+dele.hour) % 24) * 60 + (+dele.minute),
+    };
+  };
+
+  // Påskedag (Meeus' algoritme) -> [måned, dag]
+  const paaskedag = (y) => {
+    const a = y % 19, b = Math.floor(y / 100), c = y % 100,
+      d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
+      g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30,
+      i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7,
+      m = Math.floor((a + 11 * h + 22 * l) / 451), n = h + l - 7 * m + 114;
+    return [Math.floor(n / 31), (n % 31) + 1];
+  };
+
+  // Officielle danske helligdage, hvor klinikken holder lukket
+  const erHelligdag = (aar, md, dag) => {
+    if ([[1, 1], [12, 25], [12, 26]].some(([m2, d2]) => m2 === md && d2 === dag)) return true;
+    const [pm, pd] = paaskedag(aar);
+    const paaske = Date.UTC(aar, pm - 1, pd);
+    // Skærtorsdag, langfredag, påskedag, 2. påskedag, Kr. himmelfart, pinsedag, 2. pinsedag
+    return [-3, -2, 0, 1, 39, 49, 50].some((off) => {
+      const d2 = new Date(paaske + off * 86400000);
+      return d2.getUTCMonth() + 1 === md && d2.getUTCDate() === dag;
+    });
+  };
+
+  const tilstand = (nu) => {
+    if (nu.ugedag === 0 || nu.ugedag === 6 || erHelligdag(nu.aar, nu.md, nu.dag)) {
+      return { farve: "roed", tekst: "Lukket — Lægevagten 70 11 31 31 · ved livsfare ring 112", vagt: true };
+    }
+    if (nu.min >= 480 && nu.min < 540) return { farve: "gul", tekst: "Akut sygdom, der kræver lægekontakt samme dag", til: "9.00" };
+    if (nu.min >= 540 && nu.min < 750) return { farve: "groen", tekst: "Tidsbestilling, prøvesvar og øvrige henvendelser", til: "12.30" };
+    if (nu.min >= 750 && nu.min < 960) return { farve: "gul", tekst: "Kun akutte henvendelser", til: "16.00" };
+    return { farve: "roed", tekst: "Lukket — Lægevagten 70 11 31 31 · ved livsfare ring 112", vagt: true };
+  };
+
+  const bar = document.createElement("div");
+  bar.className = "tlf-status";
+  bar.innerHTML = `
+    <div class="wrap tlf-status-inner">
+      <span class="dot" aria-hidden="true"></span>
+      <p><strong>Telefonen lige nu:</strong> <span data-tlf-tekst></span><span class="tid" data-tlf-tid></span></p>
+      <a class="tlf-ring" href="tel:75891811">Ring 75 89 18 11</a>
+    </div>`;
+  header.insertAdjacentElement("afterend", bar);
+
+  const tekstEl = bar.querySelector("[data-tlf-tekst]");
+  const tidEl = bar.querySelector("[data-tlf-tid]");
+  const ringEl = bar.querySelector(".tlf-ring");
+
+  const opdater = () => {
+    const t = tilstand(cphNu());
+    bar.dataset.farve = t.farve;
+    tekstEl.textContent = t.tekst;
+    tidEl.textContent = t.til ? ` · til kl. ${t.til}` : "";
+    if (t.vagt) { ringEl.href = "tel:70113131"; ringEl.textContent = "Ring Lægevagten"; }
+    else { ringEl.href = "tel:75891811"; ringEl.textContent = "Ring 75 89 18 11"; }
+  };
+  opdater();
+  setInterval(opdater, 30000); // følger med, når klokken passerer et skifte
+})();
