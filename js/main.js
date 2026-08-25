@@ -201,10 +201,17 @@ if ("IntersectionObserver" in window && revealables.length) {
   revealables.forEach((el) => el.classList.add("in"));
 }
 
-// Header-morf: krymper og får skygge, når der scrolles
+// Header-morf: krymper og får skygge, når der scrolles.
+// To forskellige tærskler (hysterese): headeren bliver 14 px lavere, når
+// den krymper, hvilket forkorter siden og skubber scrollpositionen tilbage
+// — med én fælles tærskel gav det en flimre-løkke lige omkring den.
 const header = document.querySelector(".site-header");
 if (header) {
-  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 14);
+  const onScroll = () => {
+    const y = window.scrollY;
+    if (y > 48) header.classList.add("scrolled");
+    else if (y < 10) header.classList.remove("scrolled");
+  };
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 }
